@@ -1,188 +1,1312 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Family Academy - a cinematic learning room for students, parents, teachers, and TV devices." />
-  <meta name="theme-color" content="#0e1624" />
-  <meta name="robots" content="index,follow" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Family Academy" />
-  <meta property="og:description" content="An immersive student room that introduces the Family Academy platform and its downloads." />
-  <meta property="og:image" content="./og-preview.svg" />
-  <meta property="og:url" content="/" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Family Academy" />
-  <meta name="twitter:description" content="An immersive student room that introduces the Family Academy platform and its downloads." />
-  <title>Family Academy</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./styles.css" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Family Academy — Your Learning Room</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{overflow:hidden;background:#1a0f07;font-family:'Georgia',serif;}
+  #canvas{display:block;width:100vw;height:100vh;cursor:grab;}
+  #canvas:active{cursor:grabbing;}
+
+  /* ── Loading screen ── */
+  #loader{
+    position:fixed;inset:0;z-index:1000;
+    background:#0d0803;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transition:opacity 1.2s ease;
+  }
+  #loader.fade-out{opacity:0;pointer-events:none;}
+  .loader-logo{
+    font-size:2.4rem;color:#f0c070;letter-spacing:.18em;text-transform:uppercase;
+    font-family:'Georgia',serif;margin-bottom:1.2rem;opacity:0;
+    animation:fadeUp .8s .3s forwards;
+  }
+  .loader-sub{color:#a07840;font-size:.85rem;letter-spacing:.35em;text-transform:uppercase;
+    margin-bottom:3rem;opacity:0;animation:fadeUp .8s .6s forwards;}
+  .loader-bar-wrap{width:260px;height:2px;background:#2a1a0a;border-radius:2px;overflow:hidden;}
+  .loader-bar{height:100%;width:0%;background:linear-gradient(90deg,#c08030,#f0c070);
+    border-radius:2px;transition:width .1s linear;}
+  .loader-tip{color:#604020;font-size:.72rem;margin-top:1.4rem;letter-spacing:.15em;
+    opacity:0;animation:fadeUp .8s 1s forwards;}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* ── HUD ── */
+  #hud{
+    position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+    display:flex;gap:10px;align-items:center;
+    background:rgba(10,6,2,.72);border:1px solid rgba(200,150,60,.25);
+    border-radius:50px;padding:8px 22px;
+    font-size:.72rem;color:#c09050;letter-spacing:.12em;
+    backdrop-filter:blur(8px);
+    opacity:0;transition:opacity .6s;pointer-events:none;
+  }
+  #hud.show{opacity:1;}
+  .hud-sep{width:1px;height:14px;background:rgba(200,150,60,.25);}
+  .hud-key{
+    background:rgba(200,150,60,.15);border:1px solid rgba(200,150,60,.3);
+    border-radius:4px;padding:1px 6px;font-size:.68rem;color:#e0b060;
+  }
+
+  /* ── Zone label ── */
+  #zone-label{
+    position:fixed;top:32px;left:50%;transform:translateX(-50%);
+    font-family:'Georgia',serif;font-size:.8rem;color:#d0a050;
+    letter-spacing:.3em;text-transform:uppercase;
+    opacity:0;transition:opacity .8s;pointer-events:none;
+    text-shadow:0 0 20px rgba(200,130,30,.5);
+  }
+  #zone-label.show{opacity:1;}
+
+  /* ── Crosshair ── */
+  #crosshair{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+    width:18px;height:18px;pointer-events:none;opacity:0;transition:opacity .4s;
+  }
+  #crosshair::before,#crosshair::after{
+    content:'';position:absolute;background:#e0c080;border-radius:2px;opacity:.6;
+  }
+  #crosshair::before{width:2px;height:18px;left:8px;top:0;}
+  #crosshair::after{width:18px;height:2px;left:0;top:8px;}
+  #crosshair.show{opacity:.5;}
+
+  /* ── Overlay panel (book content, downloads) ── */
+  #overlay{
+    position:fixed;inset:0;z-index:500;
+    background:rgba(8,4,1,.88);
+    display:flex;align-items:center;justify-content:center;
+    opacity:0;pointer-events:none;transition:opacity .5s;
+    backdrop-filter:blur(6px);
+  }
+  #overlay.show{opacity:1;pointer-events:all;}
+  .overlay-card{
+    background:linear-gradient(135deg,#1e1208,#150c05);
+    border:1px solid rgba(200,150,60,.35);
+    border-radius:16px;padding:40px 48px;max-width:640px;width:90%;
+    max-height:84vh;overflow-y:auto;
+    box-shadow:0 30px 80px rgba(0,0,0,.7),inset 0 1px 0 rgba(200,150,60,.15);
+    position:relative;
+  }
+  .overlay-card::-webkit-scrollbar{width:4px;}
+  .overlay-card::-webkit-scrollbar-track{background:transparent;}
+  .overlay-card::-webkit-scrollbar-thumb{background:#604020;border-radius:4px;}
+  .overlay-close{
+    position:absolute;top:16px;right:20px;
+    background:none;border:none;color:#a07040;font-size:1.4rem;cursor:pointer;
+    transition:color .2s;
+  }
+  .overlay-close:hover{color:#f0c070;}
+  .overlay-title{
+    font-family:'Georgia',serif;font-size:1.6rem;color:#f0c070;
+    margin-bottom:6px;letter-spacing:.05em;
+  }
+  .overlay-sub{font-size:.78rem;color:#806040;letter-spacing:.18em;text-transform:uppercase;
+    margin-bottom:24px;border-bottom:1px solid rgba(200,150,60,.15);padding-bottom:16px;}
+  .overlay-body{color:#c0a070;font-size:.92rem;line-height:1.8;}
+  .overlay-body h3{color:#f0c070;font-size:1.05rem;margin:20px 0 8px;}
+  .overlay-body ul{padding-left:1.2em;}
+  .overlay-body ul li{margin-bottom:6px;}
+  .overlay-body p{margin-bottom:10px;}
+
+  /* download buttons */
+  .dl-section-title{
+    color:#f0c070;font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;
+    margin:22px 0 10px;border-left:2px solid #c08030;padding-left:10px;
+  }
+  .dl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+  .dl-btn{
+    display:flex;align-items:center;gap:8px;padding:10px 14px;
+    background:rgba(200,150,60,.1);border:1px solid rgba(200,150,60,.25);
+    border-radius:8px;color:#d0a060;font-size:.8rem;text-decoration:none;
+    transition:all .2s;cursor:pointer;
+  }
+  .dl-btn:hover{background:rgba(200,150,60,.2);border-color:rgba(200,150,60,.5);color:#f0c070;transform:translateY(-1px);}
+  .dl-btn .icon{font-size:1.1rem;flex-shrink:0;}
+
+  /* ── Hotspot tooltip ── */
+  #tooltip{
+    position:fixed;padding:6px 14px;background:rgba(10,6,2,.85);
+    border:1px solid rgba(200,150,60,.3);border-radius:20px;
+    color:#e0b060;font-size:.75rem;letter-spacing:.12em;
+    pointer-events:none;opacity:0;transition:opacity .25s;
+    transform:translateX(-50%);white-space:nowrap;
+  }
+  #tooltip.show{opacity:1;}
+
+  /* ── Intro cinematic text ── */
+  #intro-text{
+    position:fixed;inset:0;z-index:300;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    pointer-events:none;
+  }
+  .intro-line{
+    font-family:'Georgia',serif;font-size:1.8rem;color:#f0c070;
+    letter-spacing:.12em;text-shadow:0 0 40px rgba(200,130,30,.6);
+    opacity:0;transform:translateY(20px);
+    transition:opacity 1s, transform 1s;
+    text-align:center;
+  }
+  .intro-line.show{opacity:1;transform:none;}
+  .intro-line.hide{opacity:0;transform:translateY(-20px);}
+</style>
 </head>
 <body>
-  <div class="ambience ambience-a"></div>
-  <div class="ambience ambience-b"></div>
-  <div class="ambience ambience-c"></div>
-  <div class="grain"></div>
 
-  <main class="experience">
-    <section class="room-shell" aria-label="Family Academy cinematic room">
-      <header class="hud">
-        <div class="brand-lockup">
-          <p class="eyebrow">Family Academy</p>
-          <h1>Family Academy</h1>
-          <p class="brand-tagline">
-            A cinematic learning room for students, parents, teachers, and TV devices.
-          </p>
-        </div>
+<div id="loader">
+  <div class="loader-logo">Family Academy</div>
+  <div class="loader-sub">Your Learning Universe</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+  <div class="loader-tip">Preparing your room…</div>
+</div>
 
-        <div class="hud-meta" aria-live="polite">
-          <span id="scene-progress">01 / 06</span>
-          <span id="scene-name">Arrival</span>
-        </div>
-      </header>
+<canvas id="canvas"></canvas>
 
-      <div class="room-stage" id="room-stage">
-        <div class="room-camera" id="room-camera">
-          <div class="room-set" aria-hidden="true">
-            <div class="plane back-wall"></div>
-            <div class="plane left-wall"></div>
-            <div class="plane right-wall"></div>
-            <div class="plane ceiling"></div>
-            <div class="plane floor"></div>
-            <div class="window window-left"></div>
-            <div class="window window-right"></div>
+<div id="hud">
+  <span><span class="hud-key">W A S D</span> Move</span>
+  <div class="hud-sep"></div>
+  <span><span class="hud-key">Drag</span> Look</span>
+  <div class="hud-sep"></div>
+  <span><span class="hud-key">Click</span> Interact</span>
+</div>
 
-            <div class="light light-desk"></div>
-            <div class="light light-shelf"></div>
-            <div class="light light-tv"></div>
+<div id="zone-label"></div>
+<div id="crosshair"></div>
 
-            <div class="room-student">
-              <div class="student-shadow"></div>
-              <div class="student-body"></div>
-              <div class="student-head"></div>
-              <div class="student-book"></div>
-            </div>
+<div id="intro-text">
+  <div class="intro-line" id="il1">Welcome to your room.</div>
+  <div class="intro-line" id="il2" style="font-size:1.1rem;color:#d0a050;margin-top:12px;letter-spacing:.25em;">FAMILY ACADEMY</div>
+</div>
 
-            <div class="desk-zone">
-              <div class="desk-shadow"></div>
-              <div class="desk-surface"></div>
-              <div class="desk-drawer"></div>
-              <div class="desk-lamp"></div>
-              <div class="desk-laptop">
-                <div class="laptop-screen"></div>
-                <div class="laptop-base"></div>
-              </div>
-              <div class="desk-phone"></div>
-              <div class="desk-notes"></div>
-              <div class="desk-mug"></div>
-            </div>
+<div id="tooltip"></div>
 
-            <div class="bed-zone">
-              <div class="bed-frame"></div>
-              <div class="bed-mattress"></div>
-              <div class="bed-pillow"></div>
-              <div class="bed-blanket"></div>
-            </div>
-
-            <div class="poster poster-a">
-              <span>Learn with motion</span>
-            </div>
-            <div class="poster poster-b">
-              <span>Read. Practice. Repeat.</span>
-            </div>
-            <div class="poster poster-c">
-              <span>Family support matters.</span>
-            </div>
-
-            <div class="tv-station">
-              <div class="tv-stand"></div>
-              <div class="tv-screen">
-                <div class="tv-screen-glow"></div>
-                <div class="tv-screen-label">TV companion</div>
-                <div class="tv-screen-copy">Remote-first. Big-screen. Paired devices.</div>
-              </div>
-              <div class="remote"></div>
-            </div>
-
-            <div class="shelf-wall">
-              <div class="shelf-title">
-                <span>Library wall</span>
-                <small>Each book opens into a guide.</small>
-              </div>
-              <div id="book-shelf" class="book-shelf" aria-label="Family Academy book shelf"></div>
-            </div>
-
-            <div class="quote-strip">
-              <div class="quote-card">
-                <p>“Read first. Watch second. Practice until it sticks.”</p>
-              </div>
-              <div class="quote-card">
-                <p>“A good learning platform feels calm, clear, and reusable.”</p>
-              </div>
-            </div>
-
-            <div class="room-hotspots" aria-label="Room hotspots">
-              <button class="hotspot" data-scene-jump="desk" aria-label="Move to the desk">Desk</button>
-              <button class="hotspot" data-scene-jump="shelf" aria-label="Move to the shelf">Shelf</button>
-              <button class="hotspot" data-scene-jump="tv" aria-label="Move to the TV">TV</button>
-              <button class="hotspot" data-open-book="downloads" aria-label="Open downloads book">Downloads</button>
-              <button class="hotspot" data-scene-jump="support" aria-label="Move to the support wall">Support</button>
-            </div>
-          </div>
-        </div>
-
-        <aside class="narrative-panel" aria-live="polite">
-          <p class="eyebrow" id="scene-kicker">Opening frame</p>
-          <h2 id="scene-title">Family Academy opens like a story, not a form.</h2>
-          <p id="scene-copy">
-            The visitor steps into a warm student room. The desk, shelf, posters, and screen all hint at what the platform does before a single button is pressed.
-          </p>
-
-          <ul id="scene-bullets" class="scene-bullets"></ul>
-
-          <div class="scene-actions">
-            <button class="button ghost" type="button" data-step="prev">Back</button>
-            <button class="button primary" type="button" data-step="next">Move forward</button>
-            <button class="button ghost" type="button" data-open-book="downloads">Open downloads</button>
-          </div>
-
-          <p class="movement-hint">
-            Use the wheel, arrow keys, or swipe to move through the room. Click a book to open it.
-          </p>
-        </aside>
-      </div>
-
-      <nav class="compass" aria-label="Room chapters">
-        <button class="compass-chip active" type="button" data-scene-jump="arrival">Arrival</button>
-        <button class="compass-chip" type="button" data-scene-jump="desk">Desk</button>
-        <button class="compass-chip" type="button" data-scene-jump="shelf">Shelf</button>
-        <button class="compass-chip" type="button" data-scene-jump="tv">TV</button>
-        <button class="compass-chip" type="button" data-scene-jump="downloads">Downloads</button>
-        <button class="compass-chip" type="button" data-scene-jump="support">Support</button>
-      </nav>
-    </section>
-  </main>
-
-  <div class="book-modal" id="book-modal" aria-hidden="true">
-    <div class="book-modal-backdrop" data-close-modal></div>
-    <section class="book-modal-shell" role="dialog" aria-modal="true" aria-labelledby="book-title">
-      <button class="modal-close" type="button" data-close-modal aria-label="Close book">Close</button>
-      <div class="book-modal-cover">
-        <p class="book-modal-kicker" id="book-category">Library guide</p>
-        <h3 id="book-title">Title</h3>
-        <p id="book-summary">Summary</p>
-      </div>
-      <div class="book-modal-pages" id="book-pages"></div>
-      <div class="book-modal-rail">
-        <button class="button ghost" type="button" data-page-nav="prev">Previous page</button>
-        <button class="button primary" type="button" data-page-nav="next">Next page</button>
-      </div>
-    </section>
+<div id="overlay">
+  <div class="overlay-card" id="overlay-card">
+    <button class="overlay-close" id="overlay-close">✕</button>
+    <div class="overlay-title" id="ov-title"></div>
+    <div class="overlay-sub" id="ov-sub"></div>
+    <div class="overlay-body" id="ov-body"></div>
   </div>
+</div>
 
-  <script src="./config.js"></script>
-  <script src="./script.js" defer></script>
+<!-- Load config FIRST so downloads are available -->
+<script>
+// Inline fallback config (replaced by external downloads.config.js if loaded separately)
+window.FA_DOWNLOADS = window.FA_DOWNLOADS || {
+  client:{
+    windows_installer:{label:"Windows Installer (.exe)",icon:"🪟",url:"#"},
+    windows_zip:{label:"Windows Portable (.zip)",icon:"🪟",url:"#"},
+    macos_zip:{label:"macOS (.zip)",icon:"🍎",url:"#"},
+    linux_tar:{label:"Linux (.tar.gz)",icon:"🐧",url:"#"},
+    android_apk:{label:"Android APK",icon:"📱",url:"#"},
+    play_store_aab:{label:"Play Store (AAB)",icon:"▶️",url:"#"}
+  },
+  tv:{
+    android_tv_apk:{label:"Android TV APK",icon:"📺",url:"#"},
+    tv_aab:{label:"TV AAB (Play Store)",icon:"📺",url:"#"},
+    tv_linux:{label:"TV Linux Bundle",icon:"🐧",url:"#"},
+    tv_macos:{label:"TV macOS (.zip)",icon:"🍎",url:"#"}
+  }
+};
+</script>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ─────────────────────────────────────────
+//  BOOK DATA
+// ─────────────────────────────────────────
+const BOOKS = [
+  {
+    id:'register', spine:'Register', color:0xc06030,
+    title:'Getting Started — Register',
+    sub:'Create your Family Academy account',
+    body:`<p>Creating your account takes under a minute. Visit the app or web portal and tap <strong>Create Account</strong>.</p>
+<h3>Steps</h3><ul>
+<li>Enter your name, email, and a secure password.</li>
+<li>Choose your role: Student, Parent, or Teacher.</li>
+<li>Verify your email via the link we send you.</li>
+<li>Complete your profile — add a photo and grade/subject info.</li>
+</ul>
+<p>Parents can link students after registration. Teachers receive a class code to share with students.</p>`
+  },
+  {
+    id:'login', spine:'Login', color:0x8050a0,
+    title:'Login & Access',
+    sub:'Sign in to your account',
+    body:`<p>Use your registered email and password on any device. Family Academy keeps your session active securely.</p>
+<h3>Login Options</h3><ul>
+<li>Email & Password — the default method.</li>
+<li>Google Sign-In — one tap access.</li>
+<li>PIN Login — for quick access on shared devices.</li>
+</ul>
+<h3>Forgot Password?</h3>
+<p>Tap <em>Forgot Password</em> on the login screen. A reset link will be emailed to you within 30 seconds.</p>`
+  },
+  {
+    id:'device', spine:'Devices', color:0x3080a0,
+    title:'Device Switching',
+    sub:'Seamlessly continue across devices',
+    body:`<p>Start a lesson on your phone, continue on your laptop, finish on the TV — your progress syncs instantly.</p>
+<h3>Supported Devices</h3><ul>
+<li>Android phones and tablets</li>
+<li>Windows, macOS, Linux desktop apps</li>
+<li>Android TV and smart TV browsers</li>
+<li>Web browser (Chrome, Firefox, Safari)</li>
+</ul>
+<h3>Sync Behavior</h3>
+<p>Video position, notes, and quiz state sync within 5 seconds of any action. Offline work queues and uploads when back online.</p>`
+  },
+  {
+    id:'notes', spine:'Notes', color:0x30a060,
+    title:'Smart Notes',
+    sub:'Capture, organize, and review',
+    body:`<p>Notes are pinned to the exact second in a video, or to a specific question, so you always know the context.</p>
+<h3>Features</h3><ul>
+<li>Rich text: bold, italic, code blocks, formulas.</li>
+<li>Timestamp links — click a note to jump to that video moment.</li>
+<li>Tag and search all notes by topic or subject.</li>
+<li>Export notes as PDF or share with a teacher.</li>
+<li>AI-powered note summary (beta).</li>
+</ul>`
+  },
+  {
+    id:'video', spine:'Videos', color:0xa03030,
+    title:'Video Playback',
+    sub:'Lessons, lectures, and live sessions',
+    body:`<p>HD video streaming with adaptive quality based on your connection. No buffering interruptions.</p>
+<h3>Playback Features</h3><ul>
+<li>Speed control: 0.5× to 2×.</li>
+<li>Auto-generated captions with highlight sync.</li>
+<li>Picture-in-picture for multitasking.</li>
+<li>Bookmarks and chapter navigation.</li>
+<li>Offline download for premium subscribers.</li>
+</ul>
+<p>On TV devices, use your remote to pause, rewind 10s, or jump to chapters.</p>`
+  },
+  {
+    id:'practice', spine:'Practice', color:0xd07020,
+    title:'Practice Questions',
+    sub:'Sharpen your skills daily',
+    body:`<p>Thousands of questions across subjects, auto-graded with detailed explanations.</p>
+<h3>Question Types</h3><ul>
+<li>Multiple choice with instant feedback.</li>
+<li>Fill-in-the-blank with smart matching.</li>
+<li>Diagram labeling (science, geography).</li>
+<li>Short answer with AI rubric scoring.</li>
+</ul>
+<h3>Spaced Repetition</h3>
+<p>Our algorithm re-queues questions you got wrong at the optimal time to cement long-term memory.</p>`
+  },
+  {
+    id:'exams', spine:'Exams', color:0x205090,
+    title:'Exams & Assessments',
+    sub:'Timed tests, mock exams, and certificates',
+    body:`<p>Take official mock exams with real exam timing and conditions to build confidence before test day.</p>
+<h3>Exam Modes</h3><ul>
+<li>Practice Mode — no time limit, hints allowed.</li>
+<li>Exam Mode — strict timer, no hints, auto-submit.</li>
+<li>Review Mode — go through your answered exam with explanations.</li>
+</ul>
+<h3>Certificates</h3>
+<p>Earn digital certificates for completed courses and high-scoring exams. Share on LinkedIn or print.</p>`
+  },
+  {
+    id:'progress', spine:'Progress', color:0x60a030,
+    title:'Progress Tracking',
+    sub:'Know exactly where you stand',
+    body:`<p>Visual dashboards show your mastery level per topic, time spent, and improvement trajectory.</p>
+<h3>What We Track</h3><ul>
+<li>Lesson completion percentage by chapter.</li>
+<li>Average quiz and exam scores.</li>
+<li>Time-on-task per subject per week.</li>
+<li>Weak topics flagged for extra practice.</li>
+</ul>
+<p>Parents and teachers see a summarized view. Students see the full detail dashboard.</p>`
+  },
+  {
+    id:'streaks', spine:'Streaks', color:0xe05010,
+    title:'Streaks & Reports',
+    sub:'Stay motivated, track your fire',
+    body:`<p>Daily streaks reward consistency. Miss a day and your streak resets — but every day you study rebuilds it.</p>
+<h3>Streak Features</h3><ul>
+<li>Daily study goal (customizable: 15 / 30 / 60 min).</li>
+<li>Streak shields — earn one to protect a streak for 1 missed day.</li>
+<li>Weekly leaderboard with classmates.</li>
+<li>Monthly progress report emailed to parents.</li>
+</ul>`
+  },
+  {
+    id:'profile', spine:'Profile', color:0x7050a0,
+    title:'Profile Settings',
+    sub:'Personalize your learning identity',
+    body:`<p>Your profile is your learning identity across Family Academy.</p>
+<h3>Settings Available</h3><ul>
+<li>Display name, avatar, and bio.</li>
+<li>Grade level and subjects of interest.</li>
+<li>Notification preferences (email, push, SMS).</li>
+<li>Language and region settings.</li>
+<li>Dark/light/high-contrast theme.</li>
+<li>Accessibility preferences (font size, contrast, captions).</li>
+</ul>`
+  },
+  {
+    id:'tv', spine:'TV', color:0x2060a0,
+    title:'TV Connection',
+    sub:'Learn on the big screen',
+    body:`<p>Install the Family Academy TV app and your entire course library appears on your television.</p>
+<h3>Setup Steps</h3><ul>
+<li>Download the TV APK from this page.</li>
+<li>Install on your Android TV or compatible smart TV.</li>
+<li>Log in with your existing account — everything syncs.</li>
+<li>Use your phone as a remote via the companion app.</li>
+</ul>
+<h3>TV Features</h3><ul>
+<li>Full-screen HD lesson playback.</li>
+<li>Family viewing mode — kids can't leave approved content.</li>
+<li>Remote-friendly navigation (D-pad, back button).</li>
+</ul>`
+  },
+  {
+    id:'parent', spine:'Parents', color:0xa06020,
+    title:'Parent Linking',
+    sub:'Stay connected to your child\'s learning',
+    body:`<p>Parents can monitor, guide, and celebrate their child's progress from a separate parent dashboard.</p>
+<h3>How to Link</h3><ul>
+<li>Student goes to <em>Profile → Share Code</em> and generates a 6-digit code.</li>
+<li>Parent enters the code under <em>Add Child</em> in their parent account.</li>
+<li>Instant connection — parent sees the child's dashboard.</li>
+</ul>
+<h3>Parent Controls</h3><ul>
+<li>Set daily screen time limits.</li>
+<li>Approve or restrict specific courses.</li>
+<li>Receive weekly summary reports by email.</li>
+</ul>`
+  },
+  {
+    id:'support', spine:'Support', color:0x209060,
+    title:'Support & Help',
+    sub:'We\'re always here for you',
+    body:`<p>Reach our support team any time. We aim to respond within 2 hours during business days.</p>
+<h3>Help Channels</h3><ul>
+<li>In-app chat — fastest response.</li>
+<li>Email: support@familyacademy.app</li>
+<li>Help Center: help.familyacademy.app (searchable)</li>
+<li>Community forum for peer help.</li>
+</ul>
+<h3>Common Issues</h3><ul>
+<li>Video won't load → Check your connection or switch quality.</li>
+<li>Login issues → Use Forgot Password.</li>
+<li>Sync delay → Force-close and reopen the app.</li>
+</ul>`
+  },
+  {
+    id:'payment', spine:'Billing', color:0xc04040,
+    title:'Payment & Billing',
+    sub:'Flexible plans for every family',
+    body:`<p>Family Academy offers monthly and annual plans. Annual saves 40%.</p>
+<h3>Plans</h3><ul>
+<li><strong>Free</strong> — 3 courses, no exams, basic progress.</li>
+<li><strong>Student</strong> — All courses, exams, offline, certificates.</li>
+<li><strong>Family</strong> — Up to 4 students, parent dashboard, TV app.</li>
+<li><strong>School</strong> — Bulk licensing, teacher tools, custom reports.</li>
+</ul>
+<h3>Payment Methods</h3>
+<p>Visa, Mastercard, M-Pesa, Telebirr, PayPal, bank transfer for institutions.</p>
+<h3>Billing Issues</h3>
+<p>Contact billing@familyacademy.app — we resolve billing issues within 24 hours.</p>`
+  },
+  {
+    id:'access', spine:'Access', color:0x508060,
+    title:'Accessibility & Controls',
+    sub:'Learning for everyone',
+    body:`<p>Family Academy is designed to be usable by everyone, including students with disabilities.</p>
+<h3>Accessibility Features</h3><ul>
+<li>Screen reader support (NVDA, VoiceOver, TalkBack).</li>
+<li>Adjustable font sizes (small to 2×).</li>
+<li>High-contrast and colorblind-friendly modes.</li>
+<li>Closed captions on all video content.</li>
+<li>Keyboard-only navigation on the web.</li>
+<li>Audio descriptions for visual content.</li>
+</ul>
+<p>To enable: <em>Profile → Accessibility Settings</em>.</p>`
+  }
+];
+
+// ─────────────────────────────────────────
+//  THREE.JS SCENE SETUP
+// ─────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+renderer.outputEncoding = THREE.sRGBEncoding;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x1a0f07);
+scene.fog = new THREE.Fog(0x1a0f07, 12, 30);
+
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.05, 60);
+camera.position.set(0, 1.65, 5.5);
+camera.lookAt(0, 1.5, 0);
+
+// ─────────────────────────────────────────
+//  TEXTURE HELPERS
+// ─────────────────────────────────────────
+function makeCanvas(w,h,fn){
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  const ctx=c.getContext('2d'); fn(ctx,c); return c;
+}
+function canvasTex(w,h,fn){
+  const t=new THREE.CanvasTexture(makeCanvas(w,h,fn));
+  t.encoding=THREE.sRGBEncoding; return t;
+}
+
+// Wood texture
+const woodTex = canvasTex(256,256,(ctx)=>{
+  const g=ctx.createLinearGradient(0,0,256,256);
+  g.addColorStop(0,'#7a4a20'); g.addColorStop(.4,'#8b5530'); g.addColorStop(1,'#6a3e18');
+  ctx.fillStyle=g; ctx.fillRect(0,0,256,256);
+  ctx.strokeStyle='rgba(50,25,8,.3)';
+  for(let i=0;i<20;i++){ctx.lineWidth=Math.random()*2;ctx.beginPath();ctx.moveTo(0,i*14+Math.random()*6);ctx.lineTo(256,i*14+Math.random()*10);ctx.stroke();}
+});
+woodTex.wrapS=woodTex.wrapT=THREE.RepeatWrapping; woodTex.repeat.set(2,2);
+
+// Floor wood (darker)
+const floorTex = canvasTex(512,512,(ctx)=>{
+  ctx.fillStyle='#4a2e10'; ctx.fillRect(0,0,512,512);
+  for(let i=0;i<8;i++){
+    const y=i*64; ctx.fillStyle=i%2?'#3e2608':'#46290e';
+    ctx.fillRect(0,y,512,64);
+  }
+  ctx.strokeStyle='rgba(20,10,2,.5)';
+  for(let i=0;i<30;i++){ctx.lineWidth=.5+Math.random();ctx.beginPath();ctx.moveTo(0,Math.random()*512);ctx.lineTo(512,Math.random()*512);ctx.stroke();}
+});
+floorTex.wrapS=floorTex.wrapT=THREE.RepeatWrapping; floorTex.repeat.set(4,4);
+
+// Wall plaster
+const wallTex = canvasTex(512,512,(ctx)=>{
+  ctx.fillStyle='#c8a878'; ctx.fillRect(0,0,512,512);
+  for(let i=0;i<2000;i++){
+    const x=Math.random()*512,y=Math.random()*512,r=Math.random()*2;
+    ctx.fillStyle=`rgba(${Math.random()>0.5?180:220},${Math.random()>0.5?140:170},${Math.random()>0.5?90:110},.07)`;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
+  }
+});
+wallTex.wrapS=wallTex.wrapT=THREE.RepeatWrapping; wallTex.repeat.set(3,2);
+
+// Ceiling
+const ceilTex = canvasTex(256,256,(ctx)=>{
+  ctx.fillStyle='#e8dcc8'; ctx.fillRect(0,0,256,256);
+  for(let i=0;i<500;i++){
+    ctx.fillStyle='rgba(180,160,120,.04)'; const x=Math.random()*256,y=Math.random()*256;
+    ctx.fillRect(x,y,Math.random()*3,Math.random()*3);
+  }
+});
+ceilTex.wrapS=ceilTex.wrapT=THREE.RepeatWrapping; ceilTex.repeat.set(2,2);
+
+// Book spine texture factory
+function makeBookSpineTex(title, color){
+  return canvasTex(64,256,(ctx)=>{
+    const r=(color>>16)&255, g=(color>>8)&255, b=color&255;
+    ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fillRect(0,0,64,256);
+    // darker edge
+    const grd=ctx.createLinearGradient(0,0,64,0);
+    grd.addColorStop(0,'rgba(0,0,0,.35)'); grd.addColorStop(.3,'rgba(0,0,0,.05)');
+    grd.addColorStop(1,'rgba(0,0,0,.2)'); ctx.fillStyle=grd; ctx.fillRect(0,0,64,256);
+    // gold band
+    ctx.fillStyle='rgba(240,200,80,.35)'; ctx.fillRect(0,8,64,6); ctx.fillRect(0,242,64,6);
+    // title text rotated
+    ctx.save(); ctx.translate(32,128); ctx.rotate(-Math.PI/2);
+    ctx.fillStyle='rgba(255,240,200,.9)'; ctx.font='bold 13px Georgia,serif';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(title.toUpperCase(),0,0); ctx.restore();
+  });
+}
+
+// ─────────────────────────────────────────
+//  GEOMETRY HELPERS
+// ─────────────────────────────────────────
+function box(w,h,d,mat,rx,ry,rz){
+  const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
+  if(rx!==undefined){m.rotation.set(rx,ry,rz);}
+  return m;
+}
+function addShadow(mesh){mesh.castShadow=true;mesh.receiveShadow=true;return mesh;}
+
+// ─────────────────────────────────────────
+//  MATERIALS
+// ─────────────────────────────────────────
+const matFloor   = new THREE.MeshStandardMaterial({map:floorTex,roughness:.85,metalness:.05});
+const matWall    = new THREE.MeshStandardMaterial({map:wallTex,roughness:.9,metalness:.0});
+const matCeil    = new THREE.MeshStandardMaterial({map:ceilTex,roughness:.95,metalness:.0});
+const matWood    = new THREE.MeshStandardMaterial({map:woodTex,roughness:.7,metalness:.1});
+const matDarkWood= new THREE.MeshStandardMaterial({color:0x3a2010,roughness:.8,metalness:.1});
+const matWhite   = new THREE.MeshStandardMaterial({color:0xfff8f0,roughness:.9});
+const matMetal   = new THREE.MeshStandardMaterial({color:0x888070,roughness:.3,metalness:.8});
+const matBlack   = new THREE.MeshStandardMaterial({color:0x151010,roughness:.8});
+const matLeather = new THREE.MeshStandardMaterial({color:0x4a2e18,roughness:.9});
+const matPillow  = new THREE.MeshStandardMaterial({color:0xd4b896,roughness:.95});
+const matBlanket = new THREE.MeshStandardMaterial({color:0x8a6040,roughness:.98});
+const matScreen  = new THREE.MeshStandardMaterial({color:0x050302,roughness:.1,metalness:.2,emissive:0x050302,emissiveIntensity:.3});
+
+// ─────────────────────────────────────────
+//  ROOM BOX  (12 wide, 8 tall, 14 deep)
+// ─────────────────────────────────────────
+const RW=12, RH=3.6, RD=14;
+
+// Floor
+const floor=addShadow(box(RW,0.08,RD,matFloor));
+floor.position.set(0,0,0); scene.add(floor);
+
+// Ceiling
+const ceil=box(RW,0.06,RD,matCeil);
+ceil.position.set(0,RH,0); scene.add(ceil);
+
+// Back wall
+const wallB=addShadow(box(RW,RH,0.1,matWall));
+wallB.position.set(0,RH/2,-RD/2); scene.add(wallB);
+
+// Front wall (behind camera, thin)
+const wallF=box(RW,RH,0.1,matWall);
+wallF.position.set(0,RH/2,RD/2); scene.add(wallF);
+
+// Left wall
+const wallL=addShadow(box(0.1,RH,RD,matWall));
+wallL.position.set(-RW/2,RH/2,0); scene.add(wallL);
+
+// Right wall
+const wallR=addShadow(box(0.1,RH,RD,matWall));
+wallR.position.set(RW/2,RH/2,0); scene.add(wallR);
+
+// ─────────────────────────────────────────
+//  SKIRTING BOARDS
+// ─────────────────────────────────────────
+const skirtMat=new THREE.MeshStandardMaterial({color:0xd8c8a8,roughness:.9});
+[[RW,0.1,0.06,0,0.05,0],[RW,0.1,0.06,0,0.05,0]].forEach(()=>{});
+// left/right along Z
+for(const x of [-RW/2+.06, RW/2-.06]){
+  const sk=box(0.06,0.14,RD,skirtMat); sk.position.set(x,.07,0); scene.add(sk);
+}
+// back/front along X
+for(const z of [-RD/2+.06, RD/2-.06]){
+  const sk=box(RW,0.14,0.06,skirtMat); sk.position.set(0,.07,z); scene.add(sk);
+}
+
+// ─────────────────────────────────────────
+//  CEILING LIGHT (plafond)
+// ─────────────────────────────────────────
+const plafond=box(1.2,.04,1.2,new THREE.MeshStandardMaterial({color:0xfff8e8,emissive:0xfff4d0,emissiveIntensity:1.5,roughness:.5}));
+plafond.position.set(0,RH-.05,0); scene.add(plafond);
+
+// ─────────────────────────────────────────
+//  LIGHTS
+// ─────────────────────────────────────────
+const ambient = new THREE.AmbientLight(0x8060401, .45);
+scene.add(ambient);
+
+const mainLight = new THREE.PointLight(0xfff0d0, 2.2, 20);
+mainLight.position.set(0, RH-.2, 0);
+mainLight.castShadow=true; mainLight.shadow.radius=8;
+scene.add(mainLight);
+
+// Desk lamp light
+const deskLight = new THREE.PointLight(0xffdc80, 1.6, 5);
+deskLight.position.set(-1.2, 1.8, -2.5);
+scene.add(deskLight);
+
+// TV glow
+const tvGlow = new THREE.PointLight(0x4080ff, .6, 4);
+tvGlow.position.set(4.5, 1.8, -5.5);
+scene.add(tvGlow);
+
+// Window light (right wall)
+const winLight = new THREE.DirectionalLight(0xfff8e8, .8);
+winLight.position.set(8,3,0); winLight.target.position.set(0,1,0);
+scene.add(winLight); scene.add(winLight.target);
+
+// ─────────────────────────────────────────
+//  WINDOW (right wall)
+// ─────────────────────────────────────────
+const windowGlow = new THREE.MeshStandardMaterial({
+  color:0x8ab4d8, emissive:0x6090c0, emissiveIntensity:.9, transparent:true, opacity:.7, roughness:.1
+});
+const winFrame = box(2.4,1.8,0.12, new THREE.MeshStandardMaterial({color:0xd8c8a8,roughness:.85}));
+winFrame.position.set(RW/2-.06, 2.2, 2); scene.add(winFrame);
+const winPane = box(2,1.4,0.04, windowGlow);
+winPane.position.set(RW/2-.06, 2.2, 2); scene.add(winPane);
+// curtains
+for(const dz of [-.85,.85]){
+  const curt=box(.5,2,.04,new THREE.MeshStandardMaterial({color:0x9a7050,roughness:.98}));
+  curt.position.set(RW/2-.05,2.1,2+dz*1.3); scene.add(curt);
+}
+
+// ─────────────────────────────────────────
+//  DESK AREA  (center, slightly left)
+// ─────────────────────────────────────────
+const deskGroup = new THREE.Group();
+// Desktop surface
+const deskTop = addShadow(box(2.4,0.06,1.1,matWood));
+deskTop.position.set(0,.78,.5);
+// Legs
+for(const [x,z] of [[-1.1,.1],[1.1,.1],[-1.1,.95],[1.1,.95]]){
+  const leg=addShadow(box(.06,.78,.06,matDarkWood));
+  leg.position.set(x,.39,z); deskGroup.add(leg);
+}
+deskGroup.add(deskTop);
+deskGroup.position.set(-1.2, 0, -2.4);
+scene.add(deskGroup);
+
+// ─────────────────────────────────────────
+//  DESK LAMP
+// ─────────────────────────────────────────
+const lampGroup=new THREE.Group();
+const lampBase=addShadow(box(.2,.04,.2,matMetal)); lampBase.position.y=.02;
+const lampPole=addShadow(box(.025,.55,.025,matMetal)); lampPole.position.y=.29;
+// arm
+const lampArm=addShadow(box(.3,.02,.02,matMetal)); lampArm.position.set(.15,.56,0); lampArm.rotation.z=-.3;
+const lampShade=addShadow(box(.2,.14,.2,new THREE.MeshStandardMaterial({color:0xd08030,roughness:.7,metalness:.1})));
+lampShade.position.set(.34,.46,0);
+lampGroup.add(lampBase,lampPole,lampArm,lampShade);
+lampGroup.position.set(-2.2,.82,-2.4);
+scene.add(lampGroup);
+
+// ─────────────────────────────────────────
+//  LAPTOP
+// ─────────────────────────────────────────
+const laptopGroup=new THREE.Group();
+const laptopBase=addShadow(box(.56,.02,.38,matMetal));
+const laptopLid=addShadow(box(.56,.02,.36,matMetal)); laptopLid.position.set(0,.22,.18); laptopLid.rotation.x=-.9;
+const laptopScreen=addShadow(box(.5,.01,.32,matScreen)); laptopScreen.position.set(0,.22,.18); laptopScreen.rotation.x=-.9;
+// Screen glow texture
+const screenTex=canvasTex(512,320,(ctx)=>{
+  ctx.fillStyle='#0a0812'; ctx.fillRect(0,0,512,320);
+  // FA logo area
+  ctx.fillStyle='rgba(200,150,50,.15)'; ctx.fillRect(0,0,512,50);
+  ctx.fillStyle='#f0c060'; ctx.font='bold 28px Georgia,serif'; ctx.textAlign='center';
+  ctx.fillText('Family Academy',256,34);
+  ctx.fillStyle='rgba(255,255,255,.05)'; ctx.fillRect(20,60,472,20); ctx.fillRect(20,90,330,20);
+  ctx.fillRect(20,120,390,20); ctx.fillRect(20,150,280,20);
+  // progress bar
+  ctx.fillStyle='rgba(200,150,50,.3)'; ctx.fillRect(20,200,472,8);
+  ctx.fillStyle='rgba(200,150,50,.9)'; ctx.fillRect(20,200,300,8);
+  ctx.fillStyle='#c09050'; ctx.font='12px Georgia'; ctx.textAlign='left';
+  ctx.fillText('Mathematics — Chapter 4: Algebra',20,240);
+  ctx.fillStyle='rgba(255,255,255,.2)'; ctx.fillText('63% complete',20,260);
+});
+const screenMat=new THREE.MeshStandardMaterial({map:screenTex,emissive:0x1a1428,emissiveIntensity:1.5,emissiveMap:screenTex});
+const screenPlane=new THREE.Mesh(new THREE.PlaneGeometry(.48,.30),screenMat);
+screenPlane.position.set(0,.025,.001); laptopLid.add(screenPlane);
+
+laptopGroup.add(laptopBase,laptopLid);
+laptopGroup.position.set(-1.1,.81,-2.4);
+scene.add(laptopGroup);
+
+// ─────────────────────────────────────────
+//  PHONE on desk
+// ─────────────────────────────────────────
+const phoneGroup=new THREE.Group();
+const phoneBody=addShadow(box(.09,.01,.18,matMetal));
+const phoneScreen=new THREE.Mesh(new THREE.PlaneGeometry(.07,.16), new THREE.MeshStandardMaterial({
+  color:0x0a0812,emissive:0x1a2060,emissiveIntensity:1,roughness:.05
+}));
+phoneScreen.position.y=.008; phoneGroup.add(phoneBody,phoneScreen);
+phoneGroup.position.set(-2.0,.83,-2.55); phoneGroup.rotation.y=.3;
+scene.add(phoneGroup);
+
+// Notebook on desk
+const notebookMat=new THREE.MeshStandardMaterial({color:0xf5eedd,roughness:.95});
+const notebook=addShadow(box(.34,.012,.24,notebookMat));
+notebook.position.set(-1.5,.82,-2.6);
+const notebookCover=addShadow(box(.34,.003,.24,new THREE.MeshStandardMaterial({color:0x2a3a6a,roughness:.8})));
+notebookCover.position.set(-1.5,.832,-2.6);
+scene.add(notebook,notebookCover);
+
+// Pen
+const pen=addShadow(box(.01,.01,.18,new THREE.MeshStandardMaterial({color:0x202080,roughness:.5})));
+pen.position.set(-1.28,.825,-2.6); scene.add(pen);
+
+// ─────────────────────────────────────────
+//  DESK CHAIR
+// ─────────────────────────────────────────
+const chairGroup=new THREE.Group();
+const seat=addShadow(box(.55,.06,.52,matLeather)); seat.position.y=.55;
+const back=addShadow(box(.55,.6,.05,matLeather)); back.position.set(0,.93,.24);
+const headrest=addShadow(box(.4,.2,.05,matLeather)); headrest.position.set(0,1.26,.24);
+for(const [x,z] of [[-0.22,-.22],[0.22,-.22],[-0.22,.22],[0.22,.22]]){
+  const l=addShadow(box(.04,.55,.04,matMetal)); l.position.set(x,.27,z); chairGroup.add(l);
+}
+const base=addShadow(box(.5,.03,.5,matMetal)); base.position.y=.03;
+chairGroup.add(seat,back,headrest,base);
+chairGroup.position.set(-1.2,0,-1.5); chairGroup.rotation.y=.15;
+scene.add(chairGroup);
+
+// ─────────────────────────────────────────
+//  BED  (right side)
+// ─────────────────────────────────────────
+const bedGroup=new THREE.Group();
+const bedFrame=addShadow(box(1.4,.26,2.4,matWood)); bedFrame.position.y=.13;
+const mattress=addShadow(box(1.3,.2,2.3,new THREE.MeshStandardMaterial({color:0xfff8f0,roughness:.98}))); mattress.position.y=.36;
+const pillow1=addShadow(box(.54,.1,.4,matPillow)); pillow1.position.set(-.22,.47,-.86);
+const pillow2=addShadow(box(.54,.1,.4,matPillow)); pillow2.position.set(.22,.47,-.86);
+const blanket=addShadow(box(1.28,.07,1.5,matBlanket)); blanket.position.set(0,.44,.4);
+const headboard=addShadow(box(1.4,.7,.08,matWood)); headboard.position.set(0,.6,-1.1);
+bedGroup.add(bedFrame,mattress,pillow1,pillow2,blanket,headboard);
+bedGroup.position.set(3.8,0,-4); scene.add(bedGroup);
+
+// Bedside table
+const bsTable=addShadow(box(.5,.65,.4,matWood)); bsTable.position.set(2.9,.325,-5.1); scene.add(bsTable);
+// Small lamp on bedside
+const bsLamp=addShadow(box(.18,.04,.18,matMetal)); bsLamp.position.set(2.9,.68,-5.1); scene.add(bsLamp);
+const bsLampLight=new THREE.PointLight(0xffc060,.8,3); bsLampLight.position.set(2.9,.9,-5.1); scene.add(bsLampLight);
+
+// ─────────────────────────────────────────
+//  BOOKSHELF  (back-left wall)
+// ─────────────────────────────────────────
+const shelfGroup=new THREE.Group();
+// Frame
+const shelfBack=addShadow(box(3.6,.04,2.6,matDarkWood)); shelfBack.position.set(0,-.02,.02);
+const shelfLeft=addShadow(box(.04,2.6,.3,matDarkWood)); shelfLeft.position.set(-1.78,.02,0);
+const shelfRight=addShadow(box(.04,2.6,.3,matDarkWood)); shelfRight.position.set(1.78,.02,0);
+const shelfTop=addShadow(box(3.6,.04,.3,matDarkWood)); shelfTop.position.set(0,1.3,0);
+// Shelves
+for(const y of [.36,.74,1.12]){
+  const s=addShadow(box(3.52,.04,.3,matWood)); s.position.set(0,y,0); shelfGroup.add(s);
+}
+shelfGroup.add(shelfBack,shelfLeft,shelfRight,shelfTop);
+
+// ─────────── PLACE BOOKS ───────────────
+const hotspots=[];
+const bookMeshes=[];
+
+const shelfRows=[
+  {y:.56,books:BOOKS.slice(0,5)},
+  {y:.94,books:BOOKS.slice(5,10)},
+  {y:1.32,books:BOOKS.slice(10,15)},
+];
+
+shelfRows.forEach(row=>{
+  const total=row.books.length;
+  const startX = -(total-1)*0.33;
+  row.books.forEach((bk,i)=>{
+    const bGroup=new THREE.Group();
+    const spineTex=makeBookSpineTex(bk.spine,bk.color);
+    const r=(bk.color>>16)&255, g=(bk.color>>8)&255, b=bk.color&255;
+    const topMat=new THREE.MeshStandardMaterial({color:new THREE.Color(r/255,g/255,b/255).multiplyScalar(.7),roughness:.9});
+    const spineMat=new THREE.MeshStandardMaterial({map:spineTex,roughness:.8});
+    const mats=[topMat,topMat,topMat,topMat,spineMat,topMat];
+    const bookMesh=addShadow(new THREE.Mesh(new THREE.BoxGeometry(.18,.28,.22),mats));
+    bookMesh.userData={bookId:bk.id,label:'📖 '+bk.spine,isBook:true};
+    bGroup.add(bookMesh);
+    bGroup.position.set(startX+i*.33, row.y, 0);
+    shelfGroup.add(bGroup);
+    bookMeshes.push(bookMesh);
+    hotspots.push({mesh:bookMesh,label:'📖 '+bk.title});
+  });
+});
+
+shelfGroup.position.set(-3.5,.04,-6.4);
+shelfGroup.rotation.y=.0;
+scene.add(shelfGroup);
+
+// ─────────────────────────────────────────
+//  TV WALL  (right back)
+// ─────────────────────────────────────────
+const tvGroup=new THREE.Group();
+// TV stand
+const tvStand=addShadow(box(1.8,.04,0.5,matDarkWood)); tvStand.position.y=.02;
+const tvStandMid=addShadow(box(.08,.7,.08,matMetal)); tvStandMid.position.y=.38;
+// TV body
+const tvBody=addShadow(box(2.2,.02,1.28,matBlack));
+tvBody.position.set(0,.74,.0);
+tvBody.rotation.x=Math.PI/2;
+// TV bezel
+const tvBezel=addShadow(box(2.24,.06,1.32,matBlack));
+tvBezel.position.set(0,.75,.0);
+tvBezel.rotation.x=Math.PI/2;
+
+// TV screen content
+const tvScreenTex=canvasTex(512,288,(ctx)=>{
+  ctx.fillStyle='#060410'; ctx.fillRect(0,0,512,288);
+  // animated content simulation
+  ctx.fillStyle='rgba(100,160,255,.08)'; ctx.fillRect(0,0,512,50);
+  ctx.fillStyle='#8ab4ff'; ctx.font='bold 22px Georgia,serif'; ctx.textAlign='center';
+  ctx.fillText('Family Academy TV',256,30);
+  ctx.fillStyle='rgba(255,255,255,.06)';
+  for(let i=0;i<5;i++) ctx.fillRect(40,65+i*38,432,26);
+  ctx.fillStyle='rgba(100,160,255,.3)'; ctx.fillRect(40,65,200,26);
+  ctx.fillStyle='#fff'; ctx.font='13px sans-serif'; ctx.textAlign='left';
+  ctx.fillText('▶  Mathematics — Algebra Basics',48,83);
+  ctx.fillStyle='rgba(255,255,255,.5)';
+  ctx.fillText('Physics — Newton\'s Laws',48,121);
+  ctx.fillText('History — Ancient Civilizations',48,159);
+  ctx.fillText('Biology — Cell Structure',48,197);
+});
+const tvScreenMat=new THREE.MeshStandardMaterial({
+  map:tvScreenTex,emissive:0x0a0820,emissiveIntensity:2,emissiveMap:tvScreenTex,roughness:.05
+});
+const tvScreen=new THREE.Mesh(new THREE.PlaneGeometry(2.0,1.12),tvScreenMat);
+tvScreen.position.set(0,.74,-.02); tvScreen.rotation.x=Math.PI/2;
+tvGroup.add(tvStand,tvStandMid,tvBody,tvBezel,tvScreen);
+tvGroup.position.set(4.5,.5,-5.8); tvGroup.rotation.y=-Math.PI/2;
+scene.add(tvGroup);
+
+// TV label hotspot (invisible mesh)
+const tvHotMesh=new THREE.Mesh(new THREE.BoxGeometry(2,1.2,.1),new THREE.MeshBasicMaterial({visible:false}));
+tvHotMesh.position.set(4.45,1.24,-5.8); tvHotMesh.rotation.y=-Math.PI/2;
+tvHotMesh.userData={bookId:'tv',label:'📺 TV Connection',isBook:true};
+scene.add(tvHotMesh); hotspots.push({mesh:tvHotMesh,label:'📺 TV Connection'});
+
+// ─────────────────────────────────────────
+//  DOWNLOAD CABINET  (special chest)
+// ─────────────────────────────────────────
+const cabinetGroup=new THREE.Group();
+const cabBody=addShadow(box(.9,1.0,.5,matWood));
+cabBody.position.y=.5;
+const cabTop=addShadow(box(.92,.04,.52,matDarkWood)); cabTop.position.y=1.02;
+// Drawers
+for(const y of [.22,.55,.88]){
+  const drawer=addShadow(box(.8,.26,.44,matWood));
+  drawer.position.set(0,y,.03);
+  const knob=addShadow(box(.06,.06,.06,matMetal)); knob.position.set(0,y,.26);
+  cabinetGroup.add(drawer,knob);
+}
+// Special glow panel on top
+const dlPanel=new THREE.Mesh(new THREE.PlaneGeometry(.7,.08), new THREE.MeshStandardMaterial({
+  color:0xffdc60,emissive:0xffaa00,emissiveIntensity:1.5
+}));
+dlPanel.position.set(0,1.06,.01); dlPanel.rotation.x=-.1;
+// Label
+const dlLabelTex=canvasTex(256,64,(ctx)=>{
+  ctx.fillStyle='transparent'; ctx.clearRect(0,0,256,64);
+  ctx.fillStyle='rgba(255,200,40,.9)'; ctx.font='bold 16px Georgia,serif'; ctx.textAlign='center';
+  ctx.fillText('⬇ DOWNLOADS',128,38);
+});
+const dlLabelMesh=new THREE.Mesh(new THREE.PlaneGeometry(.7,.18),new THREE.MeshStandardMaterial({
+  map:dlLabelTex,transparent:true,emissive:0xffffff,emissiveIntensity:.5,emissiveMap:dlLabelTex
+}));
+dlLabelMesh.position.set(0,1.18,.26);
+cabinetGroup.add(cabBody,cabTop,dlPanel,dlLabelMesh);
+cabinetGroup.position.set(2.0,0,-6.5);
+scene.add(cabinetGroup);
+
+// Download hotspot
+const dlHotMesh=new THREE.Mesh(new THREE.BoxGeometry(.95,1.1,.55),new THREE.MeshBasicMaterial({visible:false}));
+dlHotMesh.position.set(2.0,.5,-6.5);
+dlHotMesh.userData={isDownload:true,label:'⬇ Downloads'};
+scene.add(dlHotMesh); hotspots.push({mesh:dlHotMesh,label:'⬇ Download Apps'});
+
+// ─────────────────────────────────────────
+//  POSTERS / QUOTES on walls
+// ─────────────────────────────────────────
+function makePoster(lines, w, h, bg, tx){
+  return canvasTex(w,h,(ctx)=>{
+    ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+    // border
+    ctx.strokeStyle='rgba(200,160,60,.4)'; ctx.lineWidth=4; ctx.strokeRect(8,8,w-16,h-16);
+    lines.forEach((l,i)=>{
+      ctx.font=l.font||'14px Georgia,serif'; ctx.fillStyle=l.color||tx;
+      ctx.textAlign='center'; ctx.fillText(l.text,w/2,l.y);
+    });
+  });
+}
+
+const posterData=[
+  {lines:[
+    {text:'KNOWLEDGE IS',y:52,font:'bold 24px Georgia,serif',color:'#f0c060'},
+    {text:'THE GREATEST',y:88,font:'bold 24px Georgia,serif',color:'#f0c060'},
+    {text:'TREASURE',y:124,font:'bold 24px Georgia,serif',color:'#f0c060'},
+    {text:'— Family Academy',y:164,font:'italic 14px Georgia,serif',color:'#a07040'},
+  ], pos:[-4.5,2.2,-5], rot:[0,Math.PI/2,0], w:256,h:192},
+  {lines:[
+    {text:'STUDY · GROW · ACHIEVE',y:44,font:'bold 18px Georgia,serif',color:'#c0d8ff'},
+    {text:'Every lesson is a step',y:80,font:'14px Georgia,serif',color:'#8090b0'},
+    {text:'towards your future.',y:104,font:'14px Georgia,serif',color:'#8090b0'},
+  ], pos:[-1.8,2.5,-6.9], rot:[0,0,0], w:256,h:128},
+  {lines:[
+    {text:'FOCUS.',y:70,font:'bold 40px Georgia,serif',color:'#e8d0a0'},
+    {text:'PRACTICE.',y:118,font:'bold 36px Georgia,serif',color:'#e8d0a0'},
+    {text:'PROGRESS.',y:162,font:'bold 36px Georgia,serif',color:'#c09040'},
+  ], pos:[1.5,2.4,-6.9], rot:[0,0,0], w:256,h:200},
+];
+posterData.forEach(p=>{
+  const tex=makePoster(p.lines,p.w,p.h,'#1a1008','#e0c080');
+  const mat=new THREE.MeshStandardMaterial({map:tex,roughness:.9,metalness:0});
+  const ratio=p.h/p.w; const mw=1.1, mh=mw*ratio;
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(mw,mh),mat);
+  m.position.set(...p.pos); m.rotation.set(...p.rot);
+  scene.add(m);
+  // frame
+  const fr=box(mw+.06,mh+.06,.02,new THREE.MeshStandardMaterial({color:0x7a5020,roughness:.7,metalness:.2}));
+  fr.position.set(...p.pos); fr.rotation.set(...p.rot);
+  fr.position.z+=.001; scene.add(fr);
+});
+
+// ─────────────────────────────────────────
+//  SMALL RUG
+// ─────────────────────────────────────────
+const rugTex=canvasTex(512,256,(ctx)=>{
+  ctx.fillStyle='#6a3c22'; ctx.fillRect(0,0,512,256);
+  // border
+  ctx.strokeStyle='rgba(200,150,60,.5)'; ctx.lineWidth=18;
+  ctx.strokeRect(9,9,494,238);
+  ctx.strokeStyle='rgba(200,150,60,.25)'; ctx.lineWidth=6;
+  ctx.strokeRect(20,20,472,216);
+  // center motif
+  ctx.strokeStyle='rgba(230,180,80,.3)'; ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(256,128,80,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.arc(256,128,50,0,Math.PI*2);ctx.stroke();
+});
+const rug=new THREE.Mesh(new THREE.PlaneGeometry(3,1.8),new THREE.MeshStandardMaterial({map:rugTex,roughness:.99}));
+rug.rotation.x=-Math.PI/2; rug.position.set(-1,.01,-2.4); scene.add(rug);
+
+// ─────────────────────────────────────────
+//  AMBIENT PARTICLES (dust motes)
+// ─────────────────────────────────────────
+const particleCount=180;
+const partPositions=new Float32Array(particleCount*3);
+for(let i=0;i<particleCount;i++){
+  partPositions[i*3]=( Math.random()-.5)*10;
+  partPositions[i*3+1]=Math.random()*3.2+.2;
+  partPositions[i*3+2]=(Math.random()-.5)*12;
+}
+const partGeo=new THREE.BufferGeometry(); partGeo.setAttribute('position',new THREE.BufferAttribute(partPositions,3));
+const partMat=new THREE.PointsMaterial({color:0xffe8a0,size:.015,transparent:true,opacity:.4});
+const particles=new THREE.Points(partGeo,partMat);
+scene.add(particles);
+
+// ─────────────────────────────────────────
+//  CAMERA / MOVEMENT SYSTEM
+// ─────────────────────────────────────────
+let targetPos=new THREE.Vector3(0,1.65,5.0);
+let currentPos=new THREE.Vector3(0,1.65,5.0);
+let yaw=Math.PI; // looking into room
+let pitch=-.05;
+let targetYaw=Math.PI;
+let targetPitch=-.05;
+
+const MOVE_SPEED=.055;
+const SMOOTH=.08;
+const YAW_SMOOTH=.1;
+
+const keys={};
+document.addEventListener('keydown',e=>{keys[e.code]=true;});
+document.addEventListener('keyup',e=>{keys[e.code]=false;});
+
+// Mouse drag
+let isDragging=false, lastX=0, lastY=0;
+canvas.addEventListener('mousedown',e=>{isDragging=true;lastX=e.clientX;lastY=e.clientY;});
+document.addEventListener('mouseup',()=>isDragging=false);
+document.addEventListener('mousemove',e=>{
+  if(!isDragging)return;
+  const dx=e.clientX-lastX, dy=e.clientY-lastY;
+  lastX=e.clientX; lastY=e.clientY;
+  targetYaw-=dx*.003;
+  targetPitch=Math.max(-.6,Math.min(.45,targetPitch-dy*.003));
+});
+
+// Touch
+let touchId=null, touchX=0, touchY=0;
+canvas.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){touchId=e.touches[0].identifier;touchX=e.touches[0].clientX;touchY=e.touches[0].clientY;}
+},{passive:true});
+canvas.addEventListener('touchmove',e=>{
+  for(const t of e.changedTouches){
+    if(t.identifier===touchId){
+      const dx=t.clientX-touchX, dy=t.clientY-touchY;
+      touchX=t.clientX;touchY=t.clientY;
+      targetYaw-=dx*.003;
+      targetPitch=Math.max(-.6,Math.min(.45,targetPitch-dy*.003));
+    }
+  }
+},{passive:true});
+canvas.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){if(t.identifier===touchId)touchId=null;}
+},{passive:true});
+
+// Room bounds
+const BOUNDS={xMin:-5.3,xMax:5.3,zMin:-6.8,zMax:6.0};
+
+function updateMovement(){
+  const dir=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));
+  const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+  let moved=false;
+  if(keys['KeyW']||keys['ArrowUp']){targetPos.addScaledVector(dir,-MOVE_SPEED);moved=true;}
+  if(keys['KeyS']||keys['ArrowDown']){targetPos.addScaledVector(dir,MOVE_SPEED);moved=true;}
+  if(keys['KeyA']||keys['ArrowLeft']){targetPos.addScaledVector(right,-MOVE_SPEED);moved=true;}
+  if(keys['KeyD']||keys['ArrowRight']){targetPos.addScaledVector(right,MOVE_SPEED);moved=true;}
+  targetPos.x=Math.max(BOUNDS.xMin,Math.min(BOUNDS.xMax,targetPos.x));
+  targetPos.z=Math.max(BOUNDS.zMin,Math.min(BOUNDS.zMax,targetPos.z));
+  targetPos.y=1.65;
+}
+
+// ─────────────────────────────────────────
+//  RAYCASTING / HOVER / CLICK
+// ─────────────────────────────────────────
+const raycaster=new THREE.Raycaster();
+const mouse=new THREE.Vector2();
+const tooltip=document.getElementById('tooltip');
+let hoveredMesh=null;
+
+function getHotMeshes(){return hotspots.map(h=>h.mesh).concat([tvHotMesh,dlHotMesh]);}
+
+canvas.addEventListener('mousemove',e=>{
+  mouse.x=(e.clientX/window.innerWidth)*2-1;
+  mouse.y=-(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const intersects=raycaster.intersectObjects(hotspots.map(h=>h.mesh),false);
+  if(intersects.length>0 && !isDragging){
+    const mesh=intersects[0].object;
+    hoveredMesh=mesh;
+    const lbl=mesh.userData.label||mesh.userData.bookId;
+    tooltip.textContent=lbl;
+    tooltip.style.left=e.clientX+'px';
+    tooltip.style.top=(e.clientY-40)+'px';
+    tooltip.classList.add('show');
+    canvas.style.cursor='pointer';
+  } else {
+    hoveredMesh=null;
+    tooltip.classList.remove('show');
+    canvas.style.cursor=isDragging?'grabbing':'grab';
+  }
+});
+
+canvas.addEventListener('click',e=>{
+  if(isDragging)return;
+  mouse.x=(e.clientX/window.innerWidth)*2-1;
+  mouse.y=-(e.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const intersects=raycaster.intersectObjects(hotspots.map(h=>h.mesh),false);
+  if(intersects.length>0){
+    const mesh=intersects[0].object;
+    if(mesh.userData.isBook) openBook(mesh.userData.bookId);
+    else if(mesh.userData.isDownload) openDownloads();
+  }
+});
+
+// touch tap
+let touchMoved=false;
+canvas.addEventListener('touchstart',()=>{touchMoved=false;},{passive:true});
+canvas.addEventListener('touchmove',()=>{touchMoved=true;},{passive:true});
+canvas.addEventListener('touchend',e=>{
+  if(touchMoved)return;
+  const t=e.changedTouches[0];
+  mouse.x=(t.clientX/window.innerWidth)*2-1;
+  mouse.y=-(t.clientY/window.innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const intersects=raycaster.intersectObjects(hotspots.map(h=>h.mesh),false);
+  if(intersects.length>0){
+    const mesh=intersects[0].object;
+    if(mesh.userData.isBook) openBook(mesh.userData.bookId);
+    else if(mesh.userData.isDownload) openDownloads();
+  }
+},{passive:true});
+
+// ─────────────────────────────────────────
+//  OVERLAY LOGIC
+// ─────────────────────────────────────────
+function openBook(id){
+  const bk=BOOKS.find(b=>b.id===id);
+  if(!bk)return;
+  document.getElementById('ov-title').textContent=bk.title;
+  document.getElementById('ov-sub').textContent=bk.sub;
+  document.getElementById('ov-body').innerHTML=bk.body;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function openDownloads(){
+  document.getElementById('ov-title').textContent='Download Family Academy';
+  document.getElementById('ov-sub').textContent='Install on any device';
+  const dl=window.FA_DOWNLOADS;
+  let html='<div class="dl-section-title">📱 Student Client Apps</div><div class="dl-grid">';
+  Object.values(dl.client).forEach(d=>{
+    html+=`<a href="${d.url}" class="dl-btn" target="_blank" rel="noopener"><span class="icon">${d.icon}</span>${d.label}</a>`;
+  });
+  html+='</div><div class="dl-section-title">📺 TV & Big Screen</div><div class="dl-grid">';
+  Object.values(dl.tv).forEach(d=>{
+    html+=`<a href="${d.url}" class="dl-btn" target="_blank" rel="noopener"><span class="icon">${d.icon}</span>${d.label}</a>`;
+  });
+  html+='</div>';
+  document.getElementById('ov-body').innerHTML=html;
+  document.getElementById('overlay').classList.add('show');
+}
+
+document.getElementById('overlay-close').addEventListener('click',()=>{
+  document.getElementById('overlay').classList.remove('show');
+});
+document.getElementById('overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('overlay')) document.getElementById('overlay').classList.remove('show');
+});
+
+// ─────────────────────────────────────────
+//  ZONE SYSTEM
+// ─────────────────────────────────────────
+const zones=[
+  {z:4.5,label:''},
+  {z:2.5,label:'Study Desk'},
+  {z:-2,label:'The Bookshelves'},
+  {z:-5,label:'TV Corner'},
+  {z:-6.5,label:'Downloads & Support'},
+];
+let currentZone='';
+const zoneEl=document.getElementById('zone-label');
+
+function updateZone(){
+  const z=currentPos.z;
+  let label='';
+  for(const zn of zones){if(z<zn.z){label=zn.label;}}
+  if(label!==currentZone){
+    currentZone=label;
+    zoneEl.classList.remove('show');
+    if(label){
+      setTimeout(()=>{zoneEl.textContent=label;zoneEl.classList.add('show');},300);
+      setTimeout(()=>zoneEl.classList.remove('show'),3000);
+    }
+  }
+}
+
+// ─────────────────────────────────────────
+//  INTRO CINEMATIC
+// ─────────────────────────────────────────
+let introPhase=0;
+const il1=document.getElementById('il1');
+const il2=document.getElementById('il2');
+
+// Camera intro animation: starts far back, moves in
+let introTime=0;
+const INTRO_DURATION=4.5;
+let introActive=true;
+const introStartZ=8;
+const introEndZ=5.0;
+
+function stepIntro(dt){
+  introTime+=dt;
+  const t=Math.min(introTime/INTRO_DURATION,1);
+  const ease=1-Math.pow(1-t,3);
+  if(introActive){
+    targetPos.z=introStartZ+(introEndZ-introStartZ)*ease;
+  }
+  // text phases
+  if(introTime>.4 && introPhase===0){introPhase=1;il1.classList.add('show');il2.classList.add('show');}
+  if(introTime>2.8 && introPhase===1){introPhase=2;il1.classList.add('hide');il2.classList.add('hide');}
+  if(introTime>INTRO_DURATION){
+    introActive=false;
+    document.getElementById('hud').classList.add('show');
+    document.getElementById('crosshair').classList.add('show');
+  }
+}
+
+// ─────────────────────────────────────────
+//  ANIMATE PARTICLES
+// ─────────────────────────────────────────
+function animateParticles(t){
+  const pos=partGeo.attributes.position.array;
+  for(let i=0;i<particleCount;i++){
+    pos[i*3+1]+=Math.sin(t*.3+i*.4)*.0004;
+    pos[i*3]+=Math.cos(t*.2+i*.3)*.0002;
+    if(pos[i*3+1]>3.4)pos[i*3+1]=.2;
+  }
+  partGeo.attributes.position.needsUpdate=true;
+}
+
+// ─────────────────────────────────────────
+//  ANIMATE LIGHTS (flicker / pulse)
+// ─────────────────────────────────────────
+function animateLights(t){
+  deskLight.intensity=1.5+Math.sin(t*1.3)*.12;
+  tvGlow.intensity=.55+Math.sin(t*.8)*.08;
+  bsLampLight.intensity=.75+Math.sin(t*1.7)*.1;
+  mainLight.intensity=2.1+Math.sin(t*.5)*.07;
+}
+
+// ─────────────────────────────────────────
+//  RESIZE
+// ─────────────────────────────────────────
+window.addEventListener('resize',()=>{
+  camera.aspect=window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth,window.innerHeight);
+});
+
+// ─────────────────────────────────────────
+//  MAIN LOOP
+// ─────────────────────────────────────────
+let lastTime=0;
+function render(time){
+  requestAnimationFrame(render);
+  const dt=(time-lastTime)/1000; lastTime=time;
+  const t=time*.001;
+
+  if(introActive) stepIntro(dt);
+  else updateMovement();
+
+  // Smooth camera
+  currentPos.lerp(targetPos,SMOOTH);
+  yaw+=(targetYaw-yaw)*YAW_SMOOTH;
+  pitch+=(targetPitch-pitch)*YAW_SMOOTH;
+
+  camera.position.copy(currentPos);
+  // head bob
+  if(!introActive){
+    const moving=keys['KeyW']||keys['KeyS']||keys['KeyA']||keys['KeyD']||keys['ArrowUp']||keys['ArrowDown']||keys['ArrowLeft']||keys['ArrowRight'];
+    camera.position.y=currentPos.y+Math.sin(t*4)*(moving?.015:0);
+  }
+
+  const cosPitch=Math.cos(pitch);
+  camera.lookAt(
+    camera.position.x+Math.sin(yaw)*cosPitch,
+    camera.position.y+Math.sin(pitch),
+    camera.position.z+Math.cos(yaw)*cosPitch
+  );
+
+  animateParticles(t);
+  animateLights(t);
+  updateZone();
+
+  // Hover pulse on books
+  bookMeshes.forEach(m=>{
+    if(m===hoveredMesh){
+      m.position.z=Math.sin(t*4)*.015+.015;
+    } else {
+      m.position.z*=.9;
+    }
+  });
+
+  renderer.render(scene,camera);
+}
+
+// ─────────────────────────────────────────
+//  LOADER PROGRESS
+// ─────────────────────────────────────────
+const loaderBar=document.getElementById('loader-bar');
+let loadPct=0;
+const loadInterval=setInterval(()=>{
+  loadPct=Math.min(loadPct+Math.random()*14+2,100);
+  loaderBar.style.width=loadPct+'%';
+  if(loadPct>=100){
+    clearInterval(loadInterval);
+    setTimeout(()=>{
+      document.getElementById('loader').classList.add('fade-out');
+      setTimeout(()=>{document.getElementById('loader').style.display='none';},1300);
+    },400);
+  }
+},80);
+
+// Kick off render
+requestAnimationFrame(render);
+</script>
 </body>
 </html>
