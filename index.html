@@ -164,7 +164,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
   top:50%;left:50%;transform:translate(-50%,-50%);
   background:rgba(200,150,50,.32);border:1px solid rgba(200,150,50,.48);}
 
+/* FOCUS DOCK */
+#focus-dock{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:55;
+  display:flex;flex-direction:column;gap:8px;opacity:0;transition:opacity .8s;pointer-events:none;}
+#focus-dock.show{opacity:1;pointer-events:all;}
+.focus-btn{width:42px;height:42px;border-radius:50%;border:1px solid rgba(200,150,50,.22);
+  background:rgba(5,2,0,.72);color:#c09040;font-family:'Lato',sans-serif;font-size:.64rem;
+  letter-spacing:.04em;cursor:pointer;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  transition:transform .18s,background .18s,color .18s,border-color .18s;}
+.focus-btn:hover,.focus-btn:focus-visible{transform:translateX(-3px);background:rgba(200,150,50,.14);
+  color:#f0c060;border-color:rgba(200,150,50,.44);outline:none;}
+
+#webgl-fallback{position:fixed;inset:0;z-index:120;background:#120900;color:#d0a050;
+  display:none;align-items:center;justify-content:center;padding:24px;text-align:center;
+  font-family:'Lato',sans-serif;}
+#webgl-fallback.show{display:flex;}
+#webgl-fallback .fallback-card{max-width:560px;border:1px solid rgba(200,150,50,.24);
+  padding:28px 30px;border-radius:14px;background:rgba(5,2,0,.62);}
+#webgl-fallback h2{font-family:'Playfair Display',Georgia,serif;color:#f0c060;
+  font-size:1.6rem;margin-bottom:10px;font-weight:400;}
+#webgl-fallback p{line-height:1.7;font-size:.95rem;}
+
 @media(max-width:540px){.ocard{padding:28px 22px;}.otitle{font-size:1.28rem;}.dlgrid{grid-template-columns:1fr;}}
+@media(max-width:820px){#focus-dock{right:10px;gap:6px}.focus-btn{width:38px;height:38px;font-size:.58rem;}}
 </style>
 </head>
 <body>
@@ -213,6 +235,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
 
 <div id="jpad"><div id="jbase"><div id="jknob"></div></div></div>
 
+<div id="focus-dock" class="show" aria-label="Move closer to room details">
+  <button class="focus-btn" type="button" data-focus="desk" title="Study desk">Desk</button>
+  <button class="focus-btn" type="button" data-focus="drawer" title="Desk drawer">Draw</button>
+  <button class="focus-btn" type="button" data-focus="shelf" title="Book shelf">Book</button>
+  <button class="focus-btn" type="button" data-focus="bed" title="Bed corner">Bed</button>
+  <button class="focus-btn" type="button" data-focus="quotes" title="Wall quotes">Quote</button>
+  <button class="focus-btn" type="button" data-focus="tv" title="TV corner">TV</button>
+  <button class="focus-btn" type="button" data-focus="downloads" title="Downloads cabinet">Files</button>
+</div>
+
+<div id="webgl-fallback" aria-live="polite">
+  <div class="fallback-card">
+    <h2>3D room could not start</h2>
+    <p>This page needs WebGL. Enable hardware acceleration in your browser, update your graphics driver, or try a recent Firefox/Chrome browser.</p>
+  </div>
+</div>
+
 <!-- HINT ARROW (first 12s) -->
 <div id="hint-arrow">
   <span class="arrow-text">Walk forward to explore</span>
@@ -247,6 +286,34 @@ window.FA_DOWNLOADS=window.FA_DOWNLOADS||{
     tv_macos:{label:"TV macOS (.zip)",icon:"\uD83C\uDF4E",url:"#"}
   }
 };
+</script>
+<script>
+window.FA_BOOT_ERROR=false;
+window.addEventListener('error',e=>{
+  window.FA_BOOT_ERROR=true;
+  const msg=document.getElementById('ld-msg');
+  if(msg)msg.textContent='Room error: '+(e.message||'script failed');
+});
+window.addEventListener('unhandledrejection',e=>{
+  window.FA_BOOT_ERROR=true;
+  const msg=document.getElementById('ld-msg');
+  if(msg)msg.textContent='Room error: '+((e.reason&&e.reason.message)||e.reason||'module failed');
+});
+window.FA_HIDE_LOADER=()=>{
+  const loader=document.getElementById('loader');
+  if(!loader)return;
+  loader.classList.add('out');
+  setTimeout(()=>{loader.style.display='none';},900);
+};
+setTimeout(()=>{
+  if(window.FA_BOOT_ERROR)return;
+  const loader=document.getElementById('loader');
+  if(loader&&loader.style.display!=='none'){
+    const msg=document.getElementById('ld-msg');
+    if(msg)msg.textContent='Entering your room...';
+    window.FA_HIDE_LOADER();
+  }
+},7000);
 </script>
 <script type="importmap">{"imports":{"three":"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"}}</script>
 <script type="module">
@@ -288,7 +355,22 @@ const BOOKS=[
 
 // ── RENDERER ──────────────────────────────────────────────────────
 const canvas=document.getElementById('canvas');
-const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
+function showWebGLFallback(error){
+  window.FA_BOOT_ERROR=true;
+  const msg=document.getElementById('ld-msg');
+  if(msg)msg.textContent='WebGL unavailable';
+  const fallback=document.getElementById('webgl-fallback');
+  if(fallback)fallback.classList.add('show');
+  window.FA_HIDE_LOADER();
+  console.error(error);
+}
+let renderer;
+try{
+  renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
+}catch(error){
+  showWebGLFallback(error);
+  throw error;
+}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.8));
 renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMap.enabled=true;
@@ -301,8 +383,8 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0f0700);
 scene.fog=new THREE.FogExp2(0x0e0600,.021);
 
-const camera=new THREE.PerspectiveCamera(68,window.innerWidth/window.innerHeight,.04,55);
-camera.position.set(0,1.62,6.5);
+const camera=new THREE.PerspectiveCamera(56,window.innerWidth/window.innerHeight,.04,55);
+camera.position.set(0,1.62,3.65);
 
 // ── HELPERS ───────────────────────────────────────────────────────
 function rnd(a,b){return a+(b-a)*Math.random();}
@@ -421,7 +503,7 @@ function place(o,x,y,z){o.position.set(x,y,z);return o;}
 function add(...os){os.forEach(o=>scene.add(o));return os[os.length-1];}
 
 // ── ROOM SHELL ────────────────────────────────────────────────────
-const RW=11,RH=3.5,RD=15;
+const RW=8.2,RH=3.35,RD=10.8;
 add(place(box(RW,.06,RD,M.floor),0,.03,0));
 add(place(box(RW,.06,RD,M.ceil),0,RH,0));
 add(place(box(RW,RH,.08,M.wall),0,RH/2,-RD/2));
@@ -494,7 +576,7 @@ const mnHand=place(box(.003,.13,.012,handM),0,.06,0);
 clockGroup.add(hrHand);clockGroup.add(mnHand);
 
 // ── STUDY DESK ────────────────────────────────────────────────────
-const DX=-1.2,DZ=-2.5;
+const DX=-2.15,DZ=-1.65;
 scene.add(place(box(2.55,.065,1.12,M.wood),DX,.79,DZ+.1));
 for(const [ax,az] of [[-1.2,.12],[1.2,.12],[-1.2,.92],[1.2,.92]])
   scene.add(place(box(.065,.79,.065,M.darkW),DX+ax,.39,DZ+az));
@@ -571,6 +653,20 @@ for(const [lx,lz] of [[-0.22,-.22],[.22,-.22],[-.22,.22],[.22,.22]]) scene.add(p
 scene.add(place(box(.54,.026,.54,M.metal),CX,.04,CZ));
 for(const [wx,wz] of [[-0.2,0],[.2,0],[0,-.2],[0,.2]]) scene.add(place(cyl(.03,.03,.04,10,M.black),CX+wx,.04,CZ+wz));
 
+// Student reading at the desk
+const skinM=new THREE.MeshStandardMaterial({color:0xb77b50,roughness:.88});
+const shirtM=new THREE.MeshStandardMaterial({color:0x243450,roughness:.86});
+const hairM=new THREE.MeshStandardMaterial({color:0x1b120c,roughness:.9});
+const student=new THREE.Group();
+student.add(place(sph(.14,16,skinM),0,1.18,0));
+student.add(place(sph(.145,16,hairM),0,1.26,-.02));
+student.add(place(box(.34,.42,.28,shirtM),0,.86,.08));
+const armL=place(box(.08,.28,.08,skinM),-.22,.88,-.04);armL.rotation.z=.45;student.add(armL);
+const armR=place(box(.08,.28,.08,skinM),.22,.88,-.04);armR.rotation.z=-.45;student.add(armR);
+const readBook=place(box(.42,.018,.26,new THREE.MeshStandardMaterial({color:0xf0e0c0,roughness:.96})),0,.81,-.2);
+readBook.rotation.x=.08;student.add(readBook);
+student.position.set(CX,.02,CZ-.15);student.rotation.y=Math.PI;scene.add(student);
+
 // ── BACKPACK ──────────────────────────────────────────────────────
 const bpM=new THREE.MeshStandardMaterial({color:0x2a3850,roughness:.85});
 const bp=place(box(.36,.42,.22,bpM),DX-1.55,.22,DZ+1.0);bp.rotation.y=.2;scene.add(bp);
@@ -578,7 +674,7 @@ scene.add(place(box(.3,.28,.2,new THREE.MeshStandardMaterial({color:0x24304a,rou
 for(const dx of [-.09,.09]) scene.add(place(box(.02,.38,.015,new THREE.MeshStandardMaterial({color:0x1a2540,roughness:.8})),DX-1.55+dx,.22,DZ+1.0));
 
 // ── BED ───────────────────────────────────────────────────────────
-const BX=3.6,BZ=-4.5;
+const BX=2.75,BZ=-2.95;
 scene.add(place(box(1.48,.28,2.58,M.wood),BX,.14,BZ));
 const hbM=new THREE.MeshStandardMaterial({color:0x5a3010,roughness:.78,metalness:.04});
 scene.add(place(box(1.5,.82,.1,hbM),BX,.55,BZ-1.26));
@@ -603,7 +699,7 @@ const bedRug=mesh(new THREE.PlaneGeometry(1.3,.85),new THREE.MeshStandardMateria
 bedRug.rotation.x=-Math.PI/2;bedRug.position.set(BX-1.2,.04,BZ+.9);scene.add(bedRug);
 
 // ── BOOKSHELF ─────────────────────────────────────────────────────
-const SX=-5.42,SZ=-6;
+const SX=-4.02,SZ=-3.7;
 const shelfGroup=new THREE.Group();
 shelfGroup.position.set(SX,0,SZ);shelfGroup.rotation.y=Math.PI/2;
 const sfM=new THREE.MeshStandardMaterial({color:0x2a1808,roughness:.82,map:darkWoodTex});
@@ -672,10 +768,10 @@ const potM=new THREE.MeshStandardMaterial({color:0x8a4520,roughness:.8});
 const leafM2=new THREE.MeshStandardMaterial({color:0x286020,roughness:.95});
 miniShelf.add(place(cyl(.07,.09,.12,16,potM),.66,1.32,0));
 for(let i=0;i<6;i++){const lf=place(box(.025,.15,.06,leafM2),.66+rnd(-.06,.06),1.48+i*.03,rnd(-.06,.06));lf.rotation.set(rnd(-.7,.7),rnd(0,Math.PI*2),rnd(-.3,.3));miniShelf.add(lf);}
-miniShelf.position.set(-4.52,0,-1.5);miniShelf.rotation.y=Math.PI/2;scene.add(miniShelf);
+miniShelf.position.set(-3.55,0,-.8);miniShelf.rotation.y=Math.PI/2;scene.add(miniShelf);
 
 // ── TV UNIT ───────────────────────────────────────────────────────
-const TX=RW/2-.12,TZ=-5.8;
+const TX=RW/2-.12,TZ=-3.55;
 const credM=new THREE.MeshStandardMaterial({color:0x2a1808,roughness:.82,map:darkWoodTex});
 scene.add(place(box(2.42,.54,.54,credM),TX-.4,1.05,TZ-.28));
 scene.add(place(box(2.46,.04,.56,M.wood),TX-.4,.8,TZ-.28));
@@ -727,7 +823,7 @@ tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={bookId:'tv',label:'TV Connect
 scene.add(tvHot);allHotspots.push({mesh:tvHot,label:'\uD83D\uDCFA  TV Connection'});
 
 // ── DOWNLOAD CABINET ──────────────────────────────────────────────
-const DCX=1.2,DCZ=-6.6;
+const DCX=.75,DCZ=-4.55;
 const cabBodyM=new THREE.MeshStandardMaterial({color:0x3a2810,roughness:.78,map:darkWoodTex});
 const cab=new THREE.Group();
 cab.add(place(box(1.05,1.12,.54,cabBodyM),0,.56,0));
@@ -767,29 +863,29 @@ function poster(lines,W,H,bg){
     });ctx.shadowBlur=0;
   });
 }
-const p1=mesh(new THREE.PlaneGeometry(1.62,.82),new THREE.MeshStandardMaterial({map:poster([
+const posterA=mesh(new THREE.PlaneGeometry(1.62,.82),new THREE.MeshStandardMaterial({map:poster([
   {text:'KNOWLEDGE',font:'bold 58px Georgia,serif',color:'#f0c060',y:88,shadow:22},
   {text:'IS THE GREATEST',font:'28px Georgia,serif',color:'#d0a040',y:130},
   {text:'TREASURE',font:'bold 50px Georgia,serif',color:'#f0c060',y:182,shadow:16},
   {text:'\u2014 Family Academy',font:'italic 16px Lato,sans-serif',color:'#7a5828',y:226},
 ],512,256,'#0d0904'),roughness:.88}));
-p1.position.set(-5.38,2.4,-3.5);p1.rotation.y=Math.PI/2;scene.add(p1);
-scene.add(place(box(.042,.9,1.7,new THREE.MeshStandardMaterial({color:0x7a5820,roughness:.6,metalness:.3})),-5.38,2.4,-3.5));
-const p2=mesh(new THREE.PlaneGeometry(1.32,.74),new THREE.MeshStandardMaterial({map:poster([
+posterA.position.set(-4.02,2.28,-2.2);posterA.rotation.y=Math.PI/2;scene.add(posterA);
+scene.add(place(box(.042,.9,1.7,new THREE.MeshStandardMaterial({color:0x7a5820,roughness:.6,metalness:.3})),-4.02,2.28,-2.2));
+const posterB=mesh(new THREE.PlaneGeometry(1.32,.74),new THREE.MeshStandardMaterial({map:poster([
   {text:'STUDY',font:'bold 44px Georgia,serif',color:'#e8e0d0',y:62},
   {text:'PRACTICE',font:'bold 44px Georgia,serif',color:'#c0d8ff',y:112},
   {text:'ACHIEVE',font:'bold 44px Georgia,serif',color:'#ffc060',y:162,shadow:14},
   {text:'Family Academy \u00b7 Learn Without Limits',font:'italic 12px Lato,sans-serif',color:'#4a3820',y:202},
 ],400,224,'#0e160a'),roughness:.88}));
-p2.position.set(-2.5,2.52,-7.38);scene.add(p2);
-scene.add(place(box(1.38,.8,.03,new THREE.MeshStandardMaterial({color:0x5a4018,roughness:.7,metalness:.2})),-2.5,2.52,-7.37));
-const p3=mesh(new THREE.PlaneGeometry(1.22,.5),new THREE.MeshStandardMaterial({map:poster([
+posterB.position.set(-1.75,2.42,-5.36);scene.add(posterB);
+scene.add(place(box(1.38,.8,.03,new THREE.MeshStandardMaterial({color:0x5a4018,roughness:.7,metalness:.2})),-1.75,2.42,-5.35));
+const posterC=mesh(new THREE.PlaneGeometry(1.22,.5),new THREE.MeshStandardMaterial({map:poster([
   {text:'YOUR PROGRESS',font:'bold 22px Georgia,serif',color:'#90b8ff',y:46},
   {text:'IS YOUR STORY.',font:'italic 36px Georgia,serif',color:'#f0e0a0',y:92,shadow:12},
   {text:'Every lesson is a chapter.',font:'14px Lato,sans-serif',color:'#7a6040',y:124},
 ],380,150,'#070d18'),roughness:.88}));
-p3.position.set(1.5,2.7,-7.38);scene.add(p3);
-scene.add(place(box(1.28,.56,.03,new THREE.MeshStandardMaterial({color:0x303828,roughness:.7})),1.5,2.7,-7.37));
+posterC.position.set(.95,2.58,-5.36);scene.add(posterC);
+scene.add(place(box(1.28,.56,.03,new THREE.MeshStandardMaterial({color:0x303828,roughness:.7})),.95,2.58,-5.35));
 // Sticky note
 const stnTex=makeTex(128,128,(ctx,W,H)=>{
   ctx.fillStyle='#ffee80';ctx.fillRect(0,0,W,H);
@@ -797,7 +893,7 @@ const stnTex=makeTex(128,128,(ctx,W,H)=>{
   ['\uD83D\uDCDD Chapter 4','Revise quadratics','Practice set B','Ask teacher abt','theorem proof!'].forEach((l,i)=>ctx.fillText(l,7,20+i*18));
 });
 const stn=mesh(new THREE.PlaneGeometry(.3,.3),new THREE.MeshStandardMaterial({map:stnTex,roughness:.95}));
-stn.position.set(-5.38,1.8,-2.2);stn.rotation.y=Math.PI/2;stn.rotation.z=.06;scene.add(stn);
+stn.position.set(-4.02,1.72,-1.35);stn.rotation.y=Math.PI/2;stn.rotation.z=.06;scene.add(stn);
 // Calendar
 const calTex=makeTex(256,192,(ctx,W,H)=>{
   ctx.fillStyle='#fafaf8';ctx.fillRect(0,0,W,H);
@@ -816,8 +912,8 @@ const calTex=makeTex(256,192,(ctx,W,H)=>{
   });
 });
 const cal=mesh(new THREE.PlaneGeometry(.75,.56),new THREE.MeshStandardMaterial({map:calTex,roughness:.88}));
-cal.position.set(-.8,2.5,-7.38);scene.add(cal);
-scene.add(place(box(.78,.59,.025,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),-.8,2.5,-7.37));
+cal.position.set(-.55,2.38,-5.36);scene.add(cal);
+scene.add(place(box(.78,.59,.025,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),-.55,2.38,-5.35));
 
 // ── RUG ───────────────────────────────────────────────────────────
 const rugTex=makeTex(512,256,(ctx,W,H)=>{
@@ -893,7 +989,7 @@ add(place(box(.7,.015,.7,new THREE.MeshStandardMaterial({color:0xfff0d0,emissive
 const PCOUNT=280;
 const pArr=new Float32Array(PCOUNT*3),pVel=new Float32Array(PCOUNT*3);
 for(let i=0;i<PCOUNT;i++){
-  pArr[i*3]=rnd(-5,5);pArr[i*3+1]=rnd(.1,3.3);pArr[i*3+2]=rnd(-7,6.5);
+  pArr[i*3]=rnd(-3.8,3.8);pArr[i*3+1]=rnd(.1,3.2);pArr[i*3+2]=rnd(-5.1,4.6);
   pVel[i*3]=rnd(-.0018,.0018);pVel[i*3+1]=rnd(.00015,.00055);pVel[i*3+2]=rnd(-.0009,.0009);
 }
 const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pArr,3));
@@ -901,15 +997,38 @@ const pMat=new THREE.PointsMaterial({color:0xffe8a0,size:.018,transparent:true,o
 scene.add(new THREE.Points(pGeo,pMat));
 
 // ── CAMERA ────────────────────────────────────────────────────────
-let tPos=new THREE.Vector3(0,1.62,6.5);
-let cPos=new THREE.Vector3(0,1.62,6.5);
+let tPos=new THREE.Vector3(0,1.62,3.65);
+let cPos=new THREE.Vector3(0,1.62,3.65);
 let tYaw=Math.PI,cYaw=Math.PI;
 let tPitch=-.03,cPitch=-.03;
-const BOUNDS={xMin:-4.8,xMax:4.8,zMin:-6.8,zMax:6.4};
-const MOVE=.058;
+const BOUNDS={xMin:-3.55,xMax:3.55,zMin:-4.85,zMax:4.65};
+const MOVE=.072;
+const FOCUS_POINTS={
+  desk:{pos:[-2.05,1.55,.35],look:[DX,.95,DZ]},
+  drawer:{pos:[-.95,1.38,-.35],look:[DX+.85,.48,DZ+.2]},
+  shelf:{pos:[-2.75,1.62,-2.8],look:[SX+.03,1.38,SZ]},
+  bed:{pos:[1.25,1.52,-1.35],look:[BX,.72,BZ]},
+  quotes:{pos:[-.45,1.62,-2.95],look:[-.55,2.34,-5.35]},
+  tv:{pos:[1.25,1.62,-2.45],look:[TX,2.05,TZ]},
+  downloads:{pos:[.6,1.48,-3.15],look:[DCX,.9,DCZ]}
+};
+function lookToward(point){
+  const dx=point[0]-tPos.x,dy=point[1]-tPos.y,dz=point[2]-tPos.z;
+  tYaw=Math.atan2(dx,dz);
+  tPitch=Math.max(-.58,Math.min(.42,Math.atan2(dy,Math.hypot(dx,dz))));
+}
+function moveToFocus(id){
+  const fp=FOCUS_POINTS[id];if(!fp)return;
+  tPos.set(fp.pos[0],fp.pos[1],fp.pos[2]);
+  tPos.x=Math.max(BOUNDS.xMin,Math.min(BOUNDS.xMax,tPos.x));
+  tPos.z=Math.max(BOUNDS.zMin,Math.min(BOUNDS.zMax,tPos.z));
+  lookToward(fp.look);
+  const hintEl=document.getElementById('hint-arrow');if(hintEl.classList.contains('show'))hintEl.classList.remove('show');
+}
 const keys={};
 document.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();});
 document.addEventListener('keyup',e=>{keys[e.code]=false;});
+document.querySelectorAll('[data-focus]').forEach(btn=>btn.addEventListener('click',()=>moveToFocus(btn.dataset.focus)));
 let drag=false,lx=0,ly=0,dragMoved=false;
 canvas.addEventListener('pointerdown',e=>{if(e.button!==2){drag=true;lx=e.clientX;ly=e.clientY;dragMoved=false;canvas.style.cursor='none';}});
 window.addEventListener('pointerup',()=>{drag=false;canvas.style.cursor='crosshair';});
@@ -1012,7 +1131,7 @@ overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.rem
 document.addEventListener('keydown',e=>{if(e.code==='Escape')overlay.classList.remove('open');});
 
 // ── ZONES ─────────────────────────────────────────────────────────
-const ZONES=[{maxZ:7,label:''},{maxZ:4.0,label:'The Entrance'},{maxZ:.6,label:'Study Desk'},{maxZ:-3,label:'The Bookshelves'},{maxZ:-5,label:'TV Corner'},{maxZ:-9,label:'Downloads & Support'}];
+const ZONES=[{maxZ:5,label:''},{maxZ:3.2,label:'The Entrance'},{maxZ:.8,label:'Study Desk'},{maxZ:-1.5,label:'Book Shelf'},{maxZ:-3.2,label:'TV And Bed Corner'},{maxZ:-6,label:'Downloads & Support'}];
 let curZone='';const zoneEl=document.getElementById('zone');let zoneTimer=null;
 function checkZone(){
   const z=cPos.z;let label='';
@@ -1036,15 +1155,15 @@ function stepIntro(dt){
   const e1=easeOut2(p1), e2=easeOut4(p2);
   if(p<.4){
     // arc from high right, sweeping across
-    tPos.x=2.5*(1-e1);
-    tPos.z=9.0+(7.5-9.0)*e1;
+    tPos.x=1.0*(1-e1);
+    tPos.z=4.45+(3.95-4.45)*e1;
     tPos.y=2.4+(1.9-2.4)*e1;
     tYaw=(Math.PI-.35)+(  .2)*e1;
     tPitch=-.14+.08*e1;
   } else {
     // smooth settle forward to start
     tPos.x=rnd(0,0.001);
-    tPos.z=7.5+(6.0-7.5)*e2;
+    tPos.z=3.95+(3.45-3.95)*e2;
     tPos.y=1.9+(1.62-1.9)*e2;
     tYaw=(Math.PI-.15)+.15*e2;
     tPitch=-.06+.03*e2;
@@ -1052,9 +1171,10 @@ function stepIntro(dt){
   if(introT>.55&&introPhase===0){introPhase=1;il1.classList.add('show');il2.classList.add('show');}
   if(introT>3.4&&introPhase===1){introPhase=2;il1.classList.add('gone');il2.classList.add('gone');}
   if(introT>=INTRO_DUR){
-    introActive=false;tPos.set(0,1.62,6.0);tYaw=Math.PI;tPitch=-.03;
+    introActive=false;tPos.set(0,1.62,3.45);tYaw=Math.PI;tPitch=-.03;
     document.getElementById('hud').classList.add('show');
     document.getElementById('toplogo').classList.add('show');
+    document.getElementById('focus-dock').classList.add('show');
     xhairEl.classList.add('show');
     // Show walk hint, auto-hide after 9s
     const hintEl=document.getElementById('hint-arrow');
@@ -1069,8 +1189,8 @@ function animParticles(t){
   for(let i=0;i<PCOUNT;i++){
     pos[i*3]+=pVel[i*3]+Math.sin(t*.18+i*.48)*.0003;
     pos[i*3+1]+=pVel[i*3+1];pos[i*3+2]+=pVel[i*3+2]+Math.cos(t*.14+i*.38)*.00022;
-    if(pos[i*3+1]>3.4){pos[i*3+1]=.1;pos[i*3]=rnd(-5,5);pos[i*3+2]=rnd(-7,6.5);}
-    if(pos[i*3]<-5.5||pos[i*3]>5.5)pVel[i*3]*=-1;
+    if(pos[i*3+1]>3.3){pos[i*3+1]=.1;pos[i*3]=rnd(-3.8,3.8);pos[i*3+2]=rnd(-5.1,4.6);}
+    if(pos[i*3]<-4||pos[i*3]>4)pVel[i*3]*=-1;
   }
   pGeo.attributes.position.needsUpdate=true;
 }
@@ -1133,7 +1253,7 @@ const ldi=setInterval(()=>{
   if(lp>22&&lmi<1){lmi=1;ldMsg.textContent=msgs[1];}
   if(lp>52&&lmi<2){lmi=2;ldMsg.textContent=msgs[2];}
   if(lp>80&&lmi<3){lmi=3;ldMsg.textContent=msgs[3];}
-  if(lp>=100){clearInterval(ldi);setTimeout(()=>{document.getElementById('loader').classList.add('out');setTimeout(()=>document.getElementById('loader').style.display='none',1700);},380);}
+  if(lp>=100){clearInterval(ldi);setTimeout(()=>window.FA_HIDE_LOADER(),380);}
 },72);
 
 requestAnimationFrame(render);
