@@ -474,6 +474,47 @@ function makeSpineTex(label,hexCol){
   });
 }
 
+function makeInfoTex(w,h,title,subtitle,lines,accent='#f0c060'){
+  return makeTex(w,h,(ctx,W,H)=>{
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,'#2a1808');g.addColorStop(.55,'#130b04');g.addColorStop(1,'#281509');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,255,255,.04)';ctx.fillRect(8,8,W-16,H-16);
+    ctx.strokeStyle='rgba(255,215,120,.18)';ctx.lineWidth=3;ctx.strokeRect(10,10,W-20,H-20);
+    ctx.fillStyle=accent;ctx.shadowColor='rgba(0,0,0,.4)';ctx.shadowBlur=8;
+    ctx.font='bold 18px Georgia,serif';ctx.textAlign='center';ctx.fillText(title,W/2,28);
+    ctx.shadowBlur=0;ctx.fillStyle='rgba(255,235,200,.74)';ctx.font='10px Lato,sans-serif';ctx.fillText(subtitle,W/2,44);
+    ctx.fillStyle='rgba(255,240,200,.9)';ctx.textAlign='left';ctx.font='10px Lato,sans-serif';
+    lines.forEach((line,i)=>ctx.fillText('• '+line,12,66+i*18));
+    ctx.fillStyle='rgba(255,230,170,.32)';ctx.fillRect(12,H-18,W-24,1.5);
+  });
+}
+
+function makePortraitTex(name,subtitle,style='sepia'){
+  return makeTex(256,320,(ctx,W,H)=>{
+    const base=style==='blue'?'#111726':'#1b1208';
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,style==='blue'?'#18253a':'#2a1a0d');
+    g.addColorStop(1,style==='blue'?'#0e1320':'#100a05');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,255,255,.03)';ctx.fillRect(14,14,W-28,H-28);
+    ctx.strokeStyle='rgba(255,220,140,.22)';ctx.lineWidth=5;ctx.strokeRect(12,12,W-24,H-24);
+    ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(22,30,W-44,H-70);
+    ctx.fillStyle=style==='blue'?'rgba(168,198,255,.9)':'rgba(255,231,180,.9)';
+    ctx.beginPath();ctx.ellipse(W/2,118,44,56,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=style==='blue'?'rgba(10,18,30,.95)':'rgba(42,26,12,.95)';
+    ctx.beginPath();ctx.arc(W/2-16,110,10,0,Math.PI*2);ctx.arc(W/2+16,110,10,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=style==='blue'?'rgba(26,40,58,.95)':'rgba(62,38,18,.95)';
+    ctx.beginPath();ctx.arc(W/2,149,38,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=style==='blue'?'rgba(58,74,98,.9)':'rgba(104,76,42,.9)';
+    ctx.fillRect(W/2-34,171,68,78);
+    ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(24,210,W-48,2);
+    ctx.fillStyle='rgba(255,235,190,.92)';ctx.textAlign='center';ctx.font='bold 20px Georgia,serif';ctx.fillText(name,W/2,246);
+    ctx.fillStyle='rgba(255,220,160,.66)';ctx.font='11px Lato,sans-serif';ctx.fillText(subtitle,W/2,266);
+    ctx.fillStyle='rgba(255,230,170,.28)';ctx.fillText('Family Academy Room Archive',W/2,294);
+  });
+}
+
 // ── MATERIALS ─────────────────────────────────────────────────────
 const M={
   floor: new THREE.MeshStandardMaterial({map:floorTex,roughness:.8,metalness:.04}),
@@ -567,13 +608,28 @@ add(place(box(2.9,.04,.04,M.brass),RW/2-.04,3.24,2.2));
 add(place(box(2.25,.05,.18,M.wood),RW/2-.04,1.31,2.2));
 
 // ── WALL CLOCK ────────────────────────────────────────────────────
-const clockRim=place(cyl(.2,.2,.016,32,new THREE.MeshStandardMaterial({color:0x5a3a10,roughness:.5,metalness:.4})),-RW/2+.05,2.4,-1.0);clockRim.rotation.z=Math.PI/2;scene.add(clockRim);
-const clockFace=place(cyl(.18,.18,.012,32,new THREE.MeshStandardMaterial({color:0xf8f2e0,roughness:.9})),-RW/2+.05,2.4,-1.0);clockFace.rotation.z=Math.PI/2;scene.add(clockFace);
+const clockTex=makeTex(256,256,(ctx,W,H)=>{
+  ctx.fillStyle='#f9f2df';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(0,0,0,.06)';ctx.fillRect(18,18,W-36,H-36);
+  ctx.strokeStyle='rgba(90,58,16,.4)';ctx.lineWidth=10;ctx.beginPath();ctx.arc(W/2,H/2,100,0,Math.PI*2);ctx.stroke();
+  ctx.fillStyle='rgba(255,240,200,.86)';ctx.beginPath();ctx.arc(W/2,H/2,90,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(80,52,18,.55)';ctx.lineWidth=3;
+  for(let i=0;i<12;i++){
+    const a=i*Math.PI/6, r1=i%3===0?70:80, r2=90;
+    ctx.beginPath();ctx.moveTo(W/2+Math.sin(a)*r1,H/2-Math.cos(a)*r1);ctx.lineTo(W/2+Math.sin(a)*r2,H/2-Math.cos(a)*r2);ctx.stroke();
+  }
+  ctx.fillStyle='rgba(60,36,12,.82)';ctx.font='bold 24px Georgia,serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('12',W/2,42);ctx.fillText('3',214,H/2);ctx.fillText('6',W/2,214);ctx.fillText('9',42,H/2);
+  ctx.fillStyle='rgba(120,80,30,.7)';ctx.font='11px Lato,sans-serif';ctx.fillText('Family Academy',W/2,182);
+});
+const clockRim=place(cyl(.24,.24,.018,40,new THREE.MeshStandardMaterial({color:0x6d4b1d,roughness:.48,metalness:.34})),-RW/2+.05,2.4,-1.0);clockRim.rotation.z=Math.PI/2;scene.add(clockRim);
+const clockFace=place(cyl(.21,.21,.014,40,new THREE.MeshStandardMaterial({map:clockTex,roughness:.92})),-RW/2+.05,2.4,-1.0);clockFace.rotation.z=Math.PI/2;scene.add(clockFace);
 const clockGroup=new THREE.Group();clockGroup.position.set(-RW/2+.07,2.4,-1.0);scene.add(clockGroup);
 const handM=new THREE.MeshStandardMaterial({color:0x1a1010,roughness:.7});
-const hrHand=place(box(.004,.09,.012,handM),0,.04,0);
-const mnHand=place(box(.003,.13,.012,handM),0,.06,0);
+const hrHand=place(box(.006,.1,.014,handM),0,.04,0);
+const mnHand=place(box(.004,.14,.014,handM),0,.06,0);
 clockGroup.add(hrHand);clockGroup.add(mnHand);
+clockGroup.add(place(cyl(.015,.015,.02,10,new THREE.MeshStandardMaterial({color:0x7c5a20,roughness:.4,metalness:.5})),0,0,0));
 
 // ── STUDY DESK ────────────────────────────────────────────────────
 const DX=-2.38,DZ=-1.92;
@@ -595,30 +651,61 @@ scene.add(place(cyl(.016,.016,.52,8,lBaseM),DX-1.0,1.09,DZ-.1));
 const lArm=place(box(.28,.02,.02,lBaseM),DX-.84,1.33,DZ-.1);lArm.rotation.z=-.18;scene.add(lArm);
 scene.add(place(cyl(.06,.1,.12,16,lShadeM),DX-.72,1.3,DZ-.1));
 scene.add(place(box(.09,.02,.09,new THREE.MeshStandardMaterial({color:0xffcc40,emissive:0xffcc40,emissiveIntensity:2.8,transparent:true,opacity:.62})),DX-.72,1.25,DZ-.1));
+const allHotspots=[];
+const allBookMeshes=[];
 // Laptop
 const lapBase=place(box(.6,.026,.42,M.metal),DX,.82,DZ);scene.add(lapBase);
 const lidG=new THREE.Group();
 const lid=box(.6,.022,.38,M.metal);lid.position.set(0,.21,.19);lid.rotation.x=-.88;
-const scrTex=makeTex(512,320,(ctx,W,H)=>{
-  ctx.fillStyle='#07050f';ctx.fillRect(0,0,W,H);
-  const hg=ctx.createLinearGradient(0,0,W,0);
-  hg.addColorStop(0,'rgba(38,22,8,.95)');hg.addColorStop(.5,'rgba(52,32,10,.95)');hg.addColorStop(1,'rgba(38,22,8,.95)');
-  ctx.fillStyle=hg;ctx.fillRect(0,0,W,42);
-  ctx.fillStyle='#f0c050';ctx.font='bold 15px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',12,27);
-  ctx.fillStyle='rgba(200,160,60,.55)';ctx.font='10px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('Mathematics \u00b7 Chapter 4',W-12,27);
-  ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(0,42,W,H-42);
-  ctx.fillStyle='rgba(200,140,40,.14)';ctx.fillRect(18,56,W-36,6);
-  ctx.fillStyle='rgba(200,140,40,.72)';ctx.fillRect(18,56,(W-36)*.63,6);
-  ctx.fillStyle='rgba(200,160,60,.62)';ctx.font='10px Lato,sans-serif';ctx.textAlign='left';ctx.fillText('63% complete',18,78);
-  ctx.fillStyle='rgba(255,255,255,.055)';
-  [[18,96,W-36,13],[18,118,W*.62,13],[18,140,W*.76,13],[18,162,W*.44,13]].forEach(r=>ctx.fillRect(...r));
-  ctx.fillStyle='rgba(200,140,40,.1)';ctx.fillRect(18,96,W-36,13);
-  ctx.fillStyle='rgba(200,140,40,.07)';ctx.fillRect(0,H-28,W,28);
-  ctx.fillStyle='rgba(200,160,60,.42)';ctx.font='9px Lato';ctx.textAlign='center';
-  ctx.fillText('\u25cf REC   \u25b6  00:14:32   \u231a 45 min left',W/2,H-10);
-});
-const scrMesh=mesh(new THREE.PlaneGeometry(.53,.295),new THREE.MeshStandardMaterial({map:scrTex,emissive:0x0c0920,emissiveIntensity:1.65,emissiveMap:scrTex}));
+const DEVICE_STATES={
+  laptop:[
+    {title:'Study Session',sub:'Mathematics \u00b7 Chapter 4',accent:'#f0c050',lines:['Resume lesson at 63%','Open notes panel','Continue the video']},
+    {title:'Login Guide',sub:'Desktop setup',accent:'#9bc7ff',lines:['Use email & password','Enable remember device','Switch profiles']},
+    {title:'Practice Mode',sub:'Questions & corrections',accent:'#9fe0ac',lines:['Attempt 10 questions','Review mistakes','Track your score']},
+  ],
+  phone:[
+    {title:'Mobile App',sub:'Sign in or register',accent:'#ffd66f',lines:['Create account','Add profile picture','Sync to other devices']},
+    {title:'Parent Link',sub:'Share your code',accent:'#9bc7ff',lines:['Profile \u2192 Share Code','Enter on parent device','Monitor progress']},
+    {title:'Messages',sub:'Support & updates',accent:'#9fe0ac',lines:['New lesson reminder','Chat support available','Streaks synced']},
+  ],
+  tv:[
+    {title:'TV Mode',sub:'Big screen learning',accent:'#9bc7ff',lines:['Use remote D-pad','Install TV app','Resume the last lesson']},
+    {title:'TV Pairing',sub:'Connect phone to TV',accent:'#ffd66f',lines:['Install companion app','Use pairing code','Start learning together']},
+    {title:'Watch List',sub:'Family Academy channels',accent:'#9fe0ac',lines:['Videos','Practice','Exams and review']},
+  ]
+};
+let deviceIndex={laptop:0,phone:0,tv:0};
+function buildDeviceTex(kind){
+  const st=DEVICE_STATES[kind][deviceIndex[kind]%DEVICE_STATES[kind].length];
+  return makeTex(512,320,(ctx,W,H)=>{
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#05070d');g.addColorStop(.35,'#11111a');g.addColorStop(1,'#050409');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    const hg=ctx.createLinearGradient(0,0,W,0);
+    hg.addColorStop(0,st.accent+'30');hg.addColorStop(.5,'rgba(255,255,255,.05)');hg.addColorStop(1,st.accent+'20');
+    ctx.fillStyle=hg;ctx.fillRect(0,0,W,42);
+    ctx.fillStyle=st.accent;ctx.font='bold 18px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',14,28);
+    ctx.fillStyle='rgba(220,220,240,.62)';ctx.font='10px Lato,sans-serif';ctx.textAlign='right';ctx.fillText(st.sub,W-14,28);
+    ctx.fillStyle='rgba(255,255,255,.04)';ctx.fillRect(0,42,W,H-42);
+    ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(20,60,W-40,6);
+    ctx.fillStyle=st.accent;ctx.fillRect(20,60,(W-40)*(0.35+0.18*deviceIndex[kind]),6);
+    ctx.fillStyle='rgba(240,235,220,.92)';ctx.font='bold 25px Georgia,serif';ctx.textAlign='left';ctx.fillText(st.title,20,96);
+    ctx.fillStyle='rgba(200,180,140,.66)';ctx.font='12px Lato,sans-serif';ctx.fillText(st.sub,20,122);
+    st.lines.forEach((line,i)=>{
+      ctx.fillStyle=['#f0f0ff','#d4e8ff','#e4f5db'][i%3];
+      ctx.font='13px Lato,sans-serif';ctx.fillText('• '+line,24,166+i*30);
+    });
+    ctx.fillStyle='rgba(255,255,255,.07)';ctx.fillRect(18,H-34,W-36,14);
+    ctx.fillStyle=st.accent;ctx.font='9px Lato,sans-serif';ctx.textAlign='center';
+    ctx.fillText('tap to change view',W/2,H-23);
+  });
+}
+let scrTex=buildDeviceTex('laptop');
+const scrMat=new THREE.MeshStandardMaterial({map:scrTex,emissive:0x0c0920,emissiveIntensity:1.65,emissiveMap:scrTex});
+const scrMesh=mesh(new THREE.PlaneGeometry(.53,.295),scrMat);
 scrMesh.position.set(0,.022,.001);lid.add(scrMesh);lidG.add(lid);lapBase.add(lidG);
+const lapHot=mesh(new THREE.BoxGeometry(.68,.38,.48),new THREE.MeshBasicMaterial({visible:false}));
+lapHot.position.set(DX,.87,DZ-.02);lapHot.userData={kind:'device',device:'laptop',label:'Laptop display'};scene.add(lapHot);allHotspots.push({mesh:lapHot,label:'\uD83D\uDCBB  Laptop display'});
 // Desk items
 const nbCM=new THREE.MeshStandardMaterial({color:0x1e2e5a,roughness:.85});
 scene.add(place(box(.33,.014,.25,nbCM),DX-.85,.826,DZ-.2));
@@ -634,14 +721,19 @@ scene.add(place(box(.015,.06,.04,mugM),DX+.9,.86,DZ-.16));
   const s=place(box(.14,.004,.14,new THREE.MeshStandardMaterial({color:col,roughness:.95,emissive:col,emissiveIntensity:.04})),DX+.18+dx,.824,DZ+.32+dz);
   s.rotation.y=rnd(-.28,.28);scene.add(s);
 });
-const ph=place(box(.074,.01,.162,new THREE.MeshStandardMaterial({color:0x141010,roughness:.28,metalness:.72})),DX+.6,.824,DZ-.25);ph.rotation.y=.38;scene.add(ph);
-scene.add(place(box(.064,.012,.152,new THREE.MeshStandardMaterial({color:0x090812,emissive:0x101840,emissiveIntensity:1.25,roughness:.04})),DX+.6,.826,DZ-.25));
+const phoneBodyM=new THREE.MeshStandardMaterial({color:0x141010,roughness:.28,metalness:.72});
+const ph=place(box(.074,.01,.162,phoneBodyM),DX+.6,.824,DZ-.25);ph.rotation.y=.38;scene.add(ph);
+let phoneTex=buildDeviceTex('phone');
+const phoneMat=new THREE.MeshStandardMaterial({map:phoneTex,emissive:0x101840,emissiveIntensity:1.25,emissiveMap:phoneTex,roughness:.04});
+scene.add(place(box(.064,.012,.152,phoneMat),DX+.6,.826,DZ-.25));
 for(let i=0;i<5;i++){
   const pm=new THREE.MeshStandardMaterial({color:new THREE.Color(1,rnd(.94,.99),rnd(.88,.95)),roughness:.99});
   scene.add(place(box(.28,.003,.2,pm),DX+.2+rnd(-.01,.01),.822+i*.003,DZ+.5+rnd(-.01,.01)));
 }
 // Charging cable
 scene.add(place(box(.005,.004,.24,new THREE.MeshStandardMaterial({color:0x181818,roughness:.8})),DX+.52,.828,DZ-.12));
+const phoneHot=mesh(new THREE.BoxGeometry(.1,.03,.21),new THREE.MeshBasicMaterial({visible:false}));
+phoneHot.position.set(DX+.6,.833,DZ-.25);phoneHot.userData={kind:'device',device:'phone',label:'Phone screen'};scene.add(phoneHot);allHotspots.push({mesh:phoneHot,label:'\uD83D\uDCF1  Phone screen'});
 
 // ── DESK CHAIR ────────────────────────────────────────────────────
 const CX=DX,CZ=DZ+1.16;
@@ -657,14 +749,25 @@ for(const [wx,wz] of [[-0.2,0],[.2,0],[0,-.2],[0,.2]]) scene.add(place(cyl(.03,.
 const skinM=new THREE.MeshStandardMaterial({color:0xb77b50,roughness:.88});
 const shirtM=new THREE.MeshStandardMaterial({color:0x243450,roughness:.86});
 const hairM=new THREE.MeshStandardMaterial({color:0x1b120c,roughness:.9});
+const jeansM=new THREE.MeshStandardMaterial({color:0x1f2e49,roughness:.84});
+const shoeM=new THREE.MeshStandardMaterial({color:0x120b08,roughness:.82});
 const student=new THREE.Group();
-student.add(place(sph(.14,16,skinM),0,1.18,0));
-student.add(place(sph(.145,16,hairM),0,1.26,-.02));
-student.add(place(box(.34,.42,.28,shirtM),0,.86,.08));
-const armL=place(box(.08,.28,.08,skinM),-.22,.88,-.04);armL.rotation.z=.45;student.add(armL);
-const armR=place(box(.08,.28,.08,skinM),.22,.88,-.04);armR.rotation.z=-.45;student.add(armR);
-const readBook=place(box(.42,.018,.26,new THREE.MeshStandardMaterial({color:0xf0e0c0,roughness:.96})),0,.81,-.2);
+const head=place(sph(.135,20,skinM),0,1.28,0);student.add(head);
+const hair=place(sph(.15,20,hairM),0,1.34,-.02);hair.scale.set(1.02,.9,1.0);student.add(hair);
+student.add(place(box(.26,.09,.22,new THREE.MeshStandardMaterial({color:0xf0d8b0,roughness:.96})),0,1.15,.1)); // neck
+student.add(place(box(.38,.48,.28,shirtM),0,.82,.08)); // torso
+student.add(place(box(.16,.34,.14,skinM),-.21,.92,.03));
+student.add(place(box(.16,.34,.14,skinM),.21,.92,.03));
+const armL=place(box(.08,.33,.08,skinM),-.24,.89,-.02);armL.rotation.z=.42;student.add(armL);
+const armR=place(box(.08,.33,.08,skinM),.24,.89,-.02);armR.rotation.z=-.42;student.add(armR);
+student.add(place(box(.18,.36,.18,jeansM),-.1,.46,.06));
+student.add(place(box(.18,.36,.18,jeansM),.1,.46,.06));
+student.add(place(box(.12,.08,.28,shoeM),-.12,.1,.14));
+student.add(place(box(.12,.08,.28,shoeM),.12,.1,.14));
+const readBook=place(box(.48,.02,.3,new THREE.MeshStandardMaterial({color:0xf0e0c0,roughness:.96})),0,.8,-.18);
 readBook.rotation.x=.08;student.add(readBook);
+const paper=place(box(.36,.01,.24,new THREE.MeshStandardMaterial({color:0xfff7ef,roughness:.98})),0,.79,-.12);paper.rotation.x=.08;student.add(paper);
+const pen=place(cyl(.01,.01,.18,8,new THREE.MeshStandardMaterial({color:0x1b1b1b,roughness:.6})),.08,.83,-.08);pen.rotation.z=-.42;student.add(pen);
 student.position.set(CX,.02,CZ-.15);student.rotation.y=Math.PI;scene.add(student);
 
 // ── BACKPACK ──────────────────────────────────────────────────────
@@ -716,9 +819,11 @@ shelfGroup.add(place(box(2.1,.14,.4,sfM),.96,.07,0));
 [.42,.9,1.38].forEach(y=>{
   shelfGroup.add(place(box(1.9,.01,.01,new THREE.MeshStandardMaterial({color:0xffe8a0,emissive:0xffda80,emissiveIntensity:1.0,roughness:.5})),.96,y+.01,.16));
 });
-const allHotspots=[];
-const allBookMeshes=[];
-const SHELF_ROWS=[{y:.62,books:BOOKS.slice(0,5)},{y:1.1,books:BOOKS.slice(5,10)},{y:1.58,books:BOOKS.slice(10,15)}];
+const SHELF_ROWS=[
+  {y:.62,title:'Getting Started',subtitle:'Account, login, devices',books:BOOKS.slice(0,5)},
+  {y:1.1,title:'Learning Tools',subtitle:'Notes, videos, practice',books:BOOKS.slice(5,10)},
+  {y:1.58,title:'Results & Support',subtitle:'Progress, parents, help',books:BOOKS.slice(10,15)}
+];
 SHELF_ROWS.forEach(row=>{
   row.books.forEach((bk,i)=>{
     const spineTex=makeSpineTex(bk.spine,bk.col);
@@ -726,19 +831,19 @@ SHELF_ROWS.forEach(row=>{
     const coverM=new THREE.MeshStandardMaterial({color:new THREE.Color(R/255*.78,G/255*.78,B/255*.78),roughness:.88});
     const pageM=new THREE.MeshStandardMaterial({color:0xf5edde,roughness:.97});
     const spineM=new THREE.MeshStandardMaterial({map:spineTex,roughness:.8});
-    const bMesh=mesh(new THREE.BoxGeometry(.2,.3,.24),[coverM,pageM,pageM,pageM,spineM,coverM]);
+    const bookW=.16+rnd(.02,.06),bookH=.28+rnd(.0,.03),bookD=.18+rnd(.02,.06);
+    const bMesh=mesh(new THREE.BoxGeometry(bookW,bookH,bookD),[coverM,pageM,pageM,pageM,spineM,coverM]);
     bMesh.userData={bookId:bk.id,label:bk.spine,isBook:true};
     allBookMeshes.push(bMesh);allHotspots.push({mesh:bMesh,label:'\uD83D\uDCD6  '+bk.title});
-    bMesh.position.set(.18+i*.38,row.y+.15,-.02);
-    bMesh.rotation.z=rnd(-.04,.04);bMesh.rotation.y=rnd(-.02,.02);
+    bMesh.position.set(.13+i*.34,row.y+.14,-.02);
+    bMesh.rotation.z=rnd(-.06,.06);bMesh.rotation.y=rnd(-.03,.03);
     shelfGroup.add(bMesh);
+    if(i===0||i===3){
+      shelfGroup.add(place(box(.028,.28,.14,new THREE.MeshStandardMaterial({color:0x1c1207,roughness:.7})),-.02+i*.34,row.y+.14,-.02));
+    }
   });
-  const lT=makeTex(256,28,(ctx,W,H)=>{
-    ctx.fillStyle='rgba(240,195,70,.12)';ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(240,195,70,.68)';ctx.font='8px Lato,sans-serif';
-    ctx.textAlign='left';ctx.fillText(row.books.map(b=>b.spine).join(' \u00b7 '),5,18);
-  });
-  shelfGroup.add(place(mesh(new THREE.PlaneGeometry(1.88,.1),new THREE.MeshStandardMaterial({map:lT,transparent:true})),.96,row.y+.04,.18));
+  const rowTex=makeInfoTex(288,76,row.title,row.subtitle,row.books.slice(0,3).map(b=>b.spine),'#ffd86d');
+  shelfGroup.add(place(mesh(new THREE.PlaneGeometry(1.56,.41),new THREE.MeshStandardMaterial({map:rowTex,transparent:true,roughness:.9})),.95,row.y+.05,.18));
 });
 const globeM2=new THREE.MeshStandardMaterial({color:0x3a70a0,roughness:.6,emissive:0x102030,emissiveIntensity:.3});
 shelfGroup.add(place(sph(.1,16,globeM2),.96,2.16,-.02));
@@ -783,31 +888,36 @@ for(const dx2 of [-0.8,0,0.8]){
 }
 scene.add(place(box(.065,1.26,2.16,new THREE.MeshStandardMaterial({color:0x0c0a08,roughness:.4,metalness:.5})),TX+.03,2.08,TZ));
 scene.add(place(box(.028,1.3,2.2,new THREE.MeshStandardMaterial({color:0x080806,roughness:.5,metalness:.6})),TX+.04,2.08,TZ));
-const tvScrTex=makeTex(640,360,(ctx,W,H)=>{
-  ctx.fillStyle='#040210';ctx.fillRect(0,0,W,H);
-  const vg=ctx.createLinearGradient(0,0,0,H);vg.addColorStop(0,'rgba(18,36,80,.32)');vg.addColorStop(1,'rgba(4,4,18,.32)');
-  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-  ctx.fillStyle='rgba(200,160,50,.88)';ctx.font='bold 19px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
-  ctx.fillStyle='rgba(140,175,255,.6)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('LIVE \u00b7 Grade 9 Mathematics',W-18,34);
-  ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(0,42,W,1);
-  const rows=[
-    {col:'#90b8ff',bold:true,title:'\u25b6  Algebra \u2014 Quadratic Equations',sub:'Chapter 4 \u00b7 45 min',p:.63},
-    {col:'rgba(255,255,255,.38)',title:'\u25cb  Geometry \u2014 Circles & Tangents',sub:'Chapter 5 \u00b7 38 min',p:0},
-    {col:'rgba(255,255,255,.28)',title:'\u25cb  Statistics \u2014 Data Interpretation',sub:'Chapter 6 \u00b7 52 min',p:0},
-    {col:'rgba(255,255,255,.22)',title:'\u25cb  Trigonometry \u2014 Intro',sub:'Chapter 7 \u00b7 40 min',p:0},
-  ];
-  rows.forEach((row,i)=>{
-    const y=58+i*66;
-    if(i===0){ctx.fillStyle='rgba(75,115,200,.14)';ctx.fillRect(0,y-5,W,62);}
-    ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');
-    ctx.textAlign='left';ctx.fillText(row.title,18,y+22);
-    ctx.fillStyle='rgba(160,140,100,.5)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,18,y+38);
-    if(row.p>0){ctx.fillStyle='rgba(80,80,60,.35)';ctx.fillRect(18,y+50,W-36,3);ctx.fillStyle='rgba(200,160,60,.7)';ctx.fillRect(18,y+50,(W-36)*row.p,3);}
+function buildTvTex(){
+  const st=DEVICE_STATES.tv[deviceIndex.tv%DEVICE_STATES.tv.length];
+  return makeTex(640,360,(ctx,W,H)=>{
+    ctx.fillStyle='#040210';ctx.fillRect(0,0,W,H);
+    const vg=ctx.createLinearGradient(0,0,0,H);vg.addColorStop(0,'rgba(18,36,80,.32)');vg.addColorStop(1,'rgba(4,4,18,.32)');
+    ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(200,160,50,.88)';ctx.font='bold 19px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
+    ctx.fillStyle='rgba(140,175,255,.6)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText(st.sub,W-18,34);
+    ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(0,42,W,1);
+    const rows=st.lines.map((line,i)=>({
+      col:i===0?'#90b8ff':'rgba(255,255,255,.28)',
+      bold:i===0,
+      title:(i===0?'▶  ':'○  ')+line,
+      sub:i===0?'Now playing':'Step '+(i+1),
+      p:i===0?.63:0
+    }));
+    rows.forEach((row,i)=>{
+      const y=58+i*66;
+      if(i===0){ctx.fillStyle='rgba(75,115,200,.14)';ctx.fillRect(0,y-5,W,62);}
+      ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');
+      ctx.textAlign='left';ctx.fillText(row.title,18,y+22);
+      ctx.fillStyle='rgba(160,140,100,.5)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,18,y+38);
+      if(row.p>0){ctx.fillStyle='rgba(80,80,60,.35)';ctx.fillRect(18,y+50,W-36,3);ctx.fillStyle=st.accent;ctx.fillRect(18,y+50,(W-36)*row.p,3);}
+    });
+    ctx.fillStyle='rgba(200,160,50,.06)';ctx.fillRect(0,H-28,W,28);
+    ctx.fillStyle='rgba(200,160,50,.48)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';
+    ctx.fillText('Student Mode  \u00b7  Sync active  \u00b7  3 Devices connected',W/2,H-10);
   });
-  ctx.fillStyle='rgba(200,160,50,.06)';ctx.fillRect(0,H-28,W,28);
-  ctx.fillStyle='rgba(200,160,50,.48)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';
-  ctx.fillText('Student Mode  \u00b7  Sync active  \u00b7  3 Devices connected',W/2,H-10);
-});
+}
+let tvScrTex=buildTvTex();
 const tvSM=new THREE.MeshStandardMaterial({map:tvScrTex,emissive:0x0b1938,emissiveIntensity:1.9,emissiveMap:tvScrTex,roughness:.04});
 const tvScreen=mesh(new THREE.PlaneGeometry(2.0,1.14),tvSM);
 tvScreen.position.set(TX-.02,2.08,TZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
@@ -819,22 +929,54 @@ const rem=place(box(.055,.01,.18,remM),TX-.4,1.12,TZ-.15);rem.rotation.y=.4;scen
 scene.add(place(box(.15,.04,.12,new THREE.MeshStandardMaterial({color:0x101010,roughness:.5,metalness:.25})),TX-.8,1.12,TZ-.25));
 scene.add(place(cyl(.055,.06,.14,16,new THREE.MeshStandardMaterial({color:0x181818,roughness:.45,metalness:.4})),TX-.6,1.12,TZ-.28));
 const tvHot=mesh(new THREE.BoxGeometry(.06,1.22,2.08),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={bookId:'tv',label:'TV Connection',isBook:true};
+tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={kind:'device',device:'tv',label:'TV Connection'};
 scene.add(tvHot);allHotspots.push({mesh:tvHot,label:'\uD83D\uDCFA  TV Connection'});
 
 // ── DOWNLOAD CABINET ──────────────────────────────────────────────
 const DCX=.62,DCZ=-4.2;
 const cabBodyM=new THREE.MeshStandardMaterial({color:0x3a2810,roughness:.78,map:darkWoodTex});
 const cab=new THREE.Group();
-cab.add(place(box(1.05,1.12,.54,cabBodyM),0,.56,0));
-cab.add(place(box(1.12,.055,.56,M.wood),0,1.14,0));
-for(const [cx,cz] of [[-.48,-.25],[.48,-.25],[-.48,.25],[.48,.25]]) cab.add(place(box(.055,.085,.055,M.brass),cx,.04,cz));
-for(let i=0;i<3;i++){
-  const dM=new THREE.MeshStandardMaterial({color:i===0?0x5a3818:0x4c3016,roughness:.78,map:woodTex});
-  cab.add(place(box(.92,.27,.5,dM),0,.16+i*.33,0));
-  const kb=place(cyl(.018,.018,.038,10,M.brass),0,.16+i*.33,.27);kb.rotation.x=Math.PI/2;cab.add(kb);
-}
-cab.add(place(box(.72,.044,.04,new THREE.MeshStandardMaterial({color:0xffdd44,emissive:0xffaa00,emissiveIntensity:2.4,roughness:.25})),0,1.2,0));
+cab.add(place(box(1.08,1.18,.58,cabBodyM),0,.59,0));
+cab.add(place(box(1.16,.06,.6,M.wood),0,1.19,0));
+cab.add(place(box(.1,1.18,.58,new THREE.MeshStandardMaterial({color:0x251508,roughness:.85})),-.49,.59,0));
+cab.add(place(box(.1,1.18,.58,new THREE.MeshStandardMaterial({color:0x251508,roughness:.85})),.49,.59,0));
+cab.add(place(box(1.08,.04,.58,new THREE.MeshStandardMaterial({color:0x241308,roughness:.88})),0,.02,0));
+for(const [cx,cz] of [[-.48,-.26],[.48,-.26],[-.48,.26],[.48,.26]]) cab.add(place(box(.055,.085,.055,M.brass),cx,.05,cz));
+cab.add(place(box(1.0,.08,.54,new THREE.MeshStandardMaterial({color:0x5d3818,roughness:.84,map:woodTex})),0,.13,0));
+
+const drawerDefs=[
+  {id:'client',title:'Client Apps',subtitle:'Windows / macOS / Linux / Android',accent:'#ffd66f',lines:['Installer','Portable zip','Android APK pack']},
+  {id:'tvapps',title:'TV Apps',subtitle:'Android TV / Linux / macOS',accent:'#9bc7ff',lines:['TV APK','TV AAB','TV bundles']},
+  {id:'guides',title:'Guides',subtitle:'Login / setup / support',accent:'#9fe0ac',lines:['Install help','Pairing steps','Support links']},
+];
+const drawerParts=[];
+drawerDefs.forEach((def,i)=>{
+  const y=.17+i*.32;
+  const drawer=new THREE.Group();
+  const drawerBody=place(box(.92,.245,.46,new THREE.MeshStandardMaterial({color:i===0?0x5a3818:0x4c3016,roughness:.78,map:woodTex})),0,0,0);
+  drawer.add(drawerBody);
+  drawer.add(place(box(.92,.018,.02,new THREE.MeshStandardMaterial({color:0x2a1608,roughness:.88})),0,.123,.235));
+  const frontTex=makeInfoTex(280,130,def.title,def.subtitle,def.lines,def.accent);
+  const frontMat=new THREE.MeshStandardMaterial({map:frontTex,roughness:.9});
+  const front=place(box(.86,.19,.034,frontMat),0,0,.248);
+  drawer.add(front);
+  const pull=place(cyl(.016,.016,.048,10,M.brass),0,0,.27);pull.rotation.x=Math.PI/2;drawer.add(pull);
+  const noteTex=makeInfoTex(256,120,def.title,'Open drawer',def.lines,def.accent);
+  drawer.content=place(mesh(new THREE.PlaneGeometry(.76,.33),new THREE.MeshStandardMaterial({map:noteTex,transparent:true,roughness:.9})),0,.0,.02);
+  drawer.content.position.set(0,.01,.03);
+  drawer.content.rotation.y=Math.PI;
+  drawer.content.visible=false;
+  drawer.add(drawer.content);
+  drawer.position.set(0,y,0);
+  drawer.userData={kind:'drawer',id:def.id,label:def.title,open:false,baseZ:0,travel:.17,index:i};
+  drawerParts.push(drawer);
+  cab.add(drawer);
+  front.userData={kind:'drawer',id:def.id,label:def.title};
+  allHotspots.push({mesh:front,label:'\uD83D\uDCC1  '+def.title});
+  drawer.front=front;
+  drawer.body=drawerBody;
+});
+cab.add(place(box(.72,.044,.04,new THREE.MeshStandardMaterial({color:0xffdd44,emissive:0xffaa00,emissiveIntensity:2.4,roughness:.25})),0,1.24,0));
 const dlSignTex=makeTex(280,72,(ctx,W,H)=>{
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='rgba(240,180,20,.92)';ctx.font='bold 16px Georgia,serif';ctx.textAlign='center';
@@ -843,7 +985,7 @@ const dlSignTex=makeTex(280,72,(ctx,W,H)=>{
   ctx.fillText('Click to install on any device',W/2,58);
 });
 const dlSignM=new THREE.MeshStandardMaterial({map:dlSignTex,transparent:true,emissive:0xffffff,emissiveIntensity:.42,emissiveMap:dlSignTex});
-cab.add(place(mesh(new THREE.PlaneGeometry(.88,.22),dlSignM),0,1.34,.28));
+cab.add(place(mesh(new THREE.PlaneGeometry(.88,.22),dlSignM),0,1.34,.3));
 cab.position.set(DCX,0,DCZ);scene.add(cab);
 const dlHot=mesh(new THREE.BoxGeometry(1.1,1.26,.58),new THREE.MeshBasicMaterial({visible:false}));
 dlHot.position.set(DCX,.56,DCZ);dlHot.userData={isDownload:true,label:'Downloads'};
@@ -914,6 +1056,19 @@ const calTex=makeTex(256,192,(ctx,W,H)=>{
 const cal=mesh(new THREE.PlaneGeometry(.75,.56),new THREE.MeshStandardMaterial({map:calTex,roughness:.88}));
 cal.position.set(-.55,2.38,-5.36);scene.add(cal);
 scene.add(place(box(.78,.59,.025,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),-.55,2.38,-5.35));
+
+const teslaTex=makePortraitTex('Nikola Tesla','Inventor \u00b7 Ideas lead the future');
+const einsteinTex=makePortraitTex('Albert Einstein','Physicist \u00b7 Curiosity drives learning','blue');
+const teslaFrame=mesh(new THREE.PlaneGeometry(.68,.84),new THREE.MeshStandardMaterial({map:teslaTex,roughness:.9}));
+teslaFrame.position.set(-1.08,1.88,-5.36);scene.add(teslaFrame);
+scene.add(place(box(.72,.9,.03,new THREE.MeshStandardMaterial({color:0x6a4b20,roughness:.75})),-1.08,1.88,-5.35));
+const einsteinFrame=mesh(new THREE.PlaneGeometry(.68,.84),new THREE.MeshStandardMaterial({map:einsteinTex,roughness:.9}));
+einsteinFrame.position.set(1.2,1.88,-5.36);scene.add(einsteinFrame);
+scene.add(place(box(.72,.9,.03,new THREE.MeshStandardMaterial({color:0x6a4b20,roughness:.75})),1.2,1.88,-5.35));
+const quoteTex=makeInfoTex(360,210,'Learn Like A Builder','The room teaches the room',[ 'Read one chapter every day', 'Use notes to remember details', 'Practice until it feels natural' ],'#f0c060');
+const quoteBoard=mesh(new THREE.PlaneGeometry(1.0,.58),new THREE.MeshStandardMaterial({map:quoteTex,roughness:.92}));
+quoteBoard.position.set(.02,1.74,4.74);scene.add(quoteBoard);
+scene.add(place(box(1.04,.62,.025,new THREE.MeshStandardMaterial({color:0x5b3d18,roughness:.75})),.02,1.74,4.73));
 
 // ── BULLETIN BOARD ────────────────────────────────────────────────
 const pinTex=makeTex(512,320,(ctx,W,H)=>{
@@ -1138,11 +1293,19 @@ canvas.addEventListener('pointermove',e=>{
 });
 canvas.addEventListener('click',e=>{
   if(dragMoved)return;const hits=castAt(e.clientX,e.clientY);if(!hits.length)return;
-  const m=hits[0].object;if(m.userData.isBook)openBook(m.userData.bookId);else if(m.userData.isDownload)openDownloads();
+  const m=hits[0].object;
+  if(m.userData.kind==='drawer'){toggleDrawer(m.userData.id);}
+  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);}
+  else if(m.userData.isBook)openBook(m.userData.bookId);
+  else if(m.userData.isDownload)openDownloads('all');
 });
 canvas.addEventListener('touchend',e=>{
   if(touchMoved)return;const t=e.changedTouches[0];const hits=castAt(t.clientX,t.clientY);if(!hits.length)return;
-  const m=hits[0].object;if(m.userData.isBook)openBook(m.userData.bookId);else if(m.userData.isDownload)openDownloads();
+  const m=hits[0].object;
+  if(m.userData.kind==='drawer'){toggleDrawer(m.userData.id);}
+  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);}
+  else if(m.userData.isBook)openBook(m.userData.bookId);
+  else if(m.userData.isDownload)openDownloads('all');
 },{passive:true});
 
 // ── OVERLAY ───────────────────────────────────────────────────────
@@ -1155,20 +1318,55 @@ function openBook(id){
   document.getElementById('obody').innerHTML=bk.body;
   overlay.classList.add('open');
 }
-function openDownloads(){
+function openDownloads(scope='all'){
   const dl=window.FA_DOWNLOADS;
   document.getElementById('otag').textContent='Downloads';
   document.getElementById('otitle').textContent='Install Family Academy';
-  document.getElementById('osub').textContent='Available on all your devices';
-  let h='<div class="dlsec">Student & Mobile Apps</div><div class="dlgrid">';
-  Object.values(dl.client).forEach(d=>{h+='<a href="'+d.url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+d.icon+'</span>'+d.label+'</a>';});
-  h+='</div><div class="dlsec">TV & Big Screen</div><div class="dlgrid">';
-  Object.values(dl.tv).forEach(d=>{h+='<a href="'+d.url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+d.icon+'</span>'+d.label+'</a>';});
-  h+='</div>';document.getElementById('obody').innerHTML=h;overlay.classList.add('open');
+  document.getElementById('osub').textContent=scope==='client'?'Client app builds':scope==='tv'?'TV app builds':'Available on all your devices';
+  let h='';
+  if(scope!=='tv'){
+    h+='<div class="dlsec">Student & Mobile Apps</div><div class="dlgrid">';
+    Object.values(dl.client).forEach(d=>{h+='<a href="'+d.url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+d.icon+'</span>'+d.label+'</a>';});
+    h+='</div>';
+  }
+  if(scope!=='client'){
+    h+='<div class="dlsec">TV & Big Screen</div><div class="dlgrid">';
+    Object.values(dl.tv).forEach(d=>{h+='<a href="'+d.url+'" class="dlbtn" target="_blank" rel="noopener"><span class="dlicon">'+d.icon+'</span>'+d.label+'</a>';});
+    h+='</div>';
+  }
+  if(scope==='guides'){
+    h+='<div class="dlsec">Setup Guide</div><p style="margin:0 0 12px;line-height:1.8;color:#b09060;font-family:Lato,sans-serif;font-size:.9rem;">Open the drawer again to see the download cards, then use the install steps shown on the TV, laptop, and phone screens in the room.</p>';
+  }
+  document.getElementById('obody').innerHTML=h;overlay.classList.add('open');
 }
 document.getElementById('ocls').addEventListener('click',()=>overlay.classList.remove('open'));
 overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.classList.remove('open');});
 document.addEventListener('keydown',e=>{if(e.code==='Escape')overlay.classList.remove('open');});
+
+function toggleDrawer(id){
+  const d=drawerParts.find(x=>x.userData.id===id);
+  if(!d)return;
+  const openNow=!d.userData.open;
+  drawerParts.forEach(x=>{x.userData.open=false;});
+  d.userData.open=openNow;
+  if(openNow){
+    if(id==='client') openDownloads('client');
+    else if(id==='tvapps') openDownloads('tv');
+    else if(id==='guides') openDownloads('guides');
+  }
+}
+function cycleDeviceScreen(device){
+  if(device==='laptop'){
+    deviceIndex.laptop=(deviceIndex.laptop+1)%DEVICE_STATES.laptop.length;
+    scrTex.dispose();scrTex=buildDeviceTex('laptop');scrMat.map=scrTex;scrMat.emissiveMap=scrTex;scrMat.needsUpdate=true;
+  }else if(device==='phone'){
+    deviceIndex.phone=(deviceIndex.phone+1)%DEVICE_STATES.phone.length;
+    phoneTex.dispose();phoneTex=buildDeviceTex('phone');phoneMat.map=phoneTex;phoneMat.emissiveMap=phoneTex;phoneMat.needsUpdate=true;
+  }else if(device==='tv'){
+    deviceIndex.tv=(deviceIndex.tv+1)%DEVICE_STATES.tv.length;
+    tvScrTex.dispose();tvScrTex=buildTvTex();tvSM.map=tvScrTex;tvSM.emissiveMap=tvScrTex;tvSM.needsUpdate=true;
+  }
+}
 
 // ── ZONES ─────────────────────────────────────────────────────────
 const ZONES=[{maxZ:5,label:''},{maxZ:3.2,label:'The Entrance'},{maxZ:.8,label:'Study Desk'},{maxZ:-1.5,label:'Book Shelf'},{maxZ:-3.2,label:'TV And Bed Corner'},{maxZ:-6,label:'Downloads & Support'}];
@@ -1262,6 +1460,17 @@ function animBooks(t){
     m.scale.y+=(ts-m.scale.y)*.1;
   });
 }
+function animDrawers(t){
+  drawerParts.forEach(d=>{
+    const target=d.userData.open?d.userData.travel:0;
+    d.position.z+=(target-d.position.z)*.14;
+    if(d.content)d.content.visible=d.userData.open||Math.abs(d.position.z)>0.01;
+    if(d.front){
+      d.front.position.z=.248+d.position.z*0.08;
+      d.front.position.x=0;
+    }
+  });
+}
 
 // ── RESIZE ────────────────────────────────────────────────────────
 window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
@@ -1285,7 +1494,7 @@ function render(now){
   camera.position.copy(cPos);camera.position.y+=moving?Math.sin(t*5.2)*.013:0;
   const cp=Math.cos(cPitch);
   camera.lookAt(cPos.x+Math.sin(cYaw)*cp,cPos.y+Math.sin(cPitch),cPos.z+Math.cos(cYaw)*cp);
-  animParticles(t);animLights(t);animBooks(t);checkZone();
+  animParticles(t);animLights(t);animBooks(t);animDrawers(t);checkZone();
   // Dynamic fog — denser when camera moves fast
   const movSpeed=cPos.distanceTo(tPos);
   scene.fog.density=.021+movSpeed*.004;
