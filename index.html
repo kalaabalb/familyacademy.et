@@ -383,8 +383,8 @@ const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x0f0700);
 scene.fog=new THREE.FogExp2(0x0e0600,.021);
 
-const camera=new THREE.PerspectiveCamera(56,window.innerWidth/window.innerHeight,.04,55);
-camera.position.set(0,1.62,3.65);
+const camera=new THREE.PerspectiveCamera(52,window.innerWidth/window.innerHeight,.04,55);
+camera.position.set(0,1.58,3.35);
 
 // ── HELPERS ───────────────────────────────────────────────────────
 function rnd(a,b){return a+(b-a)*Math.random();}
@@ -503,7 +503,7 @@ function place(o,x,y,z){o.position.set(x,y,z);return o;}
 function add(...os){os.forEach(o=>scene.add(o));return os[os.length-1];}
 
 // ── ROOM SHELL ────────────────────────────────────────────────────
-const RW=8.2,RH=3.35,RD=10.8;
+const RW=7.6,RH=3.22,RD=9.8;
 add(place(box(RW,.06,RD,M.floor),0,.03,0));
 add(place(box(RW,.06,RD,M.ceil),0,RH,0));
 add(place(box(RW,RH,.08,M.wall),0,RH/2,-RD/2));
@@ -576,7 +576,7 @@ const mnHand=place(box(.003,.13,.012,handM),0,.06,0);
 clockGroup.add(hrHand);clockGroup.add(mnHand);
 
 // ── STUDY DESK ────────────────────────────────────────────────────
-const DX=-2.15,DZ=-1.65;
+const DX=-2.38,DZ=-1.92;
 scene.add(place(box(2.55,.065,1.12,M.wood),DX,.79,DZ+.1));
 for(const [ax,az] of [[-1.2,.12],[1.2,.12],[-1.2,.92],[1.2,.92]])
   scene.add(place(box(.065,.79,.065,M.darkW),DX+ax,.39,DZ+az));
@@ -644,7 +644,7 @@ for(let i=0;i<5;i++){
 scene.add(place(box(.005,.004,.24,new THREE.MeshStandardMaterial({color:0x181818,roughness:.8})),DX+.52,.828,DZ-.12));
 
 // ── DESK CHAIR ────────────────────────────────────────────────────
-const CX=DX,CZ=DZ+1.32;
+const CX=DX,CZ=DZ+1.16;
 scene.add(place(box(.6,.068,.56,new THREE.MeshStandardMaterial({color:0x282018,roughness:.75})),CX,.56,CZ));
 scene.add(place(box(.6,.64,.058,new THREE.MeshStandardMaterial({color:0x201810,roughness:.8})),CX,.91,CZ-.27));
 scene.add(place(box(.38,.18,.058,new THREE.MeshStandardMaterial({color:0x201810,roughness:.8})),CX,1.4,CZ-.27));
@@ -674,7 +674,7 @@ scene.add(place(box(.3,.28,.2,new THREE.MeshStandardMaterial({color:0x24304a,rou
 for(const dx of [-.09,.09]) scene.add(place(box(.02,.38,.015,new THREE.MeshStandardMaterial({color:0x1a2540,roughness:.8})),DX-1.55+dx,.22,DZ+1.0));
 
 // ── BED ───────────────────────────────────────────────────────────
-const BX=2.75,BZ=-2.95;
+const BX=2.38,BZ=-3.28;
 scene.add(place(box(1.48,.28,2.58,M.wood),BX,.14,BZ));
 const hbM=new THREE.MeshStandardMaterial({color:0x5a3010,roughness:.78,metalness:.04});
 scene.add(place(box(1.5,.82,.1,hbM),BX,.55,BZ-1.26));
@@ -699,7 +699,7 @@ const bedRug=mesh(new THREE.PlaneGeometry(1.3,.85),new THREE.MeshStandardMateria
 bedRug.rotation.x=-Math.PI/2;bedRug.position.set(BX-1.2,.04,BZ+.9);scene.add(bedRug);
 
 // ── BOOKSHELF ─────────────────────────────────────────────────────
-const SX=-4.02,SZ=-3.7;
+const SX=-3.78,SZ=-3.95;
 const shelfGroup=new THREE.Group();
 shelfGroup.position.set(SX,0,SZ);shelfGroup.rotation.y=Math.PI/2;
 const sfM=new THREE.MeshStandardMaterial({color:0x2a1808,roughness:.82,map:darkWoodTex});
@@ -771,7 +771,7 @@ for(let i=0;i<6;i++){const lf=place(box(.025,.15,.06,leafM2),.66+rnd(-.06,.06),1
 miniShelf.position.set(-3.55,0,-.8);miniShelf.rotation.y=Math.PI/2;scene.add(miniShelf);
 
 // ── TV UNIT ───────────────────────────────────────────────────────
-const TX=RW/2-.12,TZ=-3.55;
+const TX=RW/2-.12,TZ=-3.82;
 const credM=new THREE.MeshStandardMaterial({color:0x2a1808,roughness:.82,map:darkWoodTex});
 scene.add(place(box(2.42,.54,.54,credM),TX-.4,1.05,TZ-.28));
 scene.add(place(box(2.46,.04,.56,M.wood),TX-.4,.8,TZ-.28));
@@ -823,7 +823,7 @@ tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={bookId:'tv',label:'TV Connect
 scene.add(tvHot);allHotspots.push({mesh:tvHot,label:'\uD83D\uDCFA  TV Connection'});
 
 // ── DOWNLOAD CABINET ──────────────────────────────────────────────
-const DCX=.75,DCZ=-4.55;
+const DCX=.62,DCZ=-4.2;
 const cabBodyM=new THREE.MeshStandardMaterial({color:0x3a2810,roughness:.78,map:darkWoodTex});
 const cab=new THREE.Group();
 cab.add(place(box(1.05,1.12,.54,cabBodyM),0,.56,0));
@@ -915,6 +915,29 @@ const cal=mesh(new THREE.PlaneGeometry(.75,.56),new THREE.MeshStandardMaterial({
 cal.position.set(-.55,2.38,-5.36);scene.add(cal);
 scene.add(place(box(.78,.59,.025,new THREE.MeshStandardMaterial({color:0x282018,roughness:.8})),-.55,2.38,-5.35));
 
+// ── BULLETIN BOARD ────────────────────────────────────────────────
+const pinTex=makeTex(512,320,(ctx,W,H)=>{
+  const g=ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,'#8f6a3a');g.addColorStop(1,'#6f4a23');
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='rgba(255,240,210,.08)';ctx.fillRect(12,12,W-24,H-24);
+  ctx.strokeStyle='rgba(255,225,150,.18)';ctx.lineWidth=6;ctx.strokeRect(10,10,W-20,H-20);
+  ctx.fillStyle='rgba(0,0,0,.22)';ctx.fillRect(24,26,W-48,H-52);
+  ctx.fillStyle='rgba(255,240,180,.95)';ctx.font='bold 24px Georgia,serif';ctx.textAlign='center';
+  ctx.fillText("TODAY'S GOAL",W/2,64);
+  ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='14px Lato,sans-serif';
+  ctx.fillText('Read. Practice. Review. Repeat.',W/2,98);
+  ['• Finish Chapter 4 notes','• Watch the lesson replay','• Try 10 practice questions','• Check progress after dinner'].forEach((l,i)=>{
+    ctx.fillStyle=['#f4d060','#c0e0ff','#ffd0a0','#d0f0b0'][i];
+    ctx.fillText(l,48,140+i*32);
+  });
+  ctx.fillStyle='rgba(255,240,180,.4)';ctx.fillRect(46,250,W-92,2);
+  ctx.fillStyle='rgba(255,240,180,.8)';ctx.font='italic 13px Georgia,serif';ctx.fillText('Small steps become strong results.',W/2,278);
+});
+const board=mesh(new THREE.PlaneGeometry(1.15,.74),new THREE.MeshStandardMaterial({map:pinTex,roughness:.9}));
+board.position.set(-RW/2+.06,2.12,-1.95);board.rotation.y=Math.PI/2;scene.add(board);
+scene.add(place(box(.06,.82,1.24,new THREE.MeshStandardMaterial({color:0x6a4822,roughness:.85})),-RW/2+.06,2.12,-1.95));
+
 // ── RUG ───────────────────────────────────────────────────────────
 const rugTex=makeTex(512,256,(ctx,W,H)=>{
   ctx.fillStyle='#5a3018';ctx.fillRect(0,0,W,H);
@@ -997,43 +1020,59 @@ const pMat=new THREE.PointsMaterial({color:0xffe8a0,size:.018,transparent:true,o
 scene.add(new THREE.Points(pGeo,pMat));
 
 // ── CAMERA ────────────────────────────────────────────────────────
-let tPos=new THREE.Vector3(0,1.62,3.65);
-let cPos=new THREE.Vector3(0,1.62,3.65);
+let tPos=new THREE.Vector3(0,1.58,3.35);
+let cPos=new THREE.Vector3(0,1.58,3.35);
 let tYaw=Math.PI,cYaw=Math.PI;
 let tPitch=-.03,cPitch=-.03;
-const BOUNDS={xMin:-3.55,xMax:3.55,zMin:-4.85,zMax:4.65};
+const BOUNDS={xMin:-3.15,xMax:3.15,zMin:-4.45,zMax:4.2};
 const MOVE=.072;
 const FOCUS_POINTS={
-  desk:{pos:[-2.05,1.55,.35],look:[DX,.95,DZ]},
-  drawer:{pos:[-.95,1.38,-.35],look:[DX+.85,.48,DZ+.2]},
-  shelf:{pos:[-2.75,1.62,-2.8],look:[SX+.03,1.38,SZ]},
-  bed:{pos:[1.25,1.52,-1.35],look:[BX,.72,BZ]},
-  quotes:{pos:[-.45,1.62,-2.95],look:[-.55,2.34,-5.35]},
-  tv:{pos:[1.25,1.62,-2.45],look:[TX,2.05,TZ]},
-  downloads:{pos:[.6,1.48,-3.15],look:[DCX,.9,DCZ]}
+  desk:{pos:[-2.2,1.44,-.15],look:[DX,.9,DZ-.05]},
+  drawer:{pos:[-1.15,1.35,-.6],look:[DX+.85,.5,DZ+.25]},
+  shelf:{pos:[-2.45,1.56,-3.1],look:[SX+.03,1.38,SZ]},
+  bed:{pos:[1.05,1.44,-1.8],look:[BX,.72,BZ]},
+  quotes:{pos:[-.15,1.56,-2.6],look:[-.55,2.34,-5.1]},
+  tv:{pos:[1.1,1.55,-2.55],look:[TX,2.0,TZ]},
+  downloads:{pos:[.55,1.42,-3.1],look:[DCX,.9,DCZ]}
 };
+let focusMode=false;
+let focusTime=0;
+let focusDur=1.1;
+let focusStartPos=new THREE.Vector3();
+let focusEndPos=new THREE.Vector3();
+let focusStartYaw=0,focusEndYaw=0,focusStartPitch=0,focusEndPitch=0;
+function lerpAngle(a,b,p){
+  const d=((b-a+Math.PI*3)%(Math.PI*2))-Math.PI;
+  return a+d*p;
+}
 function lookToward(point){
   const dx=point[0]-tPos.x,dy=point[1]-tPos.y,dz=point[2]-tPos.z;
   tYaw=Math.atan2(dx,dz);
   tPitch=Math.max(-.58,Math.min(.42,Math.atan2(dy,Math.hypot(dx,dz))));
 }
-function moveToFocus(id){
+function beginFocus(id){
   const fp=FOCUS_POINTS[id];if(!fp)return;
-  tPos.set(fp.pos[0],fp.pos[1],fp.pos[2]);
-  tPos.x=Math.max(BOUNDS.xMin,Math.min(BOUNDS.xMax,tPos.x));
-  tPos.z=Math.max(BOUNDS.zMin,Math.min(BOUNDS.zMax,tPos.z));
-  lookToward(fp.look);
+  focusMode=true;focusTime=0;
+  focusStartPos.copy(tPos);
+  focusEndPos.set(fp.pos[0],fp.pos[1],fp.pos[2]);
+  focusEndPos.x=Math.max(BOUNDS.xMin,Math.min(BOUNDS.xMax,focusEndPos.x));
+  focusEndPos.z=Math.max(BOUNDS.zMin,Math.min(BOUNDS.zMax,focusEndPos.z));
+  focusStartYaw=tYaw;focusStartPitch=tPitch;
+  const dx=fp.look[0]-focusEndPos.x,dy=fp.look[1]-focusEndPos.y,dz=fp.look[2]-focusEndPos.z;
+  focusEndYaw=Math.atan2(dx,dz);
+  focusEndPitch=Math.max(-.58,Math.min(.42,Math.atan2(dy,Math.hypot(dx,dz))));
   const hintEl=document.getElementById('hint-arrow');if(hintEl.classList.contains('show'))hintEl.classList.remove('show');
 }
 const keys={};
 document.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();});
 document.addEventListener('keyup',e=>{keys[e.code]=false;});
-document.querySelectorAll('[data-focus]').forEach(btn=>btn.addEventListener('click',()=>moveToFocus(btn.dataset.focus)));
+document.querySelectorAll('[data-focus]').forEach(btn=>btn.addEventListener('click',()=>beginFocus(btn.dataset.focus)));
 let drag=false,lx=0,ly=0,dragMoved=false;
 canvas.addEventListener('pointerdown',e=>{if(e.button!==2){drag=true;lx=e.clientX;ly=e.clientY;dragMoved=false;canvas.style.cursor='none';}});
 window.addEventListener('pointerup',()=>{drag=false;canvas.style.cursor='crosshair';});
 window.addEventListener('pointermove',e=>{
   if(!drag)return;
+  focusMode=false;
   const dx=e.clientX-lx,dy=e.clientY-ly;
   if(Math.abs(dx)>2||Math.abs(dy)>2)dragMoved=true;
   lx=e.clientX;ly=e.clientY;
@@ -1054,6 +1093,7 @@ window.addEventListener('touchend',()=>{if(jActive){jActive=false;jDX=0;jDY=0;jK
 // Scroll wheel → walk forward/back
 canvas.addEventListener('wheel',e=>{
   if(overlay.classList.contains('open'))return;
+  focusMode=false;
   const dir=new THREE.Vector3(Math.sin(cYaw),0,Math.cos(cYaw));
   tPos.addScaledVector(dir,e.deltaY>0?MOVE*1.6:-MOVE*1.6);
   tPos.x=Math.max(BOUNDS.xMin,Math.min(BOUNDS.xMax,tPos.x));
@@ -1231,9 +1271,17 @@ let lastT=0;
 function render(now){
   requestAnimationFrame(render);
   const dt=Math.min((now-lastT)/1000,.05);lastT=now;const t=now*.001;
-  if(introActive)stepIntro(dt);else doMove();
+  if(introActive)stepIntro(dt);else if(focusMode){
+    focusTime=Math.min(focusTime+dt,focusDur);
+    const p=Math.min(focusTime/focusDur,1);
+    const e=easeOut4(p);
+    tPos.lerpVectors(focusStartPos,focusEndPos,e);
+    tYaw=lerpAngle(focusStartYaw,focusEndYaw,e);
+    tPitch=focusStartPitch+(focusEndPitch-focusStartPitch)*e;
+    if(p>=1)focusMode=false;
+  } else doMove();
   cPos.lerp(tPos,.09);cYaw+=(tYaw-cYaw)*.1;cPitch+=(tPitch-cPitch)*.1;
-  const moving=!introActive&&(keys.KeyW||keys.KeyS||keys.KeyA||keys.KeyD||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight||(jActive&&(Math.abs(jDX)>4||Math.abs(jDY)>4)));
+  const moving=!introActive&&!focusMode&&(keys.KeyW||keys.KeyS||keys.KeyA||keys.KeyD||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight||(jActive&&(Math.abs(jDX)>4||Math.abs(jDY)>4)));
   camera.position.copy(cPos);camera.position.y+=moving?Math.sin(t*5.2)*.013:0;
   const cp=Math.cos(cPitch);
   camera.lookAt(cPos.x+Math.sin(cYaw)*cp,cPos.y+Math.sin(cPitch),cPos.z+Math.cos(cYaw)*cp);
