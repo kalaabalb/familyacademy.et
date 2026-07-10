@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Family Academy">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#130b04"/>
+      <stop offset="58%" stop-color="#27160b"/>
+      <stop offset="100%" stop-color="#4a2b13"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#f0c060" stop-opacity="0.38"/>
+      <stop offset="100%" stop-color="#f0c060" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="60" y="60" width="1080" height="510" rx="38" fill="none" stroke="#f0c060" stroke-opacity="0.2" stroke-width="4"/>
+  <circle cx="600" cy="270" r="220" fill="url(#glow)"/>
+  <circle cx="600" cy="270" r="98" fill="#f0c060"/>
+  <text x="600" y="302" text-anchor="middle" font-family="Georgia,serif" font-size="86" fill="#130b04" font-weight="700">FA</text>
+  <text x="600" y="420" text-anchor="middle" font-family="Georgia,serif" font-size="48" fill="#f3d18c">Family Academy</text>
+  <text x="600" y="468" text-anchor="middle" font-family="Arial,sans-serif" font-size="26" fill="#e8cfb0" letter-spacing="6">YOUR LEARNING UNIVERSE</text>
+  <text x="600" y="520" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#caa06c">Download • Learn • Study on Web, Mobile, Desktop, and TV</text>
+</svg>
