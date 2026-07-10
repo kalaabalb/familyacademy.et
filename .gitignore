@@ -1,3 +1,17 @@
 node_modules/
 .DS_Store
 npm-debug.log*
+.env
+.cache/
+dist/
+build/
+coverage/
+downloads/
+*.apk
+*.aab
+*.zip
+*.tar.gz
+*.exe
+*.dmg
+*.msi
+*.AppImage
