@@ -2,207 +2,348 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Family Academy Downloads</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Family Academy</title>
+<meta name="description" content="Family Academy downloads and cinematic room. Get the client apps, TV app, and the immersive learning room from one landing page."/>
+<meta name="theme-color" content="#0d0804"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --bg:#0d0804;
-  --panel:rgba(20,12,6,.84);
-  --panel-2:rgba(29,18,9,.92);
+  --bg-2:#150d08;
+  --panel:rgba(24,15,9,.86);
+  --panel-2:rgba(35,22,13,.9);
   --line:rgba(244,202,116,.18);
   --line-2:rgba(244,202,116,.32);
-  --text:#f6e2ba;
-  --muted:#c6a87a;
+  --text:#f7ead0;
+  --muted:#cfb08a;
+  --soft:#ebd4aa;
   --accent:#f0c060;
   --accent-2:#8cb4ff;
+  --accent-3:#9ad7b4;
+  --shadow:0 30px 90px rgba(0,0,0,.58);
 }
 *{box-sizing:border-box}
-html,body{width:100%;height:100%;margin:0}
+html,body{min-height:100%;margin:0}
 body{
-  overflow:hidden;
-  font-family:Arial,Helvetica,sans-serif;
   color:var(--text);
+  font-family:"Space Grotesk",system-ui,sans-serif;
   background:
-    radial-gradient(circle at 50% 20%,rgba(240,192,96,.22),transparent 28%),
-    radial-gradient(circle at 15% 85%,rgba(140,180,255,.12),transparent 30%),
-    linear-gradient(180deg,#201107 0%,#120a04 42%,#090502 100%);
+    radial-gradient(circle at 20% 18%,rgba(240,192,96,.2),transparent 28%),
+    radial-gradient(circle at 84% 12%,rgba(140,180,255,.16),transparent 26%),
+    radial-gradient(circle at 50% 88%,rgba(154,215,180,.08),transparent 26%),
+    linear-gradient(180deg,#1a1009 0%,#0f0905 48%,#090502 100%);
+  overflow-x:hidden;
 }
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent 20%),
+    radial-gradient(circle at 50% 42%,transparent 0 54%,rgba(0,0,0,.42) 100%);
+  opacity:.9;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:-20%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(240,192,96,.08),transparent 12%),
+    radial-gradient(circle at 70% 30%,rgba(140,180,255,.08),transparent 14%),
+    radial-gradient(circle at 55% 68%,rgba(154,215,180,.08),transparent 14%);
+  filter:blur(26px);
+  animation:floatGlow 18s ease-in-out infinite;
+}
+@keyframes floatGlow{
+  0%,100%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,-1.5%,0) scale(1.03)}
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
 .shell{
-  min-height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:28px;
+  position:relative;
+  z-index:1;
+  width:min(1380px,100%);
+  margin:0 auto;
+  padding:24px;
+}
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  gap:18px;
+  align-items:stretch;
+  min-height:calc(100vh - 48px);
 }
 .panel{
-  width:min(1120px,100%);
-  max-height:100%;
-  overflow:auto;
   border:1px solid var(--line);
   border-radius:28px;
   background:linear-gradient(160deg,var(--panel),var(--panel-2));
-  box-shadow:0 30px 90px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.05);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(16px);
+}
+.story{
   padding:28px;
-}
-.hero{
-  display:flex;
-  gap:24px;
-  align-items:flex-start;
-  justify-content:space-between;
-  margin-bottom:22px;
-}
-.brand{
   display:flex;
   flex-direction:column;
-  gap:8px;
+  justify-content:space-between;
+  gap:22px;
+  overflow:hidden;
+  position:relative;
+}
+.story::before{
+  content:"";
+  position:absolute;
+  inset:auto -10% 36% auto;
+  width:360px;
+  height:360px;
+  background:radial-gradient(circle,rgba(240,192,96,.12),transparent 66%);
+  pointer-events:none;
 }
 .eyebrow{
-  font-size:12px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  width:max-content;
+  font-size:.72rem;
   letter-spacing:.42em;
   text-transform:uppercase;
   color:var(--muted);
 }
-h1{
-  font-family:Georgia,serif;
-  font-size:clamp(2.1rem,4vw,4rem);
-  line-height:1.02;
-  margin:0;
-  color:#ffe29a;
-}
-.lead{
-  max-width:70ch;
-  margin:8px 0 0;
-  line-height:1.75;
-  color:#d7c09a;
-  font-size:1rem;
-}
-.quick{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:flex-end;
-}
-.chip{
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:10px 14px;
-  color:var(--muted);
-  background:rgba(255,255,255,.03);
-  font-size:.82rem;
-  letter-spacing:.04em;
-}
-.sections{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:16px;
-}
-.section{
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:rgba(0,0,0,.14);
-  padding:18px;
-}
-.section h2{
-  margin:0 0 8px;
-  font-family:Georgia,serif;
-  font-size:1.4rem;
-  color:#f7d78c;
-}
-.section p{
-  margin:0 0 16px;
-  color:#cdb38a;
-  line-height:1.6;
-  font-size:.95rem;
-}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:10px;
-}
-.download{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-  padding:14px 14px 13px;
-  border-radius:16px;
-  border:1px solid rgba(244,202,116,.16);
-  background:linear-gradient(180deg,rgba(244,202,116,.08),rgba(255,255,255,.02));
-  color:var(--text);
-  text-decoration:none;
-  min-height:100px;
-  outline:none;
-}
-.download:hover,.download:focus-visible,.download.selected{
-  border-color:var(--line-2);
-  background:linear-gradient(180deg,rgba(244,202,116,.18),rgba(255,255,255,.05));
-  transform:translateY(-1px);
-}
-.download strong{
-  font-size:.96rem;
-  line-height:1.25;
-  color:#ffe39d;
-}
-.download span{
-  color:var(--muted);
-  font-size:.82rem;
-  line-height:1.45;
-}
-.tag{
-  display:inline-flex;
-  align-items:center;
-  width:max-content;
-  gap:8px;
-  font-size:.72rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
-  color:#b89054;
-}
-.tag::before{
-  content:'';
+.eyebrow::before{
+  content:"";
   width:18px;
   height:1px;
   background:var(--accent);
-  opacity:.7;
+  opacity:.8;
 }
-.tv-callout{
+h1{
+  margin:12px 0 14px;
+  max-width:12ch;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:clamp(3rem,7vw,6rem);
+  line-height:.9;
+  letter-spacing:-.05em;
+  color:#ffe29a;
+}
+.lead{
+  max-width:66ch;
+  margin:0;
+  color:#d8c1a1;
+  font-size:1.02rem;
+  line-height:1.8;
+}
+.hero-actions{
   display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:18px;
-  border-radius:22px;
-  border:1px solid rgba(140,180,255,.2);
-  background:linear-gradient(180deg,rgba(140,180,255,.09),rgba(255,255,255,.03));
+  flex-wrap:wrap;
+  gap:12px;
+  margin-top:22px;
 }
-.tv-callout h2{
-  margin:0;
-  font-family:Georgia,serif;
-  font-size:1.45rem;
-  color:#d6e6ff;
-}
-.tv-callout p{
-  margin:0;
-  color:#c5d6f3;
-  line-height:1.6;
-}
-.primary{
+.btn{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:10px;
-  min-height:56px;
+  min-height:54px;
   padding:14px 18px;
   border-radius:16px;
-  border:1px solid rgba(140,180,255,.28);
-  background:linear-gradient(180deg,rgba(140,180,255,.2),rgba(140,180,255,.08));
-  color:#eff6ff;
-  font-size:1rem;
+  border:1px solid rgba(244,202,116,.24);
+  background:linear-gradient(180deg,rgba(244,202,116,.16),rgba(255,255,255,.02));
+  color:var(--text);
   font-weight:700;
+  letter-spacing:.02em;
   text-decoration:none;
+  transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease;
 }
-.primary:hover,.primary:focus-visible,.primary.selected{
-  background:linear-gradient(180deg,rgba(140,180,255,.3),rgba(140,180,255,.14));
-  border-color:rgba(140,180,255,.48);
+.btn:hover,.btn:focus-visible,.btn.selected{
+  transform:translateY(-1px);
+  border-color:var(--line-2);
+  background:linear-gradient(180deg,rgba(244,202,116,.24),rgba(255,255,255,.05));
+  box-shadow:0 12px 32px rgba(0,0,0,.24);
   outline:none;
+}
+.btn.primary{
+  color:#160f08;
+  background:linear-gradient(180deg,#ffe09a,#f0c060);
+  border-color:rgba(255,226,154,.42);
+}
+.btn.primary:hover,.btn.primary:focus-visible,.btn.primary.selected{
+  background:linear-gradient(180deg,#ffe6b4,#f3cb73);
+}
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:20px;
+}
+.chip{
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:9px 13px;
+  background:rgba(255,255,255,.03);
+  color:var(--muted);
+  font-size:.8rem;
+}
+.room-preview{
+  margin-top:auto;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.preview-card{
+  border:1px solid rgba(140,180,255,.18);
+  border-radius:22px;
+  background:linear-gradient(180deg,rgba(140,180,255,.09),rgba(255,255,255,.03));
+  padding:18px;
+}
+.preview-card h2{
+  margin:0 0 8px;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:1.55rem;
+  color:#d9e7ff;
+}
+.preview-card p{
+  margin:0;
+  color:#c9d8ef;
+  line-height:1.65;
+}
+.preview-list{
+  list-style:none;
+  padding:0;
+  margin:14px 0 0;
+  display:grid;
+  gap:10px;
+}
+.preview-list li{
+  padding-left:18px;
+  position:relative;
+  color:#d7e5fa;
+  line-height:1.5;
+}
+.preview-list li::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:.6em;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--accent-2);
+}
+.downloads{
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.section-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  width:max-content;
+  font-size:.72rem;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:#c6a06a;
+}
+.section-tag::before{
+  content:"";
+  width:20px;
+  height:1px;
+  background:var(--accent);
+}
+.downloads h2,.info h2{
+  margin:0;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-size:2rem;
+  line-height:1;
+  color:#ffe1a0;
+}
+.downloads p,.info p,.install p{
+  margin:0;
+  color:#d4bc98;
+  line-height:1.7;
+}
+.download-grid{
+  display:grid;
+  gap:10px;
+}
+.download-cluster{
+  display:grid;
+  gap:10px;
+}
+.download-cluster .cluster-title{
+  margin-top:6px;
+  color:#b99562;
+  font-size:.72rem;
+  letter-spacing:.26em;
+  text-transform:uppercase;
+}
+.download-card{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  padding:14px 15px;
+  border-radius:18px;
+  border:1px solid rgba(244,202,116,.16);
+  background:linear-gradient(180deg,rgba(244,202,116,.08),rgba(255,255,255,.02));
+  transition:transform .18s ease,border-color .18s ease,background .18s ease;
+}
+.download-card:hover,.download-card:focus-visible,.download-card.selected{
+  transform:translateY(-1px);
+  border-color:var(--line-2);
+  background:linear-gradient(180deg,rgba(244,202,116,.16),rgba(255,255,255,.05));
+  outline:none;
+}
+.download-card strong{
+  display:block;
+  color:#ffe29a;
+  font-size:.98rem;
+  line-height:1.2;
+}
+.download-card small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  line-height:1.4;
+}
+.download-card span:last-child{
+  flex-shrink:0;
+  font-size:.7rem;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:#b68f55;
+}
+.download-card.missing{
+  opacity:.55;
+}
+.support-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.support-box{
+  padding:18px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:rgba(0,0,0,.12);
+}
+.support-box h3{
+  margin:0 0 10px;
+  font-family:"Cormorant Garamond",Georgia,serif;
+  color:#f6ddaa;
+  font-size:1.35rem;
+}
+.support-box ul{
+  margin:12px 0 0;
+  padding-left:18px;
+  color:#d8c3a1;
+  line-height:1.7;
 }
 .footer{
   display:flex;
@@ -210,11 +351,11 @@ h1{
   gap:12px;
   justify-content:space-between;
   align-items:center;
-  margin-top:18px;
-  padding-top:14px;
-  border-top:1px solid rgba(244,202,116,.12);
-  color:#b99c72;
+  margin-top:16px;
+  padding:18px 2px 4px;
+  color:#ba9c73;
   font-size:.82rem;
+  border-top:1px solid rgba(244,202,116,.12);
 }
 .keys{
   display:flex;
@@ -222,117 +363,228 @@ h1{
   gap:8px;
 }
 .key{
-  border:1px solid rgba(244,202,116,.2);
+  border:1px solid rgba(244,202,116,.18);
   border-radius:999px;
-  padding:6px 10px;
+  padding:7px 10px;
   background:rgba(255,255,255,.03);
 }
-@media (max-width:860px){
-  body{overflow:auto}
-  .shell{padding:16px}
-  .hero{flex-direction:column}
-  .sections{grid-template-columns:1fr}
-  .quick{justify-content:flex-start}
+.room-link{
+  color:#dfeaff;
+  text-decoration:underline;
+}
+.mobile-only{display:none}
+@media (max-width: 980px){
+  .hero{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+  .room-preview{
+    grid-template-columns:1fr;
+  }
+  .support-grid{
+    grid-template-columns:1fr;
+  }
+}
+@media (max-width: 720px){
+  .shell{padding:14px}
+  .story,.downloads{padding:18px}
+  h1{max-width:100%;font-size:clamp(2.8rem,14vw,4.8rem)}
+  .download-card{align-items:stretch;flex-direction:column}
+  .download-card span:last-child{align-self:flex-end}
+  .keys{display:none}
+  .mobile-only{display:block}
 }
 </style>
 </head>
 <body>
 <div class="shell">
-  <main class="panel">
-    <div class="hero">
-      <div class="brand">
-        <div class="eyebrow">Family Academy downloads</div>
-        <h1>Choose the app you want and download it directly.</h1>
-        <p class="lead">This page is the simple, TV-safe download hub. It gives you a direct path to the client and TV builds first, so you do not have to navigate the cinematic room to get the app.</p>
+  <main class="hero">
+    <section class="panel story">
+      <div>
+        <div class="eyebrow">Family Academy</div>
+        <h1>Your learning universe.</h1>
+        <p class="lead">
+          Open the immersive room, or go straight to the builds. This landing page keeps the cinematic story-driven experience from the room page and the direct download speed from the hub page.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary nav-target" href="./cinematic-room.html">Enter the cinematic room</a>
+          <a class="btn nav-target" href="#downloads">Jump to downloads</a>
+        </div>
+        <div class="chips" aria-label="Key facts">
+          <div class="chip">TV remote friendly</div>
+          <div class="chip">Direct GitHub Releases</div>
+          <div class="chip">Client + TV builds</div>
+          <div class="chip">Room and downloads in one place</div>
+        </div>
       </div>
-      <div class="quick" aria-label="Quick facts">
-        <div class="chip">TV remote friendly</div>
-        <div class="chip">Direct GitHub Releases</div>
-        <div class="chip">Client + TV builds</div>
+
+      <div class="room-preview">
+        <div class="preview-card">
+          <h2>Cinematic room</h2>
+          <p>
+            The detailed room experience lives in a separate page, so TV browsers and desktop users can open the same story without losing the build links.
+          </p>
+          <ul class="preview-list">
+            <li>Student room, shelf, desk, TV, bed, and guidance posters</li>
+            <li>Mouse, keyboard, touch, and remote-friendly navigation</li>
+            <li>Book-style help pages for login, progress, support, and devices</li>
+          </ul>
+        </div>
+        <div class="preview-card">
+          <h2>What to do next</h2>
+          <p>
+            If you want the story scene, choose the room. If you want the files, use the direct release cards below.
+          </p>
+          <ul class="preview-list">
+            <li>Windows, macOS, Linux, and Android client builds</li>
+            <li>Android TV and TV bundle releases</li>
+            <li>Single-click access to the correct file</li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="sections">
-      <section class="section">
-        <div class="tag">TV app</div>
-        <h2>Download the TV build</h2>
-        <p>This is the fastest path for a television browser. Use the big button first, or choose a specific TV package below.</p>
-        <div class="tv-callout">
-          <h2>Family Academy TV</h2>
-          <p>Use this on your TV, Android TV box, or big-screen device. It includes the TV remote flow and the big-screen learning experience.</p>
-          <a id="tv-main" class="primary" href="/downloads/tvapp-android-universal.apk" download>Download TV APK now</a>
-          <a href="/downloads/tvapp-android-universal.apk" download style="color:#c5d6f3;text-decoration:underline;font-size:.9rem">Direct TV APK file</a>
+    <aside class="panel downloads" id="downloads">
+      <div>
+        <div class="section-tag">Downloads</div>
+        <h2>Direct release files</h2>
+        <p>Choose the build you need. The links below point to the release assets used by the client and TV repositories.</p>
+      </div>
+
+      <div class="download-grid">
+        <div class="download-cluster" id="client-downloads">
+          <div class="cluster-title">Client builds</div>
         </div>
-      </section>
-
-      <section class="section">
-        <div class="tag">Client app</div>
-        <h2>Download the client build</h2>
-        <p>Use this for Windows, macOS, Linux, and Android. The buttons below go straight to the release assets.</p>
-        <div class="grid">
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/FamilyAcademyInstaller.exe" target="_blank" rel="noopener"><strong>Windows Installer</strong><span>Best option for most Windows users.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-windows.zip" target="_blank" rel="noopener"><strong>Windows Portable Zip</strong><span>Portable desktop package.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-macos.zip" target="_blank" rel="noopener"><strong>macOS Zip</strong><span>Native macOS build.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-linux.tar.gz" target="_blank" rel="noopener"><strong>Linux Tarball</strong><span>Desktop Linux release bundle.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-android-older-armeabi-v7a.apk" target="_blank" rel="noopener"><strong>Android APK Old</strong><span>32-bit armv7 package.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-android-newer-arm64-v8a.apk" target="_blank" rel="noopener"><strong>Android APK New</strong><span>64-bit arm64 package.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-android-emulator-x86_64.apk" target="_blank" rel="noopener"><strong>Android APK Emulator</strong><span>x86_64 emulator build.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-android-universal.apk" target="_blank" rel="noopener"><strong>Android APK Universal</strong><span>Single APK for more devices.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-android-apks.zip" target="_blank" rel="noopener"><strong>Android APK Pack</strong><span>Split APK set.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client/releases/download/v2026.06.09-client/family-academy-play-store.aab" target="_blank" rel="noopener"><strong>Play Store AAB</strong><span>Android App Bundle upload.</span></a>
+        <div class="download-cluster" id="tv-downloads">
+          <div class="cluster-title">TV builds</div>
         </div>
-      </section>
+      </div>
 
-      <section class="section">
-        <div class="tag">TV packages</div>
-        <h2>Direct TV download files</h2>
-        <p>If you only want the file for TV installation, use one of these direct links.</p>
-        <div class="grid">
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-android-older-armeabi-v7a.apk" target="_blank" rel="noopener"><strong>TV APK Old</strong><span>Older Android TV devices.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-android-newer-arm64-v8a.apk" target="_blank" rel="noopener"><strong>TV APK New</strong><span>Newer Android TV devices.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-android-emulator-x86_64.apk" target="_blank" rel="noopener"><strong>TV APK Emulator</strong><span>x86_64 TV emulator build.</span></a>
-          <a class="download" href="/downloads/tvapp-android-universal.apk" download><strong>TV APK Universal</strong><span>Single APK for more TVs.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-play-store.aab" target="_blank" rel="noopener"><strong>TV AAB</strong><span>Store-ready TV bundle.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-linux.tar.gz" target="_blank" rel="noopener"><strong>TV Linux Bundle</strong><span>Linux / kiosk build.</span></a>
-          <a class="download" href="https://github.com/kalaabalb/family-academy-client-tv/releases/download/v2026.06.09-tv/tvapp-macos.zip" target="_blank" rel="noopener"><strong>TV macOS Zip</strong><span>macOS companion build.</span></a>
+      <div class="info">
+        <div class="section-tag">Install flow</div>
+        <h2>Practical first steps</h2>
+        <div class="support-grid">
+          <div class="support-box">
+            <h3>Desktop</h3>
+            <p>Windows users can start with the installer, or use the portable zip if they want to run from a folder or flash drive.</p>
+          </div>
+          <div class="support-box">
+            <h3>Android</h3>
+            <p>Use the old, new, emulator, or universal APK depending on the device. The universal build is the safest one to try first.</p>
+          </div>
+          <div class="support-box">
+            <h3>TV</h3>
+            <p>Use the TV APK directly on the television, then use the remote to move between buttons and open the highlighted file.</p>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="section">
-        <div class="tag">TV remote</div>
-        <h2>Remote-friendly controls</h2>
-        <p>On TV browsers, use the arrows to move between buttons and Select or Enter to open the highlighted download.</p>
-        <div class="keys">
-          <span class="key">Arrow keys to move</span>
-          <span class="key">Enter or Select to open</span>
-          <span class="key">Back to leave</span>
+      <div>
+        <div class="section-tag">Controls</div>
+        <p class="mobile-only">On touch devices, tap the cards. On TV and desktop, use arrows or Tab to move between buttons and Enter or Select to open one.</p>
+        <div class="keys" aria-label="Remote and keyboard guidance">
+          <span class="key">Arrow keys move focus</span>
+          <span class="key">Enter / Select opens</span>
+          <span class="key">Backspace / Escape returns</span>
         </div>
-      </section>
-    </div>
-
-    <div class="footer">
-      <div>Family Academy · Downloads only</div>
-      <div>Direct GitHub Releases links</div>
-    </div>
+      </div>
+    </aside>
   </main>
+
+  <footer class="footer">
+    <div>Family Academy · learning room and downloads</div>
+    <div>
+      <a class="room-link" href="./cinematic-room.html">Open the cinematic room</a>
+    </div>
+  </footer>
 </div>
 
+<script src="./config.js"></script>
 <script>
-const focusables=Array.from(document.querySelectorAll('a,button'));
-let focusIndex=0;
-function setFocus(index){
-  if(!focusables.length)return;
-  focusIndex=(index+focusables.length)%focusables.length;
-  focusables.forEach((el,i)=>el.classList.toggle('selected',i===focusIndex));
-  focusables[focusIndex].focus({preventScroll:true});
-}
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();setFocus(focusIndex-1);}
-  if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();setFocus(focusIndex+1);}
-  if(e.key==='Enter'||e.key===' '){e.preventDefault();const el=document.activeElement; if(el&&typeof el.click==='function') el.click();}
-  if(e.key==='Backspace'||e.key==='Escape'){e.preventDefault();window.history.length>1?history.back():null;}
+const config = window.FAMILY_ACADEMY_SITE_CONFIG || {};
+
+const createCard = (item) => {
+  const href = String(item?.href || '').trim();
+  const ready = Boolean(href);
+  const card = document.createElement(ready ? 'a' : 'div');
+  card.className = `download-card nav-target${ready ? '' : ' missing'}`;
+  if (ready) {
+    card.href = href;
+    card.target = '_blank';
+    card.rel = 'noreferrer';
+  } else {
+    card.setAttribute('aria-disabled', 'true');
+  }
+
+  card.innerHTML = `
+    <span>
+      <strong>${item?.title || 'Download'}</strong>
+      <small>${item?.note || item?.fileName || 'Attach a release URL'}</small>
+    </span>
+    <span>${ready ? 'Download' : 'Missing'}</span>
+  `;
+  return card;
+};
+
+const renderDownloads = () => {
+  const clientWrap = document.getElementById('client-downloads');
+  const tvWrap = document.getElementById('tv-downloads');
+  const client = Array.isArray(config.downloads?.client) ? config.downloads.client : [];
+  const tv = Array.isArray(config.downloads?.tv) ? config.downloads.tv : [];
+
+  client.forEach((item) => clientWrap.appendChild(createCard(item)));
+  tv.forEach((item) => tvWrap.appendChild(createCard(item)));
+};
+
+const focusables = [];
+let focusIndex = 0;
+const refreshFocusables = () => {
+  focusables.splice(0, focusables.length, ...document.querySelectorAll('.nav-target'));
+};
+const setFocus = (index) => {
+  if (!focusables.length) return;
+  focusIndex = (index + focusables.length) % focusables.length;
+  focusables.forEach((el, i) => el.classList.toggle('selected', i === focusIndex));
+  const target = focusables[focusIndex];
+  if (target && typeof target.focus === 'function') {
+    target.focus({ preventScroll: true });
+  }
+};
+
+renderDownloads();
+refreshFocusables();
+if (focusables.length) setFocus(0);
+
+document.addEventListener('keydown', (event) => {
+  if (!focusables.length) return;
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    event.preventDefault();
+    setFocus(focusIndex + 1);
+  }
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    setFocus(focusIndex - 1);
+  }
+  if (event.key === 'Enter' || event.key === ' ') {
+    const active = document.activeElement;
+    if (active && typeof active.click === 'function') {
+      event.preventDefault();
+      active.click();
+    }
+  }
+  if (event.key === 'Escape' || event.key === 'Backspace') {
+    event.preventDefault();
+    if (history.length > 1) history.back();
+  }
 });
-if(focusables.length)setFocus(0);
+
+document.addEventListener('focusin', (event) => {
+  const target = event.target.closest?.('.nav-target');
+  if (!target) return;
+  refreshFocusables();
+  focusIndex = focusables.indexOf(target);
+  focusables.forEach((el, i) => el.classList.toggle('selected', i === focusIndex));
+});
 </script>
 </body>
 </html>
