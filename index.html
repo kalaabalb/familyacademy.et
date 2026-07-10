@@ -4,6 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
 <title>Family Academy \u2014 Your Learning Room</title>
+<link rel="icon" href="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230c0701'/%3E%3Ccircle cx='32' cy='32' r='23' fill='%23f0c060'/%3E%3Ctext x='32' y='40' text-anchor='middle' font-size='26' font-family='Georgia' fill='%230c0701'%3EFA%3C/text%3E%3C/svg%3E"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
@@ -496,6 +497,11 @@ const scHand=new THREE.Group();scHand.add(place(box(.003,.13,.007,secHandM),0,.0
 clockGroup.add(place(cyl(.015,.015,.008,16,new THREE.MeshStandardMaterial({color:0xc8a030,roughness:.2,metalness:.95})),0,0,.02));
 clockGroup.add(place(mesh(new THREE.CircleGeometry(.195,48),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.08,roughness:.05,metalness:.1})),0,0,.02));
 scene.add(clockGroup);
+const clockHot=mesh(new THREE.CylinderGeometry(.28,.28,.08,24),new THREE.MeshBasicMaterial({visible:false}));
+clockHot.position.copy(clockGroup.position);
+clockHot.userData={isBook:true,bookId:'progress',label:'Clock — time and progress'};
+scene.add(clockHot);
+allHotspots.push({mesh:clockHot,label:'🕒  Clock — study time and progress'});
 
 // DESK
 const DX=-1.2,DZ=-2.5;
@@ -781,6 +787,13 @@ for(const[wx,wz]of[[-0.2,0],[.2,0],[0,-.2],[0,.2]])scene.add(place(cyl(.03,.03,.
 const bp=place(box(.36,.42,.22,new THREE.MeshStandardMaterial({color:0x2a3850,roughness:.85})),DX-1.55,.22,DZ+1.0);bp.rotation.y=.2;scene.add(bp);
 scene.add(place(box(.3,.28,.2,new THREE.MeshStandardMaterial({color:0x24304a,roughness:.85})),DX-1.55,.4,DZ+.9));
 for(const dsx of[-.09,.09])scene.add(place(box(.02,.38,.015,new THREE.MeshStandardMaterial({color:0x1a2540,roughness:.8})),DX-1.55+dsx,.22,DZ+1.0));
+// Trash can
+const binG=new THREE.Group();
+binG.add(place(cyl(.12,.14,.24,20,new THREE.MeshStandardMaterial({color:0x2d2a24,roughness:.9,metalness:.08})),0,.12,0));
+binG.add(place(cyl(.13,.14,.02,20,new THREE.MeshStandardMaterial({color:0x201c18,roughness:.8,metalness:.12})),0,.23,0));
+for(let i=0;i<8;i++){const ang=(i/8)*Math.PI*2;binG.add(place(cyl(.006,.006,.02,8,new THREE.MeshStandardMaterial({color:0x5a5a56,roughness:.45,metalness:.6})),Math.cos(ang)*.11,.14,Math.sin(ang)*.11));}
+binG.add(place(box(.06,.07,.06,new THREE.MeshStandardMaterial({color:0x3c3a38,roughness:.8})),0,.02,.03));
+binG.position.set(DX+1.12,.02,DZ+.75);scene.add(binG);
 
 // BED
 const BX=3.6,BZ=-4.5;
@@ -829,13 +842,13 @@ const ROW_SECTIONS=[
 ];
 ROW_SECTIONS.forEach(row=>{
   const lTex=makeTex(320,32,(ctx,W,H)=>{
-    ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(240,180,60,.72)';ctx.font='bold 11px Georgia,serif';ctx.textAlign='left';ctx.fillText(row.label.toUpperCase(),4,22);
-    ctx.fillStyle='rgba(200,150,40,.3)';ctx.fillRect(0,28,W,1);
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(255,220,120,.92)';ctx.font='bold 12px Georgia,serif';ctx.textAlign='left';ctx.fillText(row.label.toUpperCase(),4,22);
+    ctx.fillStyle='rgba(255,220,120,.42)';ctx.fillRect(0,28,W,1);
   });
   shelfGroup.add(place(mesh(new THREE.PlaneGeometry(1.9,.09),new THREE.MeshStandardMaterial({map:lTex,transparent:true,side:THREE.DoubleSide})),1.0,row.y+.01,.195));
   let xCursor=.1;
   row.books.forEach((bk,i)=>{
-    const bw=rnd(.18,.27),bh=rnd(.26,.35),bd=.22;
+    const bw=rnd(.24,.36),bh=rnd(.32,.45),bd=.18;
     const spineTex=makeSpineTex(bk);
     const{r,g,b}=h2rgb(bk.col),{r:r2,g:g2,b:b2}=h2rgb(bk.col2);
     const coverM=new THREE.MeshStandardMaterial({color:new THREE.Color(r2/255,g2/255,b2/255),roughness:.88});
@@ -844,7 +857,7 @@ ROW_SECTIONS.forEach(row=>{
     const bMesh=mesh(new THREE.BoxGeometry(bw,bh,bd),[coverM,coverM,pageM,pageM,spineM,coverM]);
     bMesh.userData={bookId:bk.id,label:bk.spine,isBook:true};
     allBookMeshes.push(bMesh);allHotspots.push({mesh:bMesh,label:bk.emoji+'  '+bk.title});
-    bMesh.position.set(xCursor+bw/2,row.y+bh/2+.04,-.01);bMesh.rotation.z=rnd(-.06,.06);bMesh.rotation.y=rnd(-.02,.02);
+    bMesh.position.set(xCursor+bw/2,row.y+bh/2+.04,-.01);bMesh.rotation.z=rnd(-.03,.03);bMesh.rotation.y=rnd(-.01,.01);
     shelfGroup.add(bMesh);xCursor+=bw+rnd(.005,.018);
   });
   // Decorative shelf items
@@ -860,32 +873,25 @@ scene.add(shelfGroup);
 
 // MINI SHELF beside desk
 const miniShelf=new THREE.Group();
-const msM=new THREE.MeshStandardMaterial({color:0x3c2010,roughness:.86,map:dkWoodTex});
-miniShelf.add(place(box(.065,1.22,.32,msM),0,.61,0));miniShelf.add(place(box(.065,1.22,.32,msM),.76,.61,0));
-[1.2,.62,.04].forEach(y=>miniShelf.add(place(box(.84,.04,.32,M.wood),.38,y,0)));
-[0x8030a0,0x208060,0xd06020].forEach((col,i)=>{
-  const sT=makeSpineTex({spine:['Sci','Math','Art'][i],emoji:'',col,col2:Math.floor(col*.5)});
-  const sm=mesh(new THREE.BoxGeometry(.12,.22,.18),[new THREE.MeshStandardMaterial({color:col,roughness:.85}),new THREE.MeshStandardMaterial({color:0xf0e8d8,roughness:.97}),new THREE.MeshStandardMaterial({color:0xf0e8d8,roughness:.97}),new THREE.MeshStandardMaterial({color:0xf0e8d8,roughness:.97}),new THREE.MeshStandardMaterial({map:sT,roughness:.8}),new THREE.MeshStandardMaterial({color:col,roughness:.85})]);
-  sm.position.set(.14+i*.2,.82,0);sm.rotation.z=rnd(-.04,.04);miniShelf.add(sm);
-});
-miniShelf.add(place(cyl(.07,.09,.12,16,new THREE.MeshStandardMaterial({color:0x8a4520,roughness:.8})),.66,1.32,0));
-for(let i=0;i<6;i++){const lf=place(box(.025,.15,.06,new THREE.MeshStandardMaterial({color:0x286020,roughness:.95})),.66+rnd(-.06,.06),1.48+i*.03,rnd(-.06,.06));lf.rotation.set(rnd(-.7,.7),rnd(0,Math.PI*2),rnd(-.3,.3));miniShelf.add(lf);}
-miniShelf.position.set(-4.52,0,-1.5);miniShelf.rotation.y=Math.PI/2;scene.add(miniShelf);
+const msM=new THREE.MeshStandardMaterial({color:0x4a2a14,roughness:.82,map:dkWoodTex});
+miniShelf.add(place(box(.58,.04,.42,msM),.28,.62,0));
+miniShelf.add(place(box(.5,.34,.04,msM),.28,.79,-.16));
+miniShelf.add(place(box(.5,.34,.04,msM),.28,.79,.16));
+miniShelf.add(place(cyl(.05,.08,.03,16,new THREE.MeshStandardMaterial({color:0x6e4a22,roughness:.55,metalness:.35})),.4,.68,0));
+miniShelf.add(place(cyl(.015,.015,.48,10,new THREE.MeshStandardMaterial({color:0xc8a050,roughness:.35,metalness:.82})),.4,.9,0));
+miniShelf.add(place(cyl(.07,.08,.14,18,new THREE.MeshStandardMaterial({color:0xe0d2aa,roughness:.62,emissive:0x2c1806,emissiveIntensity:.3,transparent:true,opacity:.9})),.4,1.06,0));
+miniShelf.add(place(box(.12,.02,.12,new THREE.MeshStandardMaterial({color:0xffdd80,emissive:0xffcc60,emissiveIntensity:2.4,transparent:true,opacity:.58})),.4,1.0,0));
+miniShelf.position.set(-4.55,0,-1.52);miniShelf.rotation.y=Math.PI/2;scene.add(miniShelf);
 
 // TV UNIT
 const TX=RW/2-.12,TZ=-5.8;
-scene.add(place(box(2.42,.54,.54,new THREE.MeshStandardMaterial({color:0x2a1808,roughness:.82,map:dkWoodTex})),TX-.4,1.05,TZ-.28));
-scene.add(place(box(2.46,.04,.56,M.wood),TX-.4,.8,TZ-.28));
-for(const[cx,czz]of[[-1.12,-.22],[1.12,-.22],[-1.12,.22],[1.12,.22]])scene.add(place(box(.065,.8,.065,M.brass),TX-.4+cx,.4,TZ-.28+czz));
-for(const dx2 of[-0.8,0,0.8]){scene.add(place(box(.68,.38,.46,new THREE.MeshStandardMaterial({color:0x3a2010,roughness:.82,map:woodTex})),TX-.4+dx2,.93,TZ-.27));const kk=place(cyl(.016,.016,.035,10,M.brass),TX-.4+dx2,.93,TZ-.01);kk.rotation.x=Math.PI/2;scene.add(kk);}
+scene.add(place(box(1.95,.08,.22,new THREE.MeshStandardMaterial({color:0x24170b,roughness:.82,map:dkWoodTex})),TX-.4,.94,TZ-.24));
+scene.add(place(box(1.68,.024,.18,new THREE.MeshStandardMaterial({color:0x16120f,roughness:.35,metalness:.45})),TX-.4,.99,TZ-.24));
 scene.add(place(box(.065,1.26,2.16,new THREE.MeshStandardMaterial({color:0x0c0a08,roughness:.4,metalness:.5})),TX+.03,2.08,TZ));
 scene.add(place(box(.028,1.3,2.2,new THREE.MeshStandardMaterial({color:0x080806,roughness:.5,metalness:.6})),TX+.04,2.08,TZ));
 const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x0b1938,emissiveIntensity:1.9,emissiveMap:tvTex,roughness:.04});
 const tvScreen=mesh(new THREE.PlaneGeometry(2.0,1.14),tvSM);tvScreen.position.set(TX-.02,2.08,TZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
-scene.add(place(box(.04,.22,.1,M.metal),TX+.06,2.08,TZ));
-scene.add(place(box(.04,.06,2.0,new THREE.MeshStandardMaterial({color:0x141414,roughness:.4,metalness:.5})),TX-.4,1.12,TZ));
-const rem=place(box(.055,.01,.18,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TX-.4,1.12,TZ-.15);rem.rotation.y=.4;scene.add(rem);
-scene.add(place(box(.15,.04,.12,new THREE.MeshStandardMaterial({color:0x101010,roughness:.5,metalness:.25})),TX-.8,1.12,TZ-.25));
+const rem=place(box(.055,.01,.18,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TX-.72,1.0,TZ-.05);rem.rotation.y=.35;scene.add(rem);
 // TV hotspot (screen click = cycle)
 const tvHot=mesh(new THREE.BoxGeometry(.06,1.22,2.08),new THREE.MeshBasicMaterial({visible:false}));
 tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
@@ -905,13 +911,14 @@ cab.add(place(box(1.14,.06,.6,M.wood),0,1.22,0));
 for(const[fx,fz]of[[-.46,-.26],[.46,-.26],[-.46,.26],[.46,.26]])cab.add(place(box(.06,.09,.06,M.brass),fx,.045,fz));
 cab.add(place(box(.75,.048,.04,new THREE.MeshStandardMaterial({color:0xffdd44,emissive:0xffaa00,emissiveIntensity:2.4,roughness:.25})),0,1.26,0));
 const DRW_DATA=[
-  {label:'Client Apps',sub:'Desktop & Mobile',y:.22,col:0x5a3818},
-  {label:'TV Apps',sub:'Big Screen',y:.55,col:0x4c3016},
-  {label:'Guides & Support',sub:'Setup & Help Docs',y:.88,col:0x3e2810},
+  {label:'01 Client Apps',sub:'Desktop & Mobile',y:.22,col:0x5a3818},
+  {label:'02 TV Apps',sub:'Big Screen',y:.55,col:0x4c3016},
+  {label:'03 Guides & Support',sub:'Setup & Help Docs',y:.88,col:0x3e2810},
 ];
 const drawerGroups=[];
 const drawerOpen=[false,false,false];
 const drawerCurZ=[0,0,0];
+let activeDrawerIndex=null;
 DRW_DATA.forEach((d,i)=>{
   const dg=new THREE.Group();
   const dFace=box(.95,.28,.52,new THREE.MeshStandardMaterial({color:d.col,roughness:.78,map:woodTex}));dg.add(dFace);
@@ -919,7 +926,7 @@ DRW_DATA.forEach((d,i)=>{
   const seamM=new THREE.MeshStandardMaterial({color:0x1a0c04,roughness:.9});
   dg.add(place(box(.97,.005,.52,seamM),0,.14,0));dg.add(place(box(.97,.005,.52,seamM),0,-.14,0));
   const dlTex=makeTex(240,64,(ctx,W,H)=>{
-    ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(240,195,70,.75)';ctx.font='bold 13px Georgia,serif';ctx.textAlign='center';ctx.fillText(d.label,W/2,28);
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='rgba(255,225,120,.92)';ctx.font='bold 13px Georgia,serif';ctx.textAlign='center';ctx.fillText(d.label,W/2,28);
     ctx.fillStyle='rgba(200,155,50,.45)';ctx.font='9px Lato,sans-serif';ctx.fillText(d.sub,W/2,46);
   });
   dg.add(place(mesh(new THREE.PlaneGeometry(.72,.18),new THREE.MeshStandardMaterial({map:dlTex,transparent:true,emissive:0xffffff,emissiveIntensity:.2,emissiveMap:dlTex})),0,.02,.265));
@@ -944,7 +951,15 @@ function makePosterTex(lines,W,H,bg){
     for(let i=0;i<600;i++){ctx.fillStyle='rgba(255,255,255,.011)';ctx.fillRect(rnd(0,_W),rnd(0,_H),rnd(.5,2.2),rnd(.5,2.2));}
     ctx.strokeStyle='rgba(200,160,60,.2)';ctx.lineWidth=5;ctx.strokeRect(8,8,_W-16,_H-16);
     ctx.strokeStyle='rgba(200,160,60,.08)';ctx.lineWidth=2;ctx.strokeRect(14,14,_W-28,_H-28);
-    lines.forEach(l=>{ctx.font=l.font;ctx.fillStyle=l.color;ctx.textAlign=l.align||'center';ctx.shadowBlur=l.shadow||0;if(l.shadow)ctx.shadowColor='rgba(0,0,0,.45)';ctx.fillText(l.text,_W/2+(l.dx||0),l.y);});ctx.shadowBlur=0;
+    lines.forEach(l=>{
+      ctx.font=l.font;
+      ctx.fillStyle=l.color;
+      ctx.textAlign=l.align||'center';
+      ctx.shadowColor='rgba(0,0,0,.7)';
+      ctx.shadowBlur=l.shadow||8;
+      ctx.fillText(l.text,_W/2+(l.dx||0),l.y);
+    });
+    ctx.shadowBlur=0;
   });
 }
 // Large left wall quote
@@ -1182,9 +1197,14 @@ function openDrawer(idx){
     });
   });
   // Animate drawer physically
-  drawerOpen[idx]=!drawerOpen[idx];
+  drawerOpen.forEach((_,i)=>{drawerOpen[i]=false;});
+  drawerOpen[idx]=true;
+  activeDrawerIndex=idx;
 }
-function closeOverlay(){overlay.classList.remove('open');}
+function closeOverlay(){
+  overlay.classList.remove('open');
+  if(activeDrawerIndex!==null){drawerOpen[activeDrawerIndex]=false;activeDrawerIndex=null;}
+}
 overlay.addEventListener('click',e=>{if(e.target===overlay)closeOverlay();});
 document.addEventListener('keydown',e=>{if(e.code==='Escape')closeOverlay();});
 
