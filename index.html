@@ -1121,7 +1121,6 @@ function cycleDevice(dev){
   else if(dev==='phone'){phState=(phState+1)%PH_STATES.length;reDraw(phTex,drawPhTex);}
   showDevLbl();
 }
-function reDraw(tex,drawFn){const c=document.createElement('canvas');c.width=tex.image.width;c.height=tex.image.height;drawFn(c.getContext('2d'),c.width,c.height);tex.image=c;tex.needsUpdate=true;}
 
 // ====================================================
 //  BOOK OVERLAY (book-style open view)
