@@ -559,3 +559,60 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
     },
   ],
 };
+
+window.FA_DOWNLOADS = {
+  client: {
+    windows_installer: {
+      label: 'Windows Installer',
+      icon: '🖥',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[0].href,
+    },
+    windows_zip: {
+      label: 'Windows Portable (.zip)',
+      icon: '🖥',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[1].href,
+    },
+    macos_zip: {
+      label: 'macOS (.zip)',
+      icon: '🍎',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[2].href,
+    },
+    linux_tar: {
+      label: 'Linux (.tar.gz)',
+      icon: '🐧',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[3].href,
+    },
+    android_apk: {
+      label: 'Android APK',
+      icon: '📱',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[7].href,
+    },
+    play_store_aab: {
+      label: 'Play Store (AAB)',
+      icon: '▶️',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.client[9].href,
+    },
+  },
+  tv: {
+    android_tv_apk: {
+      label: 'Android TV APK',
+      icon: '📺',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.tv[3].href,
+    },
+    tv_aab: {
+      label: 'TV Play Store (AAB)',
+      icon: '📺',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.tv[4].href,
+    },
+    tv_linux: {
+      label: 'TV Linux Bundle',
+      icon: '🐧',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.tv[5].href,
+    },
+    tv_macos: {
+      label: 'TV macOS (.zip)',
+      icon: '🍎',
+      url: window.FAMILY_ACADEMY_SITE_CONFIG.downloads.tv[6].href,
+    },
+  },
+};
