@@ -276,6 +276,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
 
 <script>
 window.FA_DOWNLOADS=window.FA_DOWNLOADS||{
+  releaseLabel:'Latest production set',
+  releaseDate:'July 21, 2026',
   client:{
     windows_installer:{label:"Windows Installer",icon:"\u{1FA9F}",url:"#"},
     windows_zip:{label:"Windows Portable (.zip)",icon:"\u{1FA9F}",url:"#"},
@@ -1327,7 +1329,13 @@ function openDownloads(scope='all'){
   const dl=window.FA_DOWNLOADS;
   document.getElementById('otag').textContent='Downloads';
   document.getElementById('otitle').textContent='Install Family Academy';
-  document.getElementById('osub').textContent=scope==='client'?'Client app builds':scope==='tv'?'TV app builds':'Available on all your devices';
+  const releaseLabel=dl.releaseLabel||'Latest production set';
+  const releaseDate=dl.releaseDate||'';
+  document.getElementById('osub').textContent=scope==='client'
+    ? `Client app builds · ${releaseLabel}${releaseDate ? ` · ${releaseDate}` : ''}`
+    : scope==='tv'
+      ? `TV app builds · ${releaseLabel}${releaseDate ? ` · ${releaseDate}` : ''}`
+      : `Available on all your devices · ${releaseLabel}${releaseDate ? ` · ${releaseDate}` : ''}`;
   let h='';
   if(scope!=='tv'){
     h+='<div class="dlsec">Student & Mobile Apps</div><div class="dlgrid">';
