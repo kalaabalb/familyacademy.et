@@ -584,16 +584,7 @@ const flPt=new THREE.PointLight(0xffcc60,.75,4.5);flPt.position.set(3.6+1.02,1.5
 const shelfPt=new THREE.PointLight(0xffe8a0,1.1,5.0);shelfPt.position.set(-5.0,1.9,-6);scene.add(shelfPt);
 const doorPt=new THREE.PointLight(0xffe8b0,.48,4.2);doorPt.position.set(4.0,1.6,5.9);scene.add(doorPt);
 
-// WINDOW
-const wfM=new THREE.MeshStandardMaterial({color:0xd6c69e,roughness:.82});
-// Keep the right-wall window away from the entrance so it does not read as a board over the doorway.
-const winX=RW/2-.04,winZ=1.25;
-add(place(box(1.62,1.58,.12,wfM),winX,2.12,winZ));
-add(place(box(1.34,1.2,.04,new THREE.MeshStandardMaterial({color:0x90b8d8,emissive:0x5888c0,emissiveIntensity:.72,transparent:true,opacity:.52,roughness:.04})),winX,2.12,winZ));
-add(place(box(.04,1.2,.07,wfM),winX,2.12,winZ));add(place(box(1.34,.04,.07,wfM),winX,2.12,winZ));
-add(place(box(.34,1.9,.05,new THREE.MeshStandardMaterial({color:0x8a6040,roughness:.99})),winX,2.0,winZ+.82));
-add(place(box(.34,1.9,.05,new THREE.MeshStandardMaterial({color:0x7a5030,roughness:.99})),winX,2.0,winZ-.82));
-add(place(box(2.18,.04,.04,M.brass),winX,2.95,winZ));add(place(box(1.72,.05,.16,M.wood),winX,1.24,winZ));
+// WINDOW REMOVED — keep the entrance wall clean and unobstructed.
 
 // DETAILED WALL CLOCK
 const clockGroup=new THREE.Group();
@@ -986,22 +977,22 @@ scene.add(shelfGroup);
 // (mini side table removed, per request — desk moved closer to the bookshelf instead)
 
 // TV UNIT
-const TX=RW/2-.24,TZ=-4.95;
-scene.add(place(box(.22,.08,1.95,new THREE.MeshStandardMaterial({color:0x24170b,roughness:.82,map:dkWoodTex})),TX-.15,.94,TZ));
-scene.add(place(box(.18,.024,1.68,new THREE.MeshStandardMaterial({color:0x16120f,roughness:.35,metalness:.45})),TX-.15,.99,TZ));
-scene.add(place(box(.065,1.26,1.4,new THREE.MeshStandardMaterial({color:0x0c0a08,roughness:.4,metalness:.5})),TX+.03,2.08,TZ));
-scene.add(place(box(.028,1.3,1.44,new THREE.MeshStandardMaterial({color:0x080806,roughness:.5,metalness:.6})),TX+.04,2.08,TZ));
+const TX=RW/2-.52,TZ=-4.95;
+scene.add(place(box(.18,.08,1.85,new THREE.MeshStandardMaterial({color:0x24170b,roughness:.82,map:dkWoodTex})),TX-.12,.94,TZ));
+scene.add(place(box(.15,.022,1.62,new THREE.MeshStandardMaterial({color:0x16120f,roughness:.35,metalness:.45})),TX-.12,.99,TZ));
+scene.add(place(box(.05,1.22,1.32,new THREE.MeshStandardMaterial({color:0x0c0a08,roughness:.4,metalness:.5})),TX+.04,2.08,TZ));
+scene.add(place(box(.024,1.26,1.36,new THREE.MeshStandardMaterial({color:0x080806,roughness:.5,metalness:.6})),TX+.05,2.08,TZ));
 const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x0b1938,emissiveIntensity:1.9,emissiveMap:tvTex,roughness:.04});
-const tvScreen=mesh(new THREE.PlaneGeometry(2.0,1.14),tvSM);tvScreen.position.set(TX-.09,2.08,TZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
-const rem=place(box(.055,.01,.18,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TX-.3,1.0,TZ-.35);rem.rotation.y=.35;scene.add(rem);
+const tvScreen=mesh(new THREE.PlaneGeometry(1.96,1.12),tvSM);tvScreen.position.set(TX-.04,2.08,TZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
+const rem=place(box(.055,.01,.18,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TX-.18,1.0,TZ-.35);rem.rotation.y=.35;scene.add(rem);
 // TV hotspot (screen click = cycle)
 const tvHot=mesh(new THREE.BoxGeometry(.06,1.22,2.08),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TX-.08,2.08,TZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
+tvHot.position.set(TX-.03,2.08,TZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
 scene.add(tvHot);
 allHotspots.push({mesh:tvHot,label:'📺  TV — click to cycle screen'});
 // TV guide hotspot (credenza area = open book)
 const tvGuideHot=mesh(new THREE.BoxGeometry(.06,.5,.5),new THREE.MeshBasicMaterial({visible:false}));
-tvGuideHot.position.set(TX-.08,1.05,TZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
+tvGuideHot.position.set(TX-.03,1.05,TZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
 scene.add(tvGuideHot);allHotspots.push({mesh:tvGuideHot,label:'📺  TV Connection Guide'});
 
 // DOWNLOAD CABINET — 3 individually-animated drawers
@@ -1462,12 +1453,12 @@ function eO4(p){return 1-Math.pow(1-p,4);}function eO2(p){return 1-Math.pow(1-p,
 function stepIntro(dt){
   introT+=dt;const p=Math.min(introT/INTRO_DUR,1);
   const p1=Math.min(p/.4,1),p2=Math.max((p-.4)/.6,0);const e1=eO2(p1),e2=eO4(p2);
-  if(p<.4){tPos.x=2.1*(1-e1);tPos.z=5.2+(3.8-5.2)*e1;tPos.y=2.4+(1.9-2.4)*e1;tYaw=(Math.PI-.35)+.2*e1;tPitch=-.14+.08*e1;}
+  if(p<.4){tPos.x=1.6*(1-e1);tPos.z=4.8+(3.7-4.8)*e1;tPos.y=2.2+(1.85-2.2)*e1;tYaw=(Math.PI-.35)+.2*e1;tPitch=-.14+.08*e1;}
   else{tPos.x=0;tPos.z=3.8+(3.0-3.8)*e2;tPos.y=1.9+(1.62-1.9)*e2;tYaw=(Math.PI-.15)+.15*e2;tPitch=-.06+.03*e2;}
   if(introT>.55&&introPhase===0){introPhase=1;il1.classList.add('show');il2.classList.add('show');}
   if(introT>3.4&&introPhase===1){introPhase=2;il1.classList.add('gone');il2.classList.add('gone');}
   if(introT>=INTRO_DUR){
-    introActive=false;tPos.set(0,1.62,2.0);tYaw=Math.PI;tPitch=-.03;
+    introActive=false;tPos.set(0,1.62,1.85);tYaw=Math.PI;tPitch=-.03;
     document.getElementById('hud').classList.add('show');document.getElementById('toplogo').classList.add('show');xhairEl.classList.add('show');
     document.getElementById('tour-panel').classList.add('show');
     document.getElementById('tour-chips').classList.add('show');
