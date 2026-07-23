@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
-<title>Family Academy — Your Learning Room</title>
+<title>Family Academy Official — Learning Platform</title>
 <link rel="icon" href="favicon.ico" sizes="any"/>
 <link rel="icon" type="image/png" href="favicon.png"/>
 <link rel="apple-touch-icon" href="family-academy-brand-logo.png"/>
@@ -208,7 +208,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
       <circle cx="41" cy="23" r="2.5" fill="#f0c060" opacity=".7"/>
     </svg>
   </div>
-  <div class="ld-name">Family Academy</div>
+  <div class="ld-name">Family Academy Official</div>
   <div class="ld-tag">Your Learning Universe</div>
   <div class="ld-bar-wrap"><div class="ld-bar" id="ld-bar"></div></div>
   <div class="ld-msg" id="ld-msg">Preparing your room…</div>
@@ -216,7 +216,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
 
 <canvas id="canvas"></canvas>
 
-<div id="toplogo"><span class="fa">FA</span><div class="sep"></div><span>Family Academy</span></div>
+<div id="toplogo"><span class="fa">FA</span><div class="sep"></div><span>Family Academy Official</span></div>
 <div id="zone"></div>
 <div id="xhair"></div>
 <div id="tip"></div>
@@ -322,9 +322,10 @@ setTimeout(()=>{
   }
 },7000);
 </script>
-<script type="importmap">{"imports":{"three":"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"}}</script>
+<script type="importmap">{"imports":{"three":"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js","three/addons/":"https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/jsm/"}}</script>
 <script type="module">
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // ── CONTENT DATA ─────────────────────────────────────────────────
 const BOOKS=[
@@ -349,7 +350,7 @@ const BOOKS=[
   {id:'profile',spine:'Profile',col:0x604890,title:'Profile Settings',sub:'Your learning identity',
    body:'<p>Your profile is persistent across every device.</p><h3>Settings</h3><ul><li>Display name, avatar, and bio.</li><li>Grade level and subjects.</li><li>Notification preferences: email, push, SMS.</li><li>Language and regional settings.</li><li>Theme: dark / light / high-contrast / sepia.</li><li>Accessibility: font size, contrast, caption defaults.</li></ul>'},
   {id:'tv',spine:'TV',col:0x145880,title:'TV Connection',sub:'Learn on the big screen',
-   body:'<p>Install the Family Academy TV app and your entire course library appears on your television.</p><h3>Setup</h3><ul><li>Download the TV APK from the Downloads cabinet in this room.</li><li>Install on your Android TV or compatible smart TV.</li><li>Log in with your existing account — everything syncs instantly.</li><li>Use your phone as a remote via the companion app.</li></ul><h3>TV Features</h3><ul><li>Family viewing mode: students cannot leave approved content.</li><li>Remote-native D-pad navigation.</li><li>Auto-resume on relaunch.</li></ul>'},
+   body:'<p>Install the Family Academy TV app and your course library becomes a lean-back learning space for the home screen.</p><h3>Setup</h3><ul><li>Open the TV drawer in the room to grab the Android TV APK, AAB, or platform bundle.</li><li>Install on your Android TV or compatible smart TV.</li><li>Log in with the same account used on mobile or desktop.</li><li>Use the phone companion flow or your remote for navigation.</li></ul><h3>TV Features</h3><ul><li>Remote-native D-pad navigation with back and select support.</li><li>Clear lessons, videos, practice, and exams on the big screen.</li><li>Auto-resume on relaunch.</li></ul>'},
   {id:'parents',spine:'Parents',col:0x906018,title:'Parent Linking',sub:"Stay close to your child's journey",
    body:"<p>Parents get a separate dashboard with a real-time view of their child's learning.</p><h3>How to Link</h3><ul><li>Student goes to <em>Profile &rarr; Share Code</em> and generates a 6-digit code.</li><li>Parent enters the code under <em>Add Child</em> in their parent account.</li><li>Connection is instant.</li></ul><h3>Parent Controls</h3><ul><li>Set daily screen-time limits per child.</li><li>Approve or restrict specific courses.</li><li>Receive weekly learning summaries by email.</li></ul>"},
   {id:'support',spine:'Support',col:0x158060,title:'Support & Help',sub:"We're always here",
@@ -676,9 +677,9 @@ const DEVICE_STATES={
     {title:'Messages',sub:'Support & updates',accent:'#9fe0ac',lines:['New lesson reminder','Chat support available','Streaks synced']},
   ],
   tv:[
-    {title:'TV Mode',sub:'Big screen learning',accent:'#9bc7ff',lines:['Use remote D-pad','Install TV app','Resume the last lesson']},
+    {title:'TV Downloads',sub:'Big screen learning',accent:'#9bc7ff',lines:['Open the TV drawer for the APK','Use the remote D-pad','Resume the last lesson']},
     {title:'TV Pairing',sub:'Connect phone to TV',accent:'#ffd66f',lines:['Install companion app','Use pairing code','Start learning together']},
-    {title:'Watch List',sub:'Family Academy channels',accent:'#9fe0ac',lines:['Videos','Practice','Exams and review']},
+    {title:'Remote Guide',sub:'Lean-back control',accent:'#9fe0ac',lines:['Move with arrows','Confirm with select','Back returns cleanly']},
   ]
 };
 let deviceIndex={laptop:0,phone:0,tv:0};
@@ -753,29 +754,64 @@ scene.add(place(box(.54,.026,.54,M.metal),CX,.04,CZ));
 for(const [wx,wz] of [[-0.2,0],[.2,0],[0,-.2],[0,.2]]) scene.add(place(cyl(.03,.03,.04,10,M.black),CX+wx,.04,CZ+wz));
 
 // Student reading at the desk
-const skinM=new THREE.MeshStandardMaterial({color:0xb77b50,roughness:.88});
-const shirtM=new THREE.MeshStandardMaterial({color:0x243450,roughness:.86});
-const hairM=new THREE.MeshStandardMaterial({color:0x1b120c,roughness:.9});
-const jeansM=new THREE.MeshStandardMaterial({color:0x1f2e49,roughness:.84});
-const shoeM=new THREE.MeshStandardMaterial({color:0x120b08,roughness:.82});
-const student=new THREE.Group();
-const head=place(sph(.135,20,skinM),0,1.28,0);student.add(head);
-const hair=place(sph(.15,20,hairM),0,1.34,-.02);hair.scale.set(1.02,.9,1.0);student.add(hair);
-student.add(place(box(.26,.09,.22,new THREE.MeshStandardMaterial({color:0xf0d8b0,roughness:.96})),0,1.15,.1)); // neck
-student.add(place(box(.38,.48,.28,shirtM),0,.82,.08)); // torso
-student.add(place(box(.16,.34,.14,skinM),-.21,.92,.03));
-student.add(place(box(.16,.34,.14,skinM),.21,.92,.03));
-const armL=place(box(.08,.33,.08,skinM),-.24,.89,-.02);armL.rotation.z=.42;student.add(armL);
-const armR=place(box(.08,.33,.08,skinM),.24,.89,-.02);armR.rotation.z=-.42;student.add(armR);
-student.add(place(box(.18,.36,.18,jeansM),-.1,.46,.06));
-student.add(place(box(.18,.36,.18,jeansM),.1,.46,.06));
-student.add(place(box(.12,.08,.28,shoeM),-.12,.1,.14));
-student.add(place(box(.12,.08,.28,shoeM),.12,.1,.14));
-const readBook=place(box(.48,.02,.3,new THREE.MeshStandardMaterial({color:0xf0e0c0,roughness:.96})),0,.8,-.18);
-readBook.rotation.x=.08;student.add(readBook);
-const paper=place(box(.36,.01,.24,new THREE.MeshStandardMaterial({color:0xfff7ef,roughness:.98})),0,.79,-.12);paper.rotation.x=.08;student.add(paper);
-const pen=place(cyl(.01,.01,.18,8,new THREE.MeshStandardMaterial({color:0x1b1b1b,roughness:.6})),.08,.83,-.08);pen.rotation.z=-.42;student.add(pen);
-student.position.set(CX,.02,CZ-.15);student.rotation.y=Math.PI;scene.add(student);
+const studentRig=new THREE.Group();
+studentRig.position.set(CX,.02,CZ-.15);
+studentRig.rotation.y=Math.PI;
+scene.add(studentRig);
+function buildFallbackStudent(){
+  const skinM=new THREE.MeshStandardMaterial({color:0xb77b50,roughness:.88});
+  const shirtM=new THREE.MeshStandardMaterial({color:0x243450,roughness:.86});
+  const hairM=new THREE.MeshStandardMaterial({color:0x1b120c,roughness:.9});
+  const jeansM=new THREE.MeshStandardMaterial({color:0x1f2e49,roughness:.84});
+  const shoeM=new THREE.MeshStandardMaterial({color:0x120b08,roughness:.82});
+  const student=new THREE.Group();
+  const head=place(sph(.135,20,skinM),0,1.28,0);student.add(head);
+  const hair=place(sph(.15,20,hairM),0,1.34,-.02);hair.scale.set(1.02,.9,1.0);student.add(hair);
+  student.add(place(box(.26,.09,.22,new THREE.MeshStandardMaterial({color:0xf0d8b0,roughness:.96})),0,1.15,.1));
+  student.add(place(box(.38,.48,.28,shirtM),0,.82,.08));
+  student.add(place(box(.16,.34,.14,skinM),-.21,.92,.03));
+  student.add(place(box(.16,.34,.14,skinM),.21,.92,.03));
+  const armL=place(box(.08,.33,.08,skinM),-.24,.89,-.02);armL.rotation.z=.42;student.add(armL);
+  const armR=place(box(.08,.33,.08,skinM),.24,.89,-.02);armR.rotation.z=-.42;student.add(armR);
+  student.add(place(box(.18,.36,.18,jeansM),-.1,.46,.06));
+  student.add(place(box(.18,.36,.18,jeansM),.1,.46,.06));
+  student.add(place(box(.12,.08,.28,shoeM),-.12,.1,.14));
+  student.add(place(box(.12,.08,.28,shoeM),.12,.1,.14));
+  const readBook=place(box(.48,.02,.3,new THREE.MeshStandardMaterial({color:0xf0e0c0,roughness:.96})),0,.8,-.18);
+  readBook.rotation.x=.08;student.add(readBook);
+  const paper=place(box(.36,.01,.24,new THREE.MeshStandardMaterial({color:0xfff7ef,roughness:.98})),0,.79,-.12);paper.rotation.x=.08;student.add(paper);
+  const pen=place(cyl(.01,.01,.18,8,new THREE.MeshStandardMaterial({color:0x1b1b1b,roughness:.6})),.08,.83,-.08);pen.rotation.z=-.42;student.add(pen);
+  return student;
+}
+const fallbackStudent=buildFallbackStudent();
+studentRig.add(fallbackStudent);
+function fitStudentModel(root){
+  root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}});
+  const box=new THREE.Box3().setFromObject(root);
+  const size=new THREE.Vector3();
+  const center=new THREE.Vector3();
+  box.getSize(size);
+  box.getCenter(center);
+  const scale=1.52/Math.max(size.y,0.001);
+  root.scale.setScalar(scale);
+  root.position.sub(center.multiplyScalar(scale));
+  const fitted=new THREE.Box3().setFromObject(root);
+  root.position.y-=fitted.min.y;
+}
+const studentLoader=new GLTFLoader();
+studentLoader.load(
+  './assets/models/student.glb',
+  gltf=>{
+    const avatar=gltf.scene||gltf.scenes?.[0];
+    if(!avatar)return;
+    studentRig.remove(fallbackStudent);
+    fitStudentModel(avatar);
+    avatar.rotation.y=Math.PI;
+    studentRig.add(avatar);
+  },
+  undefined,
+  ()=>{}
+);
 
 // ── BACKPACK ──────────────────────────────────────────────────────
 const bpM=new THREE.MeshStandardMaterial({color:0x2a3850,roughness:.85});
@@ -921,7 +957,7 @@ function buildTvTex(){
     });
     ctx.fillStyle='rgba(200,160,50,.06)';ctx.fillRect(0,H-28,W,28);
     ctx.fillStyle='rgba(200,160,50,.48)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';
-    ctx.fillText('Student Mode  \u00b7  Sync active  \u00b7  3 Devices connected',W/2,H-10);
+    ctx.fillText('TV downloads ready  \u00b7  Remote friendly  \u00b7  Pair from phone',W/2,H-10);
   });
 }
 let tvScrTex=buildTvTex();
@@ -936,8 +972,8 @@ const rem=place(box(.055,.01,.18,remM),TX-.4,1.12,TZ-.15);rem.rotation.y=.4;scen
 scene.add(place(box(.15,.04,.12,new THREE.MeshStandardMaterial({color:0x101010,roughness:.5,metalness:.25})),TX-.8,1.12,TZ-.25));
 scene.add(place(cyl(.055,.06,.14,16,new THREE.MeshStandardMaterial({color:0x181818,roughness:.45,metalness:.4})),TX-.6,1.12,TZ-.28));
 const tvHot=mesh(new THREE.BoxGeometry(.06,1.22,2.08),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={kind:'device',device:'tv',label:'TV Connection'};
-scene.add(tvHot);allHotspots.push({mesh:tvHot,label:'\uD83D\uDCFA  TV Connection'});
+tvHot.position.set(TX-.01,2.08,TZ);tvHot.userData={kind:'device',device:'tv',label:'TV Downloads'};
+scene.add(tvHot);allHotspots.push({mesh:tvHot,label:'\uD83D\uDCFA  TV Downloads'});
 
 // ── DOWNLOAD CABINET ──────────────────────────────────────────────
 const DCX=.62,DCZ=-4.2;
@@ -1302,7 +1338,7 @@ canvas.addEventListener('click',e=>{
   if(dragMoved)return;const hits=castAt(e.clientX,e.clientY);if(!hits.length)return;
   const m=hits[0].object;
   if(m.userData.kind==='drawer'){toggleDrawer(m.userData.id);}
-  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);}
+  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);if(m.userData.device==='tv')openDownloads('tv');}
   else if(m.userData.isBook)openBook(m.userData.bookId);
   else if(m.userData.isDownload)openDownloads('all');
 });
@@ -1310,7 +1346,7 @@ canvas.addEventListener('touchend',e=>{
   if(touchMoved)return;const t=e.changedTouches[0];const hits=castAt(t.clientX,t.clientY);if(!hits.length)return;
   const m=hits[0].object;
   if(m.userData.kind==='drawer'){toggleDrawer(m.userData.id);}
-  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);}
+  else if(m.userData.kind==='device'){cycleDeviceScreen(m.userData.device);if(m.userData.device==='tv')openDownloads('tv');}
   else if(m.userData.isBook)openBook(m.userData.bookId);
   else if(m.userData.isDownload)openDownloads('all');
 },{passive:true});
@@ -1328,7 +1364,7 @@ function openBook(id){
 function openDownloads(scope='all'){
   const dl=window.FA_DOWNLOADS;
   document.getElementById('otag').textContent='Downloads';
-  document.getElementById('otitle').textContent='Install Family Academy';
+  document.getElementById('otitle').textContent=scope==='tv'?'Install Family Academy TV':'Install Family Academy';
   const releaseLabel=dl.releaseLabel||'Latest production set';
   const releaseDate=dl.releaseDate||'';
   document.getElementById('osub').textContent=scope==='client'
@@ -1348,7 +1384,7 @@ function openDownloads(scope='all'){
     h+='</div>';
   }
   if(scope==='guides'){
-    h+='<div class="dlsec">Setup Guide</div><p style="margin:0 0 12px;line-height:1.8;color:#b09060;font-family:Lato,sans-serif;font-size:.9rem;">Open the drawer again to see the download cards, then use the install steps shown on the TV, laptop, and phone screens in the room.</p>';
+    h+='<div class="dlsec">Setup Guide</div><p style="margin:0 0 12px;line-height:1.8;color:#b09060;font-family:Lato,sans-serif;font-size:.9rem;">Open the drawer again to see the download cards. The TV hotspot now opens the TV download set, while the laptop and phone screens show matching setup flows for each device.</p>';
   }
   document.getElementById('obody').innerHTML=h;overlay.classList.add('open');
 }
