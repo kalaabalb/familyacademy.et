@@ -1,6 +1,6 @@
-# Family Academy Landing Page
+# Family Academy Learning Group Landing Page
 
-Public cinematic landing page for Family Academy.
+Public cinematic landing page for Family Academy Learning Group.
 
 ## Role
 

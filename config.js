@@ -1,5 +1,5 @@
 window.FAMILY_ACADEMY_SITE_CONFIG = {
-  brand: 'Family Academy',
+  brand: 'Family Academy Learning Group',
   tagline: 'A cinematic learning room for students, parents, teachers, and TV devices.',
   supportUrl: '',
   privacyUrl: '',
@@ -116,7 +116,7 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
     {
       id: 'arrival',
       kicker: 'Opening frame',
-      title: 'Family Academy opens like a story, not a form.',
+      title: 'Family Academy Learning Group opens like a story, not a form.',
       copy:
         'The visitor steps into a warm student room. The desk, shelf, posters, and screen all hint at what the platform does before a single button is pressed.',
       bullets: ['Cinematic entrance', 'Warm study room lighting', 'A public doorway for the product'],
@@ -241,13 +241,13 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
       title: 'Welcome',
       spine: 'Start here',
       corner: 'Entrance',
-      summary: 'A gentle introduction to what Family Academy is and why the room exists.',
+      summary: 'A gentle introduction to what Family Academy Learning Group is and why the room exists.',
       accent: '#d9b17a',
       pages: [
         {
           title: 'Why the room opens first',
           text:
-            'Family Academy is a learning platform built for students, parents, teachers, and TV devices. The public landing page is designed like a room you enter, so the product feels human and story-driven from the first second.',
+            'Family Academy Learning Group is a learning platform built for students, parents, teachers, and TV devices. The public landing page is designed like a room you enter, so the product feels human and story-driven from the first second.',
           bullets: ['Student-first learning', 'Public brand doorway', 'Cinematic product presentation'],
         },
         {
@@ -460,7 +460,7 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
         {
           title: 'Why this is public-facing',
           text:
-            'The landing page should not hide the family story. It should show that Family Academy is built around real households, not just one device or one role.',
+            'The landing page should not hide the family story. It should show that Family Academy Learning Group is built around real households, not just one device or one role.',
           bullets: ['Household use case', 'Clear reporting path', 'Easy to understand'],
         },
       ],
