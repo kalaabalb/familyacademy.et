@@ -461,26 +461,26 @@ const M={
 // ====================================================
 //  ROOM
 // ====================================================
-const RW=8.5,RH=3.5,RD=11.0;
-add(place(box(RW,.06,RD,M.floor),0,.03,0));
-add(place(box(RW,.06,RD,M.ceil),0,RH,0));
-add(place(box(RW,RH,.08,M.wall),0,RH/2,-RD/2));
-add(place(box(RW,RH,.08,M.wall),0,RH/2,RD/2));
-add(place(box(.08,RH,RD,M.wall),-RW/2,RH/2,0));
-add(place(box(.08,RH,RD,M.wall),RW/2,RH/2,0));
-for(const x of[-RW/2+.04,RW/2-.04])add(place(box(.05,.14,RD,M.skirt),x,.07,0));
-for(const z of[-RD/2+.04,RD/2-.04])add(place(box(RW,.14,.05,M.skirt),0,.07,z));
-for(const x of[-RW/2+.04,RW/2-.04])add(place(box(.06,.1,RD,M.crown),x,RH-.05,0));
-for(const z of[-RD/2+.04,RD/2-.04])add(place(box(RW,.1,.06,M.crown),0,RH-.05,z));
+const RW=8.5,RH=3.5,RD=8.0,RZ=-1.5;
+add(place(box(RW,.06,RD,M.floor),0,.03,RZ));
+add(place(box(RW,.06,RD,M.ceil),0,RH,RZ));
+add(place(box(RW,RH,.08,M.wall),0,RH/2,RZ-RD/2));
+add(place(box(RW,RH,.08,M.wall),0,RH/2,RZ+RD/2));
+add(place(box(.08,RH,RD,M.wall),-RW/2,RH/2,RZ));
+add(place(box(.08,RH,RD,M.wall),RW/2,RH/2,RZ));
+for(const x of[-RW/2+.04,RW/2-.04])add(place(box(.05,.14,RD,M.skirt),x,.07,RZ));
+for(const z of[RZ-RD/2+.04,RZ+RD/2-.04])add(place(box(RW,.14,.05,M.skirt),0,.07,z));
+for(const x of[-RW/2+.04,RW/2-.04])add(place(box(.06,.1,RD,M.crown),x,RH-.05,RZ));
+for(const z of[RZ-RD/2+.04,RZ+RD/2-.04])add(place(box(RW,.1,.06,M.crown),0,RH-.05,z));
 
 // DOOR
-add(place(box(.12,2.1,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),3.18,1.05,RD/2-.05));
-add(place(box(.12,2.1,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),4.18,1.05,RD/2-.05));
-add(place(box(1.22,.12,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),3.68,2.12,RD/2-.05));
-const dSlab=place(box(.9,2.0,.05,new THREE.MeshStandardMaterial({color:0x4a2e10,roughness:.78,map:woodTex})),3.65,1.02,RD/2-.07);dSlab.rotation.y=-.15;scene.add(dSlab);
-for(const[py,ph]of[[.52,.42],[1.3,.42]]){const dp=place(box(.72,ph,.02,new THREE.MeshStandardMaterial({color:0x3a2408,roughness:.82})),3.65,py,RD/2-.05);dp.rotation.y=-.15;scene.add(dp);}
-const dk=place(cyl(.022,.022,.05,12,M.brass),4.08,.94,RD/2-.09);dk.rotation.z=Math.PI/2;scene.add(dk);
-add(place(box(.07,2.04,.04,new THREE.MeshStandardMaterial({color:0xffebc0,emissive:0xffd080,emissiveIntensity:.55,transparent:true,opacity:.14})),4.15,1.02,RD/2-.03));
+add(place(box(.12,2.1,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),3.18,1.05,RZ+RD/2-.05));
+add(place(box(.12,2.1,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),4.18,1.05,RZ+RD/2-.05));
+add(place(box(1.22,.12,.1,new THREE.MeshStandardMaterial({color:0xd0c0a0,roughness:.88})),3.68,2.12,RZ+RD/2-.05));
+const dSlab=place(box(.9,2.0,.05,new THREE.MeshStandardMaterial({color:0x4a2e10,roughness:.78,map:woodTex})),3.65,1.02,RZ+RD/2-.07);dSlab.rotation.y=-.15;scene.add(dSlab);
+for(const[py,ph]of[[.52,.42],[1.3,.42]]){const dp=place(box(.72,ph,.02,new THREE.MeshStandardMaterial({color:0x3a2408,roughness:.82})),3.65,py,RZ+RD/2-.05);dp.rotation.y=-.15;scene.add(dp);}
+const dk=place(cyl(.022,.022,.05,12,M.brass),4.08,.94,RZ+RD/2-.09);dk.rotation.z=Math.PI/2;scene.add(dk);
+add(place(box(.07,2.04,.04,new THREE.MeshStandardMaterial({color:0xffebc0,emissive:0xffd080,emissiveIntensity:.55,transparent:true,opacity:.14})),4.15,1.02,RZ+RD/2-.03));
 
 // CEILING MURAL — a glowing solar system covering the full ceiling: sun, planets, asteroid belt, nebulae, dense starfield
 const muralTex=makeTex(896,1376,(ctx,W,H)=>{
@@ -546,8 +546,8 @@ const muralTex=makeTex(896,1376,(ctx,W,H)=>{
   });
 });
 const muralMat=new THREE.MeshStandardMaterial({map:muralTex,emissive:0xffffff,emissiveMap:muralTex,emissiveIntensity:1.1,roughness:.95,side:THREE.DoubleSide});
-const muralMesh=mesh(new THREE.PlaneGeometry(8.2,12.6),muralMat);
-muralMesh.rotation.x=Math.PI/2;muralMesh.position.set(0,RH-.045,0);scene.add(muralMesh);
+const muralMesh=mesh(new THREE.PlaneGeometry(8.2,8.0),muralMat);
+muralMesh.rotation.x=Math.PI/2;muralMesh.position.set(0,RH-.045,RZ);scene.add(muralMesh);
 // Real 3D twinkling stars scattered across the full ceiling, for actual depth beyond the flat print
 const ceilingStars=[];
 const starM2=new THREE.MeshBasicMaterial({color:0xfff6d8,transparent:true,opacity:.85});
@@ -787,7 +787,7 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
       rotateWorldAxis(upLeg,AX,-Math.PI/2);
       rotateWorldAxis(leg,AX,Math.PI/2);
     }
-    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.42); // elbow bends forward so the hands land on the desk
+    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.24); // elbow bends forward so the hands stay near the desk
   });
   // The hip bend above pivots the knee, not the pelvis — the pelvis itself has to be
   // lowered onto the chair by exactly the thigh length, since the thigh no longer
@@ -1193,7 +1193,7 @@ scene.add(new THREE.Points(pGeo,dustPointsMat));
 // ====================================================
 let tPos=new THREE.Vector3(0,1.62,5.0);let cPos=new THREE.Vector3(0,1.62,5.0);
 let tYaw=Math.PI,cYaw=Math.PI,tPitch=-.03,cPitch=-.03;
-const BOUNDS={xMin:-4.0,xMax:4.0,zMin:-5.35,zMax:5.35};const MOVE=.058;
+const BOUNDS={xMin:-4.0,xMax:4.0,zMin:-5.35,zMax:3.15};const MOVE=.058;
 const keys={};
 document.addEventListener('keydown',e=>{keys[e.code]=true;if(['Space','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();});
 document.addEventListener('keyup',e=>{keys[e.code]=false;});
@@ -1363,10 +1363,9 @@ const TOUR=[
     text:{kicker:'The learner',title:'A student, focused.',copy:'This is who the room is built for \u2014 one learner, one streak, one chapter at a time.',bullets:['Focused study session','An open book and notes','Progress that keeps momentum']}},
   {id:'shelf',label:'Bookshelves',pos:[-2.0,1.55,-5.0],focus:[-3.94,1.3,-5.0],
     text:sceneText('shelf',{kicker:'Book shelf',title:'The shelf is the map.',copy:'Every book on this shelf opens a guide \u2014 registration, login, devices, progress, and more.',bullets:['Register and login','Notes, progress, exams','Payments, support, profiles']})},
-  {id:'tv',label:'TV Corner',pos:[2.2,1.6,-3.6],focus:[4.13,2.05,-5.4],
+  {id:'tv',label:'TV Corner',pos:[2.8,1.7,-5.2],focus:[4.05,2.05,-5.2],
     text:sceneText('tv',{kicker:'Living room branch',title:'The story continues on TV.',copy:'The same learning system follows you to the big screen, built for remote-first control.',bullets:['Remote-first control','Pairing and device flow','Large-screen playback']})},
-  {id:'support',label:'Support',pos:[-.3,1.7,-3.8],focus:[.5,2.5,-5.35],
-    sweep:[[-3.1,2.32,-5.35],[-1.8,2.32,-5.35],[.1,2.5,-5.35],[2.2,2.7,-5.35]],
+  {id:'support',label:'Support',pos:[-.3,1.7,-3.2],focus:[.5,2.5,-5.1],
     text:sceneText('support',{kicker:'Along the way',title:'A few words on the walls.',copy:'Wall quotes and calendars keep the room calm and personal on the way to the last stop.',bullets:['Support & help center','Progress you can trust','Almost there']})},
   {id:'downloads',label:'Downloads',pos:[2.2,1.55,-2.8],focus:[3.65,.9,-2.8],
     text:sceneText('downloads',{kicker:'Download cabinet',title:'Every build, one cabinet.',copy:'Open a drawer to find the right installer for your desktop, mobile, or TV device. This is where the tour ends \u2014 ready to get started.',bullets:['Windows, macOS, Linux','Android client packages','TV app bundles and guides']})},
@@ -1461,12 +1460,12 @@ function eO4(p){return 1-Math.pow(1-p,4);}function eO2(p){return 1-Math.pow(1-p,
 function stepIntro(dt){
   introT+=dt;const p=Math.min(introT/INTRO_DUR,1);
   const p1=Math.min(p/.4,1),p2=Math.max((p-.4)/.6,0);const e1=eO2(p1),e2=eO4(p2);
-  if(p<.4){tPos.x=2.1*(1-e1);tPos.z=7.6+(6.3-7.6)*e1;tPos.y=2.4+(1.9-2.4)*e1;tYaw=(Math.PI-.35)+.2*e1;tPitch=-.14+.08*e1;}
-  else{tPos.x=0;tPos.z=6.3+(6.0-6.3)*e2;tPos.y=1.9+(1.62-1.9)*e2;tYaw=(Math.PI-.15)+.15*e2;tPitch=-.06+.03*e2;}
+  if(p<.4){tPos.x=2.1*(1-e1);tPos.z=5.2+(3.8-5.2)*e1;tPos.y=2.4+(1.9-2.4)*e1;tYaw=(Math.PI-.35)+.2*e1;tPitch=-.14+.08*e1;}
+  else{tPos.x=0;tPos.z=3.8+(3.0-3.8)*e2;tPos.y=1.9+(1.62-1.9)*e2;tYaw=(Math.PI-.15)+.15*e2;tPitch=-.06+.03*e2;}
   if(introT>.55&&introPhase===0){introPhase=1;il1.classList.add('show');il2.classList.add('show');}
   if(introT>3.4&&introPhase===1){introPhase=2;il1.classList.add('gone');il2.classList.add('gone');}
   if(introT>=INTRO_DUR){
-    introActive=false;tPos.set(0,1.62,6.0);tYaw=Math.PI;tPitch=-.03;
+    introActive=false;tPos.set(0,1.62,3.0);tYaw=Math.PI;tPitch=-.03;
     document.getElementById('hud').classList.add('show');document.getElementById('toplogo').classList.add('show');xhairEl.classList.add('show');
     document.getElementById('tour-panel').classList.add('show');
     document.getElementById('tour-chips').classList.add('show');
