@@ -217,21 +217,21 @@ window._THREE=THREE;
 //  BOOK DATA
 // ====================================================
 const BOOKS=[
-  {id:'register',spine:'Register',emoji:'\uD83D\uDCDD',col:0xb85528,col2:0x7a2e0e,title:'Getting Started',sub:'Create your Family Academy account',body:'<p>Creating an account takes under 90 seconds.</p><h3>Steps</h3><ul><li>Enter your full name, email, and a secure password.</li><li>Select your role: <em>Student</em>, <em>Parent</em>, or <em>Teacher</em>.</li><li>Confirm your email via the verification link.</li><li>Complete your profile and choose your grade.</li></ul><p>Parents can link students after registration. Teachers receive a class code automatically.</p>'},
-  {id:'login',spine:'Login',emoji:'\uD83D\uDD10',col:0x7045a0,col2:0x3a1e60,title:'Login & Access',sub:'Sign in from any device',body:'<p>Use your email and password. Sessions persist securely across all devices.</p><h3>Login Options</h3><ul><li><strong>Email &amp; Password</strong> &mdash; the default method.</li><li><strong>Google Sign-In</strong> &mdash; one tap access.</li><li><strong>PIN Login</strong> &mdash; quick 4-digit access.</li></ul><h3>Forgot Password?</h3><p>Tap <em>Forgot Password</em>. A reset link arrives within 30 seconds.</p>'},
-  {id:'devices',spine:'Devices',emoji:'💻',col:0x226690,col2:0x0e3550,title:'Device Switching',sub:'Seamlessly continue anywhere',body:'<p>Start on your phone, continue on your laptop, finish on the TV &mdash; progress syncs in real time.</p><h3>Platforms</h3><ul><li>Android phones &amp; tablets</li><li>Windows, macOS, Linux desktops</li><li>Android TV &amp; smart TVs</li><li>Web browsers (Chrome, Firefox, Safari)</li></ul><p>Offline work queues and uploads when back online.</p>'},
-  {id:'notes',spine:'Notes',emoji:'\uD83D\uDCD2',col:0x1f8850,col2:0x0d4a28,title:'Smart Notes',sub:'Capture, organise, review',body:'<p>Notes anchor to the exact video second, so context is never lost.</p><h3>Features</h3><ul><li>Rich text &mdash; bold, italic, code blocks, LaTeX.</li><li><strong>Timestamp links</strong> &mdash; tap a note to jump to that video moment.</li><li>Tag and search by topic or date.</li><li>Export as PDF or share with a teacher.</li><li>AI-powered note summary (beta).</li></ul>'},
-  {id:'video',spine:'Videos',emoji:'\uD83C\uDFAC',col:0xa02828,col2:0x5a1010,title:'Video Playback',sub:'Lessons, lectures & live sessions',body:'<p>Adaptive HD streaming adjusts quality automatically.</p><h3>Playback Features</h3><ul><li>Speed control: 0.5x to 2x.</li><li>Auto-generated captions with highlight-sync.</li><li>Picture-in-picture on desktop.</li><li>Chapter navigation and bookmarks.</li><li>Offline download for premium subscribers.</li></ul>'},
-  {id:'practice',spine:'Practice',emoji:'\u270F\uFE0F',col:0xc86818,col2:0x7a3a08,title:'Practice Questions',sub:'Sharpen your skills daily',body:'<p>Thousands of curriculum-aligned questions, auto-graded with explanations.</p><h3>Question Types</h3><ul><li>Multiple choice with instant feedback.</li><li>Fill-in-the-blank with smart matching.</li><li>Diagram labelling.</li><li>Short-answer with AI rubric scoring.</li></ul><h3>Spaced Repetition</h3><p>Our algorithm re-surfaces questions at the optimal interval to cement long-term memory.</p>'},
-  {id:'exams',spine:'Exams',emoji:'\uD83D\uDCCB',col:0x18407a,col2:0x0a1e40,title:'Exams & Assessments',sub:'Timed tests, mocks & certificates',body:'<p>Full mock exams with real-world timing build confidence before test day.</p><h3>Exam Modes</h3><ul><li><strong>Practice Mode</strong> &mdash; no time limit, hints allowed.</li><li><strong>Exam Mode</strong> &mdash; strict timer, auto-submit.</li><li><strong>Review Mode</strong> &mdash; full explanations after submission.</li></ul><h3>Certificates</h3><p>Earn verifiable digital certificates. Share to LinkedIn or print.</p>'},
-  {id:'progress',spine:'Progress',emoji:'\uD83D\uDCC8',col:0x4a9020,col2:0x244a0e,title:'Progress Tracking',sub:'See exactly where you stand',body:'<p>Visual dashboards show mastery by topic, time invested, and improvement over weeks.</p><h3>What We Track</h3><ul><li>Lesson completion by chapter.</li><li>Average quiz and exam scores with trendlines.</li><li>Time-on-task per subject per week.</li><li>Weak topics flagged and prioritised.</li></ul>'},
-  {id:'streaks',spine:'Streaks',emoji:'\uD83D\uDD25',col:0xd84010,col2:0x801e06,title:'Streaks & Reports',sub:'Momentum, motivation & milestones',body:'<p>Daily streaks reward consistency. Miss a day and it resets &mdash; every new day rebuilds it.</p><h3>Features</h3><ul><li>Daily study goal &mdash; 15, 30, or 60 min.</li><li><strong>Streak shields</strong> &mdash; protect one missed day.</li><li>Weekly leaderboard with classmates.</li><li>Monthly report emailed to linked parents.</li></ul>'},
-  {id:'profile',spine:'Profile',emoji:'\uD83D\uDC64',col:0x604890,col2:0x302448,title:'Profile Settings',sub:'Your learning identity',body:'<p>Your profile is persistent across every device.</p><h3>Settings</h3><ul><li>Display name, avatar, and bio.</li><li>Grade level and subjects.</li><li>Notifications: email, push, SMS.</li><li>Language and region.</li><li>Theme: dark / light / high-contrast / sepia.</li><li>Accessibility defaults.</li></ul>'},
-  {id:'tv',spine:'TV',emoji:'📺',col:0x145880,col2:0x082840,title:'TV Connection',sub:'Learn on the big screen',body:'<p>Install Family Academy TV and your entire course library appears on your television.</p><h3>Setup</h3><ul><li>Download the TV APK from the Downloads drawer in this room.</li><li>Install on Android TV or compatible smart TV.</li><li>Log in &mdash; everything syncs instantly.</li><li>Use your phone as a remote via the companion app.</li></ul><h3>TV Features</h3><ul><li>Family viewing mode: students cannot leave approved content.</li><li>Remote-native D-pad navigation.</li><li>Auto-resume on relaunch.</li></ul>'},
-  {id:'parents',spine:'Parents',emoji:'\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC66',col:0x906018,col2:0x4a2e08,title:'Parent Linking',sub:"Stay close to your child's journey",body:"<p>Parents get a real-time view of their child's learning without interrupting it.</p><h3>How to Link</h3><ul><li>Student: <em>Profile &rarr; Share Code</em> &rarr; 6-digit code.</li><li>Parent: enter code under <em>Add Child</em>.</li><li>Connection is instant.</li></ul><h3>Parent Controls</h3><ul><li>Set daily screen-time limits.</li><li>Approve or restrict specific courses.</li><li>Receive weekly summaries by email.</li></ul>"},
-  {id:'support',spine:'Support',emoji:'\uD83D\uDCAC',col:0x158060,col2:0x083d30,title:'Support & Help',sub:"We're always here",body:"<p>Our support team targets a 2-hour response. Help Center articles are searchable 24/7.</p><h3>Channels</h3><ul><li>In-app live chat &mdash; fastest response.</li><li>Email: <strong>support@familyacademy.app</strong></li><li>Help Center: <em>help.familyacademy.app</em></li><li>Community forum.</li></ul><h3>Quick Fixes</h3><ul><li>Video won't load &rarr; check connection.</li><li>Login issue &rarr; use Forgot Password.</li><li>Sync delay &rarr; force-close and reopen.</li></ul>"},
-  {id:'billing',spine:'Billing',emoji:'\uD83D\uDCB3',col:0xa03030,col2:0x601818,title:'Payment & Billing',sub:'Flexible plans for every family',body:'<p>Monthly and annual plans. Annual saves 40%.</p><h3>Plans</h3><ul><li><strong>Free</strong> &mdash; 3 courses, basic tracking.</li><li><strong>Student</strong> &mdash; all courses, exams, offline, certificates.</li><li><strong>Family</strong> &mdash; up to 4 students, parent dashboard, TV app.</li><li><strong>School</strong> &mdash; bulk licensing, teacher tools.</li></ul><h3>Payment Methods</h3><p>Visa, Mastercard, M-Pesa, Telebirr, PayPal, bank transfer.</p>'},
-  {id:'access',spine:'Access',emoji:'\u267F',col:0x3a7050,col2:0x1a3828,title:'Accessibility & Controls',sub:'Learning designed for everyone',body:'<p>Family Academy is built to WCAG 2.1 AA standards.</p><h3>Features</h3><ul><li>Screen reader support: NVDA, VoiceOver, TalkBack.</li><li>Adjustable font sizes up to 200%.</li><li>High-contrast and colourblind-friendly palettes.</li><li>Closed captions on all video.</li><li>Full keyboard navigation.</li><li>Audio descriptions for visual-only content.</li></ul>'},
+  {id:'register',spine:'Register',emoji:'\uD83D\uDCDD',col:0xb85528,col2:0x7a2e0e,title:'Account Setup',sub:'Create a student, parent, or teacher account',body:'<p>This book explains the real Family Academy onboarding flow used by the client, TV app, and admin panel.</p><h3>What gets saved</h3><ul><li>User role and account identity</li><li>School, grade, and contact details used by the backend</li><li>Parent-link and device-pairing hooks for later setup</li><li>Profile settings that follow the learner across devices</li></ul>'},
+  {id:'login',spine:'Login',emoji:'\uD83D\uDD10',col:0x7045a0,col2:0x3a1e60,title:'Login & Session',sub:'Sign in once, continue on every device',body:'<p>Family Academy keeps one account active across phone, desktop, TV, and admin workflows where permitted.</p><h3>Login flow</h3><ul><li>Email, username, or phone-based sign in depending on account rules</li><li>Forgot-password recovery when credentials are missing</li><li>Session persistence so the app does not force repeat sign-in on every visit</li></ul>'},
+  {id:'devices',spine:'Devices',emoji:'💻',col:0x226690,col2:0x0e3550,title:'Device Switching',sub:'Phone, desktop, and TV support',body:'<p>Family Academy is designed for the real target set: Android client, Windows, macOS, Linux, TV, and the admin portal.</p><h3>Supported targets</h3><ul><li>Mobile app for daily study</li><li>Desktop builds for long sessions and school use</li><li>TV build with remote-friendly navigation</li><li>Shared backend data so progress stays in sync</li></ul>'},
+  {id:'notes',spine:'Notes',emoji:'\uD83D\uDCD2',col:0x1f8850,col2:0x0d4a28,title:'Smart Notes',sub:'Chapter-linked reading and revision',body:'<p>Notes are not generic pages. They are tied to the chapter, lesson, and video the learner is studying.</p><h3>What the notes book covers</h3><ul><li>Lesson notes and teacher material</li><li>Video-linked references and timestamps</li><li>Offline reading when the client allows it</li><li>Searchable study text instead of filler content</li></ul>'},
+  {id:'video',spine:'Videos',emoji:'\uD83C\uDFAC',col:0xa02828,col2:0x5a1010,title:'Video Playback',sub:'Lessons, quality control, resume, download',body:'<p>Video playback in Family Academy is about reliable lesson delivery, quality switching, and resume points.</p><h3>Playback features</h3><ul><li>Quality selection for slow or fast connections</li><li>Fullscreen and replay controls</li><li>Resume from the last watched position</li><li>Download or stream depending on access rules</li></ul>'},
+  {id:'practice',spine:'Practice',emoji:'\u270F\uFE0F',col:0xc86818,col2:0x7a3a08,title:'Practice Questions',sub:'Chapter-based drilling and review',body:'<p>Practice questions belong to the exact chapter or topic the learner is working on.</p><h3>Question flow</h3><ul><li>Check answers after submission</li><li>Repeat weak topics until the learner improves</li><li>Use chapter-linked sets instead of random questions</li><li>Feed progress data back into the parent and student views</li></ul>'},
+  {id:'exams',spine:'Exams',emoji:'\uD83D\uDCCB',col:0x18407a,col2:0x0a1e40,title:'Exams & Assessments',sub:'Timed tests and review',body:'<p>Exams behave like real assessments with rules, timing, submission, and results review.</p><h3>Exam rules</h3><ul><li>Timed or practice mode depending on the teacher setup</li><li>Clear start, submit, and review states</li><li>Results tied back to the learner record</li><li>Parent reporting for exam progress</li></ul>'},
+  {id:'progress',spine:'Progress',emoji:'\uD83D\uDCC8',col:0x4a9020,col2:0x244a0e,title:'Progress Tracking',sub:'Weekly activity and long-term growth',body:'<p>Progress records the actions the learner actually completed this week and over time.</p><h3>What is tracked</h3><ul><li>Video watch progress and completion</li><li>Notes opened and saved</li><li>Practice, exam, and chapter activity</li><li>Streaks and parent-visible weekly reports</li></ul>'},
+  {id:'streaks',spine:'Streaks',emoji:'\uD83D\uDD25',col:0xd84010,col2:0x801e06,title:'Streaks & Reports',sub:'Momentum, motivation, and weekly summaries',body:'<p>Streaks reward consistent study, and the weekly report shows what the learner did during the current week.</p><h3>What belongs here</h3><ul><li>Current streak count</li><li>Weekly summary for parents</li><li>Learning milestones and completed actions</li><li>Rewards tied to real study activity</li></ul>'},
+  {id:'profile',spine:'Profile',emoji:'\uD83D\uDC64',col:0x604890,col2:0x302448,title:'Profile Settings',sub:'Identity, school, and preferences',body:'<p>The profile area stores the learner identity and the settings used by the app.</p><h3>Profile items</h3><ul><li>Name, avatar, and school selection</li><li>Theme, language, and accessibility choices</li><li>Notification and device preferences</li><li>Personalization data used by the client and admin tools</li></ul>'},
+  {id:'tv',spine:'TV',emoji:'📺',col:0x145880,col2:0x082840,title:'TV Connection',sub:'Big-screen learning with remote control',body:'<p>The TV book maps to the real TV app workflow for Family Academy.</p><h3>TV flow</h3><ul><li>Install the TV build from the downloads cabinet</li><li>Navigate with remote buttons, not touch</li><li>Pair the TV with the same user account as the phone app</li><li>Show lessons, chapters, and pairing instructions on the TV screen</li></ul>'},
+  {id:'parents',spine:'Parents',emoji:'\uD83D\uDC68\u200D\uD83D\uDC69\u200D\uD83D\uDC66',col:0x906018,col2:0x4a2e08,title:'Parent Linking',sub:"Stay close to your child's journey",body:"<p>Parent linking connects the learner account to a parent view so families can follow real progress.</p><h3>How it works</h3><ul><li>Parent link code is generated in the app</li><li>Parents can see progress, streaks, and weekly updates</li><li>Notifications and support links can be tied back to the family view</li></ul>"},
+  {id:'support',spine:'Support',emoji:'\uD83D\uDCAC',col:0x158060,col2:0x083d30,title:'Support & Help',sub:'Help links, FAQs, and contact routes',body:"<p>Support should show the real contact paths a Family Academy user can use.</p><h3>What belongs here</h3><ul><li>WhatsApp, Telegram, email, website, and phone links</li><li>FAQ items that answer common app issues</li><li>Clear recovery steps instead of placeholder text</li><li>Support content that can be updated from the backend</li></ul>"},
+  {id:'billing',spine:'Billing',emoji:'\uD83D\uDCB3',col:0xa03030,col2:0x601818,title:'Payment & Billing',sub:'Plans, renewals, and proof review',body:'<p>Billing covers the subscription and repayment flow used in Family Academy.</p><h3>What it should show</h3><ul><li>Current plan and expiry</li><li>Pending payment requests and renewals</li><li>Access rules for school, family, or student plans</li><li>Receipt or proof-of-payment review in the admin panel</li></ul>'},
+  {id:'access',spine:'Access',emoji:'\u267F',col:0x3a7050,col2:0x1a3828,title:'Accessibility & Controls',sub:'Keyboard, remote, and readable UI',body:'<p>Accessibility is part of the product, not filler.</p><h3>Features</h3><ul><li>Keyboard and remote navigation</li><li>Readable contrast and font sizing</li><li>Screen-reader-friendly labels</li><li>Closed captions and clear focus states</li></ul>'},
 ];
 
 // ====================================================
@@ -363,14 +363,19 @@ function drawLapTex(ctx,W,H){LAP_STATES[lapState](ctx,W,H);}
 
 const TV_STATES=[
   (ctx,W,H)=>{// watch list
-    ctx.fillStyle='#040210';ctx.fillRect(0,0,W,H);
-    const vg=ctx.createLinearGradient(0,0,0,H);vg.addColorStop(0,'rgba(18,36,80,.32)');vg.addColorStop(1,'rgba(4,4,18,.32)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(200,160,50,.88)';ctx.font='bold 19px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
-    ctx.fillStyle='rgba(140,175,255,.6)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('LIVE \u00b7 Grade 9 Mathematics',W-18,34);
-    ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(0,42,W,1);
-    const rows=[{col:'#90b8ff',bold:true,title:'\u25b6  Algebra \u2014 Quadratic Equations',sub:'Chapter 4 \u00b7 45 min',p:.63},{col:'rgba(255,255,255,.38)',title:'\u25cb  Geometry \u2014 Circles & Tangents',sub:'Chapter 5 \u00b7 38 min',p:0},{col:'rgba(255,255,255,.28)',title:'\u25cb  Statistics \u2014 Data Interpretation',sub:'Chapter 6 \u00b7 52 min',p:0},{col:'rgba(255,255,255,.22)',title:'\u25cb  Trigonometry \u2014 Intro',sub:'Chapter 7 \u00b7 40 min',p:0}];
-    rows.forEach((row,i)=>{const y=58+i*66;if(i===0){ctx.fillStyle='rgba(75,115,200,.14)';ctx.fillRect(0,y-5,W,62);}ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');ctx.textAlign='left';ctx.fillText(row.title,18,y+22);ctx.fillStyle='rgba(160,140,100,.5)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,18,y+38);if(row.p>0){ctx.fillStyle='rgba(80,80,60,.35)';ctx.fillRect(18,y+50,W-36,3);ctx.fillStyle='rgba(200,160,60,.7)';ctx.fillRect(18,y+50,(W-36)*row.p,3);}});
-    ctx.fillStyle='rgba(200,160,50,.48)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';ctx.fillText('Student Mode \u00b7 Sync active \u00b7 3 Devices',W/2,H-10);
+    ctx.fillStyle='#050816';ctx.fillRect(0,0,W,H);
+    const vg=ctx.createRadialGradient(W*.44,H*.34,8,W*.5,H*.45,H*.95);vg.addColorStop(0,'rgba(46,88,170,.62)');vg.addColorStop(.7,'rgba(10,18,40,.68)');vg.addColorStop(1,'rgba(4,4,12,.92)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(208,172,80,.95)';ctx.font='bold 20px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
+    ctx.fillStyle='rgba(168,194,255,.72)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('TV DOWNLOADS • STUDY • PARENT LINK',W-18,34);
+    ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(0,42,W,1);
+    const rows=[
+      {col:'#b6d0ff',bold:true,title:'▶  Client App Downloads',sub:'Android old, Android new, universal APK, AAB',p:.81},
+      {col:'rgba(255,255,255,.44)',title:'◌  TV App Downloads',sub:'Remote-first navigation and pairing',p:.56},
+      {col:'rgba(255,255,255,.34)',title:'◌  Desktop Builds',sub:'Windows, macOS, and Linux installers',p:.42},
+      {col:'rgba(255,255,255,.26)',title:'◌  Parent and Support Guides',sub:'Login, support, billing, and connection help',p:.33}
+    ];
+    rows.forEach((row,i)=>{const y=58+i*63;if(i===0){ctx.fillStyle='rgba(78,122,208,.18)';ctx.fillRect(0,y-5,W,58);}ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');ctx.textAlign='left';ctx.fillText(row.title,18,y+20);ctx.fillStyle='rgba(186,172,126,.58)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,18,y+37);ctx.fillStyle='rgba(90,100,120,.34)';ctx.fillRect(18,y+47,W-36,3);ctx.fillStyle='rgba(208,172,80,.82)';ctx.fillRect(18,y+47,(W-36)*row.p,3);});
+    ctx.fillStyle='rgba(208,172,80,.5)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';ctx.fillText('Student Mode • Sync active • Project builds linked',W/2,H-10);
   },
   (ctx,W,H)=>{// TV pairing
     ctx.fillStyle='#020408';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(40,80,200,.1)';ctx.fillRect(0,0,W,H);
@@ -667,37 +672,24 @@ const lArm=place(box(.28,.02,.02,lBaseM),-.84,1.33,-.1);lArm.rotation.z=-.18;des
 deskGroup.add(place(cyl(.06,.1,.12,16,new THREE.MeshStandardMaterial({color:0xc07818,roughness:.55,metalness:.05,emissive:0x3f0700,emissiveIntensity:.35})),-.72,1.3,-.1));
 deskGroup.add(place(box(.09,.02,.09,new THREE.MeshStandardMaterial({color:0xffcc40,emissive:0xffcc40,emissiveIntensity:2.8,transparent:true,opacity:.62})),-.72,1.25,-.1));
 
-// LAPTOP with cycling screen
-const lapBase=place(box(.6,.026,.42,M.metal),0,.82,0);deskGroup.add(lapBase);
-const kbTex=makeTex(300,210,(ctx,W,H)=>{
-  ctx.fillStyle='#8a8a86';ctx.fillRect(0,0,W,H);
-  const kw=20,kh=20,gx=6,gy=6;
-  for(let r=0;r<7;r++)for(let c=0;c<13;c++){
-    const x=10+c*(kw+3),y=10+r*(kh+3);
-    ctx.fillStyle='rgba(20,20,18,.85)';ctx.fillRect(x,y,kw,kh);
-    ctx.fillStyle='rgba(70,70,66,.9)';ctx.fillRect(x+1.5,y+1.5,kw-3,kh-4);
-  }
-  ctx.fillStyle='rgba(40,40,38,.9)';ctx.fillRect(10,H-46,W-20,30);
-});
-const kbMesh=mesh(new THREE.PlaneGeometry(.53,.32),new THREE.MeshStandardMaterial({map:kbTex,roughness:.75}));
-kbMesh.rotation.x=-Math.PI/2;kbMesh.position.set(0,.834,-.02);deskGroup.add(kbMesh);
-const lapLidG=new THREE.Group();lapLidG.position.set(0,.013,-.21); // hinge line: base's back top edge
-const lapLid=box(.6,.022,.38,M.metal);lapLid.position.set(0,.011,.19); // lid extends forward from the hinge
-lapLid.add(place(box(.55,.005,.33,new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:.6})),0,.014,0));
-lapLid.add(place(box(.008,.008,.008,new THREE.MeshStandardMaterial({color:0x1a1a1a,roughness:.5})),0,.02,-.148));
-const lapScrM=new THREE.MeshStandardMaterial({map:lapTex,emissive:0x0c0920,emissiveIntensity:1.65,emissiveMap:lapTex});
-const lapScrMesh=mesh(new THREE.PlaneGeometry(.53,.295),lapScrM);lapScrMesh.position.set(0,.022,.001);lapLid.add(lapScrMesh);
-lapLid.add(place(cyl(.009,.009,.004,12,new THREE.MeshStandardMaterial({color:0x707068,roughness:.35,metalness:.7})),0,.02,-.148));
-lapLidG.add(lapLid);lapLidG.rotation.x=-1.78;lapBase.add(lapLidG); // pivots from the hinge, opened to a natural ~100° screen angle
-const hingeM=new THREE.MeshStandardMaterial({color:0x606058,roughness:.35,metalness:.8});
-const lapHinge=place(cyl(.012,.012,.58,10,hingeM),0,.826,-.2);lapHinge.rotation.z=Math.PI/2;deskGroup.add(lapHinge);
-
-// Laptop invisible hotspot
-const lapHot=mesh(new THREE.BoxGeometry(.58,.34,.32),new THREE.MeshBasicMaterial({visible:false}));
-lapHot.position.set(0,1.0,-.05);
-lapHot.userData={isDevice:'laptop',label:'Laptop — click to cycle'};
-deskGroup.add(lapHot);
-allHotspots.push({mesh:lapHot,label:'💻  Laptop — click to cycle screen'});
+// DESKTOP PC with cycling monitor screen
+const pcBase=place(box(.64,.03,.42,M.metal),0,.82,0);deskGroup.add(pcBase);
+const pcTower=place(box(.16,.42,.26,new THREE.MeshStandardMaterial({color:0x101215,roughness:.5,metalness:.2})),.56,.99,-.1);deskGroup.add(pcTower);
+deskGroup.add(place(box(.13,.012,.19,new THREE.MeshStandardMaterial({color:0x1f2228,roughness:.65})),.56,.84,-.02));
+const monitorStand=place(cyl(.014,.014,.14,12,new THREE.MeshStandardMaterial({color:0x5f6268,roughness:.35,metalness:.75})),0,.93,-.08);deskGroup.add(monitorStand);
+deskGroup.add(place(cyl(.05,.05,.03,16,new THREE.MeshStandardMaterial({color:0x3a3d43,roughness:.45,metalness:.7})),0,.85,-.08));
+const monitorFrame=box(.68,.44,.045,new THREE.MeshStandardMaterial({color:0x0b0c0f,roughness:.28,metalness:.5}));
+monitorFrame.position.set(0,1.2,-.08);
+const monitorPanel=mesh(new THREE.PlaneGeometry(.62,.36),new THREE.MeshStandardMaterial({map:lapTex,emissive:0x18244a,emissiveIntensity:2.0,emissiveMap:lapTex,roughness:.1}));
+monitorPanel.position.set(0,0,.028);
+monitorFrame.add(monitorPanel);
+monitorFrame.add(place(box(.58,.03,.005,new THREE.MeshStandardMaterial({color:0x14161a,roughness:.34,metalness:.62})),0,-.2,.027));
+deskGroup.add(monitorFrame);
+const pcHot=mesh(new THREE.BoxGeometry(.82,.52,.32),new THREE.MeshBasicMaterial({visible:false}));
+pcHot.position.set(0,1.12,-.08);
+pcHot.userData={isDevice:'desktop',label:'Desktop PC — click to cycle'};
+deskGroup.add(pcHot);
+allHotspots.push({mesh:pcHot,label:'🖥️  Desktop PC — click to cycle screen'});
 
 // Desk items
 deskGroup.add(place(box(.33,.014,.25,new THREE.MeshStandardMaterial({color:0x1e2e5a,roughness:.85})),-.85,.826,-.2));
@@ -793,25 +785,28 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
   // net rotation on the shin is zero relative to world, so the lower leg still points
   // straight down and the foot lands close to its original standing floor height.
   ['Left','Right'].forEach(side=>{
-    const upLeg=bone(side+'UpLeg'),leg=bone(side+'Leg'),foreArm=bone(side+'ForeArm');
+    const upLeg=bone(side+'UpLeg'),leg=bone(side+'Leg'),foreArm=bone(side+'ForeArm'),hand=bone(side+'Hand'),arm=bone(side+'Arm'),shoulder=bone(side+'Shoulder');
     if(upLeg&&leg){
       thighLen=leg.position.length();
       rotateWorldAxis(upLeg,AX,-Math.PI/2);
       rotateWorldAxis(leg,AX,Math.PI/2);
     }
-    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.24); // elbow bends forward so the hands stay near the desk
+    if(shoulder)rotateWorldAxis(shoulder,AX,-Math.PI*.08);
+    if(arm)rotateWorldAxis(arm,AX,-Math.PI*.12);
+    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.52); // elbows bend forward so the hands rest near the desk
+    if(hand)rotateWorldAxis(hand,AX,-Math.PI*.14);
   });
   // The hip bend above pivots the knee, not the pelvis — the pelvis itself has to be
   // lowered onto the chair by exactly the thigh length, since the thigh no longer
   // contributes any vertical height once it's horizontal.
   const hips=bone('Hips');
   if(hips&&thighLen)hips.position.y-=thighLen;
-  const spine2=bone('Spine2');if(spine2)rotateWorldAxis(spine2,AX,.12); // slight forward lean, studying posture
-  const head=bone('Head');if(head)rotateWorldAxis(head,AX,.08); // faint downward gaze toward the desk
+  const spine2=bone('Spine2');if(spine2)rotateWorldAxis(spine2,AX,.24); // stronger forward lean, studying posture
+  const head=bone('Head');if(head)rotateWorldAxis(head,AX,.14); // downward gaze toward the desk
 
   const wrap=new THREE.Group();
   wrap.add(model);
-  wrap.position.set(0,0,1.02); // chair seat position (matches CX,CZ below) — seat height is handled by the hip bend above
+  wrap.position.set(0,0,.88); // pull the student closer to the desk so the hands sit on top of it
   wrap.rotation.y=Math.PI;     // the model's bind pose faces +Z; the desk sits at lower z, so flip to face it
   deskGroup.add(wrap);
   studentPlaceholder.visible=false;
@@ -831,7 +826,7 @@ const pgTex=makeTex(128,96,(ctx,W,H)=>{
 const pgMesh=mesh(new THREE.PlaneGeometry(.2,.14),new THREE.MeshStandardMaterial({map:pgTex,roughness:.96}));
 pgMesh.rotation.x=-Math.PI/2;pgMesh.position.y=.012;bookOpen.add(pgMesh);
 bookOpen.add(place(box(.005,.018,.16,new THREE.MeshStandardMaterial({color:0xd0c8a0,roughness:.95})),0,.012,0));
-bookOpen.rotation.x=.06;bookOpen.position.set(-.12,.79,.70);deskGroup.add(bookOpen);
+bookOpen.rotation.x=.06;bookOpen.position.set(-.02,.835,.22);deskGroup.add(bookOpen);
 
 // DESK CHAIR — racing-style gaming chair
 const CX=0,CZ=1.02;
@@ -869,26 +864,18 @@ for(const[lx,lz]of[[-.24,0],[.12,-.21],[-.12,-.21],[.12,.21],[-.12,.21]]){
 const bp=place(box(.36,.42,.22,new THREE.MeshStandardMaterial({color:0x2a3850,roughness:.85})),-1.55,.22,1.0);bp.rotation.y=.2;deskGroup.add(bp);
 deskGroup.add(place(box(.3,.28,.2,new THREE.MeshStandardMaterial({color:0x24304a,roughness:.85})),-1.55,.4,.9));
 for(const dsx of[-.09,.09])deskGroup.add(place(box(.02,.38,.015,new THREE.MeshStandardMaterial({color:0x1a2540,roughness:.8})),-1.55+dsx,.22,1.0));
-// Trash basket — woven wicker look
-const basketTex=makeTex(128,128,(ctx,W,H)=>{
-  ctx.fillStyle='#a87c48';ctx.fillRect(0,0,W,H);
-  for(let r=0;r<16;r++){
-    const y=r*8,dark=r%2===0;
-    ctx.fillStyle=dark?'rgba(90,58,24,.5)':'rgba(200,160,100,.35)';
-    for(let c=0;c<16;c++){const x=c*8+(dark?4:0);ctx.fillRect(x,y,8,8);}
-  }
-  ctx.strokeStyle='rgba(60,36,12,.3)';ctx.lineWidth=1;
-  for(let r=0;r<=16;r++){ctx.beginPath();ctx.moveTo(0,r*8);ctx.lineTo(W,r*8);ctx.stroke();}
-});
-const basketM=new THREE.MeshStandardMaterial({map:basketTex,roughness:.95});
+// Realistic office trash can
 const binG=new THREE.Group();
-binG.add(place(cyl(.12,.15,.24,16,basketM),0,.12,0));
-binG.add(place(cyl(.13,.13,.018,16,new THREE.MeshStandardMaterial({color:0x8a5e2e,roughness:.85})),0,.235,0));
-binG.add(place(cyl(.152,.152,.014,16,new THREE.MeshStandardMaterial({color:0x6a4420,roughness:.8})),0,.005,0));
-for(let i=0;i<10;i++){const ang=(i/10)*Math.PI*2;binG.add(place(cyl(.005,.005,.24,6,new THREE.MeshStandardMaterial({color:0x6a4420,roughness:.85})),Math.cos(ang)*.135,.12,Math.sin(ang)*.135));}
-const paperM=new THREE.MeshStandardMaterial({color:0xf2ecdc,roughness:.98});
-for(let i=0;i<3;i++){const pb=place(sph(rnd(.028,.04),6,paperM),rnd(-.06,.06),.2+i*.02,rnd(-.06,.06));pb.scale.set(rnd(.8,1.2),rnd(.7,1),rnd(.8,1.2));binG.add(pb);}
-binG.position.set(1.12,.02,.75);deskGroup.add(binG);
+const binM=new THREE.MeshStandardMaterial({color:0x1f2328,roughness:.72,metalness:.12});
+const binLipM=new THREE.MeshStandardMaterial({color:0x32363c,roughness:.42,metalness:.35});
+binG.add(place(cyl(.13,.15,.34,20,binM),0,.17,0));
+binG.add(place(cyl(.145,.145,.028,20,binLipM),0,.315,0));
+binG.add(place(cyl(.11,.11,.012,20,new THREE.MeshStandardMaterial({color:0x0f1114,roughness:.9})),0,.01,0));
+for(let i=0;i<3;i++){const curl=place(box(.012,.18,.006,binLipM),Math.cos(i*2.1)*.11,.18,Math.sin(i*2.1)*.11);curl.rotation.z=(i-1)*.08;curl.rotation.y=i*1.7;binG.add(curl);}
+const bagM=new THREE.MeshStandardMaterial({color:0x101214,roughness:.95,transparent:true,opacity:.58});
+binG.add(place(sph(.1,10,bagM),0,.18,0));
+binG.scale.set(1,1,.92);
+binG.position.set(1.14,.02,.76);deskGroup.add(binG);
 const deskRugTex=makeTex(256,160,(ctx,W,H)=>{
   ctx.fillStyle='#5a3018';ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(200,152,52,.38)';ctx.lineWidth=7;ctx.strokeRect(4,4,W-8,H-8);
@@ -997,23 +984,23 @@ scene.add(shelfGroup);
 // (mini side table removed, per request — desk moved closer to the bookshelf instead)
 
 // TV UNIT
-const TVX=RW/2-.03,TVZ=-2.75;
+const TVX=RW/2-.03,TVZ=-4.22;
 const tvBodyM=new THREE.MeshStandardMaterial({color:0x090808,roughness:.36,metalness:.42});
 const tvBezelM=new THREE.MeshStandardMaterial({color:0x040405,roughness:.28,metalness:.52});
-scene.add(place(box(.08,1.22,1.92,tvBodyM),TVX,2.08,TVZ));
-scene.add(place(box(.02,1.12,1.76,tvBezelM),TVX-.02,2.08,TVZ));
-const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x0b1938,emissiveIntensity:1.9,emissiveMap:tvTex,roughness:.04});
-const tvScreen=mesh(new THREE.PlaneGeometry(1.76,1.02),tvSM);tvScreen.position.set(TVX+.041,2.08,TVZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
-scene.add(place(box(.01,1.06,1.7,new THREE.MeshStandardMaterial({color:0x131313,roughness:.4,metalness:.35})),TVX+.05,2.08,TVZ));
+scene.add(place(box(.06,1.2,1.86,tvBodyM),TVX,2.08,TVZ));
+scene.add(place(box(.018,1.12,1.72,tvBezelM),TVX-.012,2.08,TVZ));
+const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x203b72,emissiveIntensity:2.25,emissiveMap:tvTex,roughness:.02});
+const tvScreen=mesh(new THREE.PlaneGeometry(1.7,0.98),tvSM);tvScreen.position.set(TVX-.02,2.08,TVZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
+scene.add(place(box(.01,1.03,1.68,new THREE.MeshStandardMaterial({color:0x131313,roughness:.4,metalness:.35})),TVX-.005,2.08,TVZ));
 const rem=place(box(.05,.01,.16,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TVX-.18,1.0,TVZ+.38);rem.rotation.y=.35;scene.add(rem);
 // TV hotspot (screen click = cycle)
-const tvHot=mesh(new THREE.BoxGeometry(.14,1.2,1.84),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TVX+.01,2.08,TVZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
+const tvHot=mesh(new THREE.BoxGeometry(.18,1.18,1.78),new THREE.MeshBasicMaterial({visible:false}));
+tvHot.position.set(TVX-.02,2.08,TVZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
 scene.add(tvHot);
 allHotspots.push({mesh:tvHot,label:'📺  TV — click to cycle screen'});
 // TV guide hotspot (credenza area = open book)
 const tvGuideHot=mesh(new THREE.BoxGeometry(.06,.5,.5),new THREE.MeshBasicMaterial({visible:false}));
-tvGuideHot.position.set(TVX+.01,1.05,TVZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
+tvGuideHot.position.set(TVX-.02,1.05,TVZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
 scene.add(tvGuideHot);allHotspots.push({mesh:tvGuideHot,label:'📺  TV Connection Guide'});
 
 // DOWNLOAD CABINET — 3 individually-animated drawers
@@ -1147,22 +1134,21 @@ scene.add(place(box(.86,.008,.56,new THREE.MeshStandardMaterial({color:0x6c4016,
 for(const[lx,lz]of[[-.4,-.24],[.4,-.24],[-.4,.24],[.4,.24]])scene.add(place(cyl(.022,.03,.68,10,new THREE.MeshStandardMaterial({color:0x5a3818,roughness:.7})),etX+lx,.36,etZ+lz));
 // Two proper bentwood-style café chairs, facing each other across the table
 function cafeChair(cx,cz,faceAngle){
-  const seatM=new THREE.MeshStandardMaterial({color:0x8a3020,roughness:.6});
-  const frameM=new THREE.MeshStandardMaterial({color:0x2a1c10,roughness:.55,metalness:.15});
-  const backM=new THREE.MeshStandardMaterial({color:0x5e3116,roughness:.58,side:THREE.DoubleSide});
+  const seatM=new THREE.MeshStandardMaterial({color:0x73411d,roughness:.64});
+  const frameM=new THREE.MeshStandardMaterial({color:0x2b2318,roughness:.5,metalness:.18});
+  const cushionM=new THREE.MeshStandardMaterial({color:0x9a5f2e,roughness:.7});
   const chG=new THREE.Group();
-  chG.add(place(box(.38,.07,.38,seatM),0,.46,0));
-  chG.add(place(box(.34,.04,.34,frameM),0,.56,0));
-  chG.add(place(box(.36,.4,.05,backM),0,.82,-.17));
-  chG.add(place(box(.34,.06,.05,frameM),0,.64,-.17));
-  chG.add(place(box(.06,.42,.05,frameM),-.18,.63,-.17));
-  chG.add(place(box(.06,.42,.05,frameM),.18,.63,-.17));
-  chG.add(place(box(.05,.26,.05,frameM),-.18,.31,-.17));
-  chG.add(place(box(.05,.26,.05,frameM),.18,.31,-.17));
-  chG.add(place(box(.18,.06,.04,frameM),0,.58,-.17));
-  for(const[lx,lz]of[[-.15,-.15],[.15,-.15],[-.15,.15],[.15,.15]])chG.add(place(cyl(.016,.016,.5,8,frameM),lx,.24,lz));
-  chG.add(place(box(.04,.14,.04,frameM),-.18,.1,-.15));
-  chG.add(place(box(.04,.14,.04,frameM),.18,.1,-.15));
+  chG.add(place(box(.38,.06,.38,seatM),0,.44,0));
+  chG.add(place(box(.35,.025,.35,cushionM),0,.47,0));
+  chG.add(place(box(.05,.44,.04,frameM),-.16,.24,-.14));
+  chG.add(place(box(.05,.44,.04,frameM),.16,.24,-.14));
+  chG.add(place(box(.34,.04,.04,frameM),0,.63,-.14));
+  chG.add(place(box(.32,.38,.04,seatM),0,.83,-.16));
+  chG.add(place(box(.05,.22,.04,frameM),-.16,.16,.12));
+  chG.add(place(box(.05,.22,.04,frameM),.16,.16,.12));
+  chG.add(place(box(.22,.04,.04,frameM),0,.57,.12));
+  for(const[lx,lz]of[[-.14,-.14],[.14,-.14],[-.14,.14],[.14,.14]])chG.add(place(cyl(.015,.015,.46,8,frameM),lx,.2,lz));
+  chG.add(place(box(.22,.03,.04,frameM),0,.88,-.12));
   chG.position.set(cx,0,cz);chG.rotation.y=faceAngle;scene.add(chG);
 }
 cafeChair(etX,etZ-.4,0);
@@ -1277,7 +1263,7 @@ canvas.addEventListener('touchend',e=>{
 const devLblEl=document.getElementById('dev-lbl');let devLblTimer=null;
 function showDevLbl(){devLblEl.classList.add('show');clearTimeout(devLblTimer);devLblTimer=setTimeout(()=>devLblEl.classList.remove('show'),2500);}
 function cycleDevice(dev){
-  if(dev==='laptop'){lapState=(lapState+1)%LAP_STATES.length;reDraw(lapTex,drawLapTex);}
+  if(dev==='laptop'||dev==='desktop'){lapState=(lapState+1)%LAP_STATES.length;reDraw(lapTex,drawLapTex);}
   else if(dev==='tv'){tvState=(tvState+1)%TV_STATES.length;reDraw(tvTex,drawTvTex);}
   else if(dev==='phone'){phState=(phState+1)%PH_STATES.length;reDraw(phTex,drawPhTex);}
   showDevLbl();
