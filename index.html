@@ -997,22 +997,23 @@ scene.add(shelfGroup);
 // (mini side table removed, per request — desk moved closer to the bookshelf instead)
 
 // TV UNIT
-const TX=RW/2-.82,TZ=-4.95;
-scene.add(place(box(.16,.08,1.72,new THREE.MeshStandardMaterial({color:0x24170b,roughness:.82,map:dkWoodTex})),TX-.11,.94,TZ));
-scene.add(place(box(.13,.022,1.48,new THREE.MeshStandardMaterial({color:0x16120f,roughness:.35,metalness:.45})),TX-.11,.99,TZ));
-scene.add(place(box(.04,1.16,1.18,new THREE.MeshStandardMaterial({color:0x0c0a08,roughness:.4,metalness:.5})),TX+.05,2.08,TZ));
-scene.add(place(box(.02,1.2,1.2,new THREE.MeshStandardMaterial({color:0x080806,roughness:.5,metalness:.6})),TX+.06,2.08,TZ));
+const TVX=RW/2-.03,TVZ=-2.75;
+const tvBodyM=new THREE.MeshStandardMaterial({color:0x090808,roughness:.36,metalness:.42});
+const tvBezelM=new THREE.MeshStandardMaterial({color:0x040405,roughness:.28,metalness:.52});
+scene.add(place(box(.08,1.22,1.92,tvBodyM),TVX,2.08,TVZ));
+scene.add(place(box(.02,1.12,1.76,tvBezelM),TVX-.02,2.08,TVZ));
 const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x0b1938,emissiveIntensity:1.9,emissiveMap:tvTex,roughness:.04});
-const tvScreen=mesh(new THREE.PlaneGeometry(1.88,1.06),tvSM);tvScreen.position.set(TX-.03,2.08,TZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
-const rem=place(box(.05,.01,.16,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TX-.1,1.0,TZ-.32);rem.rotation.y=.35;scene.add(rem);
+const tvScreen=mesh(new THREE.PlaneGeometry(1.76,1.02),tvSM);tvScreen.position.set(TVX+.041,2.08,TVZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
+scene.add(place(box(.01,1.06,1.7,new THREE.MeshStandardMaterial({color:0x131313,roughness:.4,metalness:.35})),TVX+.05,2.08,TVZ));
+const rem=place(box(.05,.01,.16,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TVX-.18,1.0,TVZ+.38);rem.rotation.y=.35;scene.add(rem);
 // TV hotspot (screen click = cycle)
-const tvHot=mesh(new THREE.BoxGeometry(.06,1.18,1.98),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TX-.02,2.08,TZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
+const tvHot=mesh(new THREE.BoxGeometry(.14,1.2,1.84),new THREE.MeshBasicMaterial({visible:false}));
+tvHot.position.set(TVX+.01,2.08,TVZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
 scene.add(tvHot);
 allHotspots.push({mesh:tvHot,label:'📺  TV — click to cycle screen'});
 // TV guide hotspot (credenza area = open book)
 const tvGuideHot=mesh(new THREE.BoxGeometry(.06,.5,.5),new THREE.MeshBasicMaterial({visible:false}));
-tvGuideHot.position.set(TX-.02,1.05,TZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
+tvGuideHot.position.set(TVX+.01,1.05,TVZ);tvGuideHot.userData={isBook:true,bookId:'tv',label:'TV Connection Guide'};
 scene.add(tvGuideHot);allHotspots.push({mesh:tvGuideHot,label:'📺  TV Connection Guide'});
 
 // DOWNLOAD CABINET — 3 individually-animated drawers
@@ -1151,13 +1152,17 @@ function cafeChair(cx,cz,faceAngle){
   const backM=new THREE.MeshStandardMaterial({color:0x5e3116,roughness:.58,side:THREE.DoubleSide});
   const chG=new THREE.Group();
   chG.add(place(box(.38,.07,.38,seatM),0,.46,0));
+  chG.add(place(box(.34,.04,.34,frameM),0,.56,0));
   chG.add(place(box(.36,.4,.05,backM),0,.82,-.17));
   chG.add(place(box(.34,.06,.05,frameM),0,.64,-.17));
-  chG.add(place(box(.05,.4,.05,frameM),-.18,.82,-.17));
-  chG.add(place(box(.05,.4,.05,frameM),.18,.82,-.17));
-  for(const[lx,lz]of[[-.15,-.15],[.15,-.15],[-.15,.15],[.15,.15]])chG.add(place(cyl(.016,.016,.46,8,frameM),lx,.23,lz));
-  chG.add(place(box(.04,.16,.04,frameM),-.18,.1,-.15));
-  chG.add(place(box(.04,.16,.04,frameM),.18,.1,-.15));
+  chG.add(place(box(.06,.42,.05,frameM),-.18,.63,-.17));
+  chG.add(place(box(.06,.42,.05,frameM),.18,.63,-.17));
+  chG.add(place(box(.05,.26,.05,frameM),-.18,.31,-.17));
+  chG.add(place(box(.05,.26,.05,frameM),.18,.31,-.17));
+  chG.add(place(box(.18,.06,.04,frameM),0,.58,-.17));
+  for(const[lx,lz]of[[-.15,-.15],[.15,-.15],[-.15,.15],[.15,.15]])chG.add(place(cyl(.016,.016,.5,8,frameM),lx,.24,lz));
+  chG.add(place(box(.04,.14,.04,frameM),-.18,.1,-.15));
+  chG.add(place(box(.04,.14,.04,frameM),.18,.1,-.15));
   chG.position.set(cx,0,cz);chG.rotation.y=faceAngle;scene.add(chG);
 }
 cafeChair(etX,etZ-.4,0);
