@@ -1541,7 +1541,7 @@ function animDrawers(){
 }
 function animAmbient(t){
   // Screens breathe with a faint glow, like real backlit displays
-  lapScrM.emissiveIntensity=1.65+Math.sin(t*1.3)*.1;
+  monitorPanel.material.emissiveIntensity=1.65+Math.sin(t*1.3)*.1;
   tvSM.emissiveIntensity=1.9+Math.sin(t*.9+.4)*.12;
   phScrM.emissiveIntensity=1.25+Math.sin(t*1.6+1.1)*.08;
   // Dust motes twinkle faintly instead of a flat opacity
