@@ -466,7 +466,7 @@ const M={
 // ====================================================
 //  ROOM
 // ====================================================
-const RW=8.5,RH=3.5,RD=8.0,RZ=-1.5;
+const RW=8.5,RH=3.5,RD=11.0,RZ=-1.5;
 add(place(box(RW,.06,RD,M.floor),0,.03,RZ));
 add(place(box(RW,.06,RD,M.ceil),0,RH,RZ));
 add(place(box(RW,RH,.08,M.wall),0,RH/2,RZ-RD/2));
@@ -875,7 +875,7 @@ for(let i=0;i<3;i++){const curl=place(box(.012,.18,.006,binLipM),Math.cos(i*2.1)
 const bagM=new THREE.MeshStandardMaterial({color:0x101214,roughness:.95,transparent:true,opacity:.58});
 binG.add(place(sph(.1,10,bagM),0,.18,0));
 binG.scale.set(1,1,.92);
-binG.position.set(1.14,.02,.76);deskGroup.add(binG);
+binG.position.set(1.36,.02,1.14);deskGroup.add(binG);
 const deskRugTex=makeTex(256,160,(ctx,W,H)=>{
   ctx.fillStyle='#5a3018';ctx.fillRect(0,0,W,H);
   ctx.strokeStyle='rgba(200,152,52,.38)';ctx.lineWidth=7;ctx.strokeRect(4,4,W-8,H-8);
