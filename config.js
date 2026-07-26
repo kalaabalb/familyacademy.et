@@ -1,3 +1,6 @@
+const CLIENT_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client/releases/download/v1.0.0';
+const TV_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client-tv/releases/download/v1.0.0';
+
 window.FAMILY_ACADEMY_SITE_CONFIG = {
   brand: 'Family Academy Learning Group',
   tagline: 'A cinematic learning room for students, parents, teachers, and TV devices.',
@@ -10,61 +13,61 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
         title: 'Windows Installer',
         fileName: 'FamilyAcademyInstaller.exe',
         note: 'Best for most Windows users.',
-        href: 'downloads/client/FamilyAcademyInstaller.exe',
+        href: `${CLIENT_RELEASE_BASE}/FamilyAcademyInstaller.exe`,
       },
       {
         title: 'Windows Portable Zip',
         fileName: 'family-academy-windows.zip',
         note: 'Portable desktop package.',
-        href: 'downloads/client/family-academy-windows.zip',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-windows.zip`,
       },
       {
         title: 'macOS Zip',
         fileName: 'family-academy-macos.zip',
         note: 'Native macOS desktop build.',
-        href: 'downloads/client/family-academy-macos.zip',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-macos.zip`,
       },
       {
         title: 'Linux Tarball',
         fileName: 'family-academy-linux.tar.gz',
         note: 'Linux release bundle.',
-        href: 'downloads/client/family-academy-linux.tar.gz',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-linux.tar.gz`,
       },
       {
         title: 'Android APK Old',
         fileName: 'family-academy-android-older-armeabi-v7a.apk',
         note: 'Best for older 32-bit Android devices.',
-        href: 'downloads/client/family-academy-android-older-armeabi-v7a.apk',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-android-older-armeabi-v7a.apk`,
       },
       {
         title: 'Android APK New',
         fileName: 'family-academy-android-newer-arm64-v8a.apk',
         note: 'Best for newer 64-bit Android devices.',
-        href: 'downloads/client/family-academy-android-newer-arm64-v8a.apk',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-android-newer-arm64-v8a.apk`,
       },
       {
         title: 'Android APK Emulator',
         fileName: 'family-academy-android-emulator-x86_64.apk',
         note: 'Android emulator and x86_64 devices.',
-        href: 'downloads/client/family-academy-android-emulator-x86_64.apk',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-android-emulator-x86_64.apk`,
       },
       {
         title: 'Android APK Universal',
         fileName: 'family-academy-android-universal.apk',
         note: 'One APK that works across more devices.',
-        href: 'downloads/client/family-academy-android-universal.apk',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-android-universal.apk`,
       },
       {
         title: 'Android APK Pack',
         fileName: 'family-academy-android-apks.zip',
         note: 'Split APK pack for Android.',
-        href: 'downloads/client/family-academy-android-apks.zip',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-android-apks.zip`,
       },
       {
         title: 'Play Store Bundle',
         fileName: 'family-academy-play-store.aab',
         note: 'Android App Bundle for store upload.',
-        href: 'downloads/client/family-academy-play-store.aab',
+        href: `${CLIENT_RELEASE_BASE}/family-academy-play-store.aab`,
       },
     ],
     tv: [
@@ -72,43 +75,43 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
         title: 'Android TV APK Old',
         fileName: 'tvapp-android-older-armeabi-v7a.apk',
         note: 'Best for older Android TV devices.',
-        href: 'downloads/tv/tvapp-android-older-armeabi-v7a.apk',
+        href: `${TV_RELEASE_BASE}/tvapp-android-older-armeabi-v7a.apk`,
       },
       {
         title: 'Android TV APK New',
         fileName: 'tvapp-android-newer-arm64-v8a.apk',
         note: 'Best for newer Android TV devices.',
-        href: 'downloads/tv/tvapp-android-newer-arm64-v8a.apk',
+        href: `${TV_RELEASE_BASE}/tvapp-android-newer-arm64-v8a.apk`,
       },
       {
         title: 'Android TV APK Emulator',
         fileName: 'tvapp-android-emulator-x86_64.apk',
         note: 'Android emulator and x86_64 TV devices.',
-        href: 'downloads/tv/tvapp-android-emulator-x86_64.apk',
+        href: `${TV_RELEASE_BASE}/tvapp-android-emulator-x86_64.apk`,
       },
       {
         title: 'Android TV APK Universal',
         fileName: 'tvapp-android-universal.apk',
         note: 'Universal Android TV build.',
-        href: 'downloads/tv/tvapp-android-universal.apk',
+        href: `${TV_RELEASE_BASE}/tvapp-android-universal.apk`,
       },
       {
         title: 'TV Android Bundle',
         fileName: 'tvapp-play-store.aab',
         note: 'Store-ready TV bundle.',
-        href: 'downloads/tv/tvapp-play-store.aab',
+        href: `${TV_RELEASE_BASE}/tvapp-play-store.aab`,
       },
       {
         title: 'Linux TV Bundle',
         fileName: 'tvapp-linux.tar.gz',
         note: 'Linux desktop and kiosk build.',
-        href: 'downloads/tv/tvapp-linux.tar.gz',
+        href: `${TV_RELEASE_BASE}/tvapp-linux.tar.gz`,
       },
       {
         title: 'macOS TV Zip',
         fileName: 'tvapp-macos.zip',
         note: 'Apple desktop TV companion build.',
-        href: 'downloads/tv/tvapp-macos.zip',
+        href: `${TV_RELEASE_BASE}/tvapp-macos.zip`,
       },
     ],
   },
@@ -540,13 +543,13 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
       title: 'Downloads',
       spine: 'Get builds',
       corner: 'Files',
-      summary: 'All public build links live here once you attach hosted URLs.',
+      summary: 'All public build links now point at the GitHub release assets for the latest bundle set.',
       accent: '#dfb37a',
       pages: [
         {
           title: 'Client builds',
           text:
-            'This page should list the client Windows, macOS, Linux, and Android builds in one place. Add the final public URLs from your hosting provider and the cards become active downloads.',
+            'This page lists the client Windows, macOS, Linux, and Android builds in one place. The cards are wired to the public GitHub release assets so families can download the latest files directly.',
           bullets: ['Windows installer and zip', 'macOS and Linux packages', 'Android APK pack and AAB'],
         },
         {
@@ -561,8 +564,8 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
 };
 
 window.FA_DOWNLOADS = {
-  releaseLabel: 'First release set',
-  releaseDate: 'July 23, 2026',
+  releaseLabel: 'v1.0.0',
+  releaseDate: 'July 21, 2026',
   client: {
     windows_installer: {
       label: 'Windows Installer',
