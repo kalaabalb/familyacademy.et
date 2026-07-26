@@ -52,7 +52,8 @@ body.tv-safe #vig{
   font-family:'Playfair Display',Georgia,serif;font-size:.82rem;color:#b08030;
   letter-spacing:.26em;text-transform:uppercase;
   opacity:0;transition:opacity .8s;pointer-events:none;
-  display:flex;align-items:center;gap:9px;}
+  display:flex;align-items:center;gap:10px;}
+#toplogo .logo-mark{width:30px;height:30px;object-fit:contain;border-radius:7px;box-shadow:0 2px 10px rgba(0,0,0,.28);}
 #toplogo .sep{width:1px;height:10px;background:rgba(200,150,50,.28);}
 #toplogo .fa{color:#f0c060;}
 #toplogo.show{opacity:.72;}
@@ -297,7 +298,7 @@ body.tv-safe #tv-welcome{display:flex;}
   </div>
 </div>
 
-<div id="toplogo"><span class="fa">FA</span><div class="sep"></div><span>Family Academy</span></div>
+<div id="toplogo"><img class="logo-mark" src="family-academy-brand-logo.png" alt="Family Academy logo"/><div class="sep"></div><span>Family Academy</span></div>
 <div id="zone"></div>
 <div id="xhair"></div>
 <div id="tip"></div>
@@ -479,8 +480,8 @@ renderer.toneMappingExposure=TV_SAFE_MODE?1.24:1.06;
 renderer.outputEncoding=THREE.sRGBEncoding;
 
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(TV_SAFE_MODE?0x231308:0x0f0700);
-scene.fog=new THREE.FogExp2(TV_SAFE_MODE?0x2a170c:0x0e0600,TV_SAFE_MODE?0.012:0.021);
+scene.background=new THREE.Color(TV_SAFE_MODE?0x2d1a0e:0x171009);
+scene.fog=new THREE.FogExp2(TV_SAFE_MODE?0x2d1a0e:0x171009,TV_SAFE_MODE?0.01:0.015);
 
 const camera=new THREE.PerspectiveCamera(52,window.innerWidth/window.innerHeight,.04,55);
 camera.position.set(0,1.58,3.35);
