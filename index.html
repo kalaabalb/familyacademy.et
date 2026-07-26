@@ -32,10 +32,10 @@
 </script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#0c0701;}
+html,body{width:100%;height:100%;overflow:hidden;background:#140d07;}
 #canvas{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair;}
-#vig{position:fixed;inset:0;pointer-events:none;z-index:10;background:radial-gradient(ellipse at 50% 48%,transparent 42%,rgba(3,1,0,.82) 100%);}
-#loader{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 42%,#170c03 0%,#090400 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.6s cubic-bezier(.4,0,.2,1);}
+#vig{position:fixed;inset:0;pointer-events:none;z-index:10;background:radial-gradient(ellipse at 50% 48%,transparent 54%,rgba(3,1,0,.48) 100%);}
+#loader{position:fixed;inset:0;z-index:9000;background:radial-gradient(ellipse at 50% 42%,#241406 0%,#0d0602 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.6s cubic-bezier(.4,0,.2,1);}
 #loader.out{opacity:0;pointer-events:none;}
 .ld-ring{width:82px;height:82px;margin-bottom:34px;animation:rp 3s ease-in-out infinite;}
 .ld-ring svg{width:100%;height:100%;}
@@ -246,11 +246,11 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMap.enabled=!isMobile; // shadow mapping is the single biggest GPU cost in this scene — off on mobile
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.08;
+renderer.toneMappingExposure=1.22;
 renderer.outputEncoding=THREE.sRGBEncoding;
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x171009);
-scene.fog=new THREE.FogExp2(0x171009,.015);
+scene.background=new THREE.Color(0x22160b);
+scene.fog=new THREE.FogExp2(0x22160b,.011);
 const camera=new THREE.PerspectiveCamera(58,window.innerWidth/window.innerHeight,.04,55);
 camera.position.set(0,1.62,5.8);
 
@@ -577,18 +577,18 @@ add(place(box(2.8,.01,3.0,new THREE.MeshStandardMaterial({color:0xffebc0,emissiv
 add(place(box(.7,.015,.7,new THREE.MeshStandardMaterial({color:0xfff0d0,emissive:0xffe8b0,emissiveIntensity:.6,roughness:.5})),-1.2,RH-.04,-2.4));
 
 // LIGHTS
-scene.add(new THREE.AmbientLight(0x7a5528,.72));
-scene.add(new THREE.HemisphereLight(0xffe0b0,0x341d0c,.32));
-const mainPt=new THREE.PointLight(0xffe8b0,2.2,20);mainPt.position.set(0,RH-.45,0);mainPt.castShadow=true;mainPt.shadow.mapSize.setScalar(1024);mainPt.shadow.radius=12;scene.add(mainPt);
-const deskPt=new THREE.PointLight(0xffd060,1.9,5.8);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
-const deskPend=new THREE.PointLight(0xffc840,.88,4.5);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
-const bedPt=new THREE.PointLight(0xffa840,.95,4.2);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
-const tvPt=new THREE.PointLight(0x5088dd,.75,5.5);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
-const winDir=new THREE.DirectionalLight(0xfff2d0,.65);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
-const dlPt=new THREE.PointLight(0xffcc00,.6,3.2);dlPt.position.set(1.2,1.55,-6.6);scene.add(dlPt);
-const flPt=new THREE.PointLight(0xffcc60,.75,4.5);flPt.position.set(3.6+1.02,1.5,-4.5+1.6);scene.add(flPt);
-const shelfPt=new THREE.PointLight(0xffe8a0,1.1,5.0);shelfPt.position.set(-5.0,1.9,-6);scene.add(shelfPt);
-const doorPt=new THREE.PointLight(0xffe8b0,.48,4.2);doorPt.position.set(4.0,1.6,5.9);scene.add(doorPt);
+scene.add(new THREE.AmbientLight(0x9a7140,1.02));
+scene.add(new THREE.HemisphereLight(0xffefcb,0x5b3014,.58));
+const mainPt=new THREE.PointLight(0xffe8b0,2.8,20);mainPt.position.set(0,RH-.45,0);mainPt.castShadow=true;mainPt.shadow.mapSize.setScalar(1024);mainPt.shadow.radius=12;scene.add(mainPt);
+const deskPt=new THREE.PointLight(0xffd060,2.3,5.8);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
+const deskPend=new THREE.PointLight(0xffc840,1.05,4.5);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
+const bedPt=new THREE.PointLight(0xffa840,1.15,4.2);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
+const tvPt=new THREE.PointLight(0x72a0ff,1.05,5.5);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
+const winDir=new THREE.DirectionalLight(0xfff2d0,.95);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
+const dlPt=new THREE.PointLight(0xffcc00,.8,3.2);dlPt.position.set(1.2,1.55,-6.6);scene.add(dlPt);
+const flPt=new THREE.PointLight(0xffcc60,.92,4.5);flPt.position.set(3.6+1.02,1.5,-4.5+1.6);scene.add(flPt);
+const shelfPt=new THREE.PointLight(0xffe8a0,1.35,5.0);shelfPt.position.set(-5.0,1.9,-6);scene.add(shelfPt);
+const doorPt=new THREE.PointLight(0xffe8b0,.68,4.2);doorPt.position.set(4.0,1.6,5.9);scene.add(doorPt);
 
 // WINDOW REMOVED — keep the entrance wall clean and unobstructed.
 
