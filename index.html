@@ -246,7 +246,7 @@ renderer.setSize(window.innerWidth,window.innerHeight);
 renderer.shadowMap.enabled=!isMobile; // shadow mapping is the single biggest GPU cost in this scene — off on mobile
 renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.56;
+renderer.toneMappingExposure=1.18;
 renderer.outputEncoding=THREE.sRGBEncoding;
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x3a2514);
@@ -580,12 +580,12 @@ for(let i=0;i<(isMobile?32:90);i++){
 }
 
 // CEILING FIXTURES
-const plafM=new THREE.MeshStandardMaterial({color:0xfff8e4,emissive:0xfff4c0,emissiveIntensity:2.1,roughness:.35});
+const plafM=new THREE.MeshStandardMaterial({color:0xfff8e4,emissive:0xfff4c0,emissiveIntensity:1.35,roughness:.35});
 add(place(box(1.5,.03,1.5,plafM),0,RH-.04,0));
 add(place(cyl(.66,.72,.065,36,new THREE.MeshStandardMaterial({color:0xc8a050,roughness:.45,metalness:.35})),0,RH-.085,0));
 const cordM=new THREE.MeshStandardMaterial({color:0x1e1a10,roughness:.9});
 add(place(cyl(.009,.009,.32,6,cordM),0,RH-.22,0));
-const bulbM=new THREE.MeshStandardMaterial({color:0xfff8e0,emissive:0xfff0a0,emissiveIntensity:3.6,roughness:.3});
+const bulbM=new THREE.MeshStandardMaterial({color:0xfff8e0,emissive:0xfff0a0,emissiveIntensity:2.35,roughness:.3});
 add(place(sph(.07,10,bulbM),0,RH-.39,0));
 add(place(cyl(.007,.007,.48,6,cordM),-1.2,RH-.28,-2.4));
 add(place(sph(.055,8,bulbM),-1.2,RH-.54,-2.4));
@@ -593,21 +593,21 @@ add(place(box(2.8,.01,3.0,new THREE.MeshStandardMaterial({color:0xffebc0,emissiv
 add(place(box(.7,.015,.7,new THREE.MeshStandardMaterial({color:0xfff0d0,emissive:0xffe8b0,emissiveIntensity:.6,roughness:.5})),-1.2,RH-.04,-2.4));
 
 // LIGHTS
-scene.add(new THREE.AmbientLight(0xffddb0,1.65));
-scene.add(new THREE.HemisphereLight(0xfff0cf,0x9b5f32,.92));
-const mainPt=new THREE.PointLight(0xffedc0,4.4,22);mainPt.position.set(0,RH-.2,0);mainPt.castShadow=true;mainPt.shadow.mapSize.setScalar(1024);mainPt.shadow.radius=12;scene.add(mainPt);
-const deskPt=new THREE.PointLight(0xffd87a,3.4,6.8);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
-const deskPend=new THREE.PointLight(0xffd060,1.8,5.5);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
-const bedPt=new THREE.PointLight(0xffba66,1.8,5.5);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
-const tvPt=new THREE.PointLight(0x8eb3ff,1.55,6.5);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
-const winDir=new THREE.DirectionalLight(0xfff6e0,1.45);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
-const fillBack=new THREE.DirectionalLight(0xffd4a0,.92);fillBack.position.set(-8,3,-4);fillBack.target.position.set(0,1,-3);scene.add(fillBack);scene.add(fillBack.target);
-const fillFront=new THREE.DirectionalLight(0xfff0cf,.88);fillFront.position.set(4,4,6);fillFront.target.position.set(0,1,0);scene.add(fillFront);scene.add(fillFront.target);
-const dlPt=new THREE.PointLight(0xffcc00,1.15,4.5);dlPt.position.set(1.2,1.55,-6.6);scene.add(dlPt);
-const flPt=new THREE.PointLight(0xffcc60,1.42,6.0);flPt.position.set(3.6+1.02,1.5,-4.5+1.6);scene.add(flPt);
-const shelfPt=new THREE.PointLight(0xffefba,1.95,6.5);shelfPt.position.set(-5.0,1.9,-6);scene.add(shelfPt);
-const doorPt=new THREE.PointLight(0xffe8b0,1.1,5.8);doorPt.position.set(4.0,1.6,5.9);scene.add(doorPt);
-const roomFill=new THREE.PointLight(0xfff1d8,2.8,18);roomFill.position.set(0,1.9,-1.5);scene.add(roomFill);
+scene.add(new THREE.AmbientLight(0xffddb0,1.08));
+scene.add(new THREE.HemisphereLight(0xfff0cf,0x9b5f32,.66));
+const mainPt=new THREE.PointLight(0xffedc0,3.1,22);mainPt.position.set(0,RH-.2,0);mainPt.castShadow=true;mainPt.shadow.mapSize.setScalar(1024);mainPt.shadow.radius=12;scene.add(mainPt);
+const deskPt=new THREE.PointLight(0xffd87a,2.35,6.8);deskPt.position.set(-1.2,1.88,-2.5);scene.add(deskPt);
+const deskPend=new THREE.PointLight(0xffd060,1.2,5.5);deskPend.position.set(-1.2,RH-.65,-2.4);scene.add(deskPend);
+const bedPt=new THREE.PointLight(0xffba66,1.2,5.5);bedPt.position.set(2.8,1.65,-5.3);scene.add(bedPt);
+const tvPt=new THREE.PointLight(0x8eb3ff,1.08,6.5);tvPt.position.set(4.4,1.95,-5.5);scene.add(tvPt);
+const winDir=new THREE.DirectionalLight(0xfff6e0,1.02);winDir.position.set(10,3.5,1.5);winDir.target.position.set(0,1,0);scene.add(winDir);scene.add(winDir.target);
+const fillBack=new THREE.DirectionalLight(0xffd4a0,.65);fillBack.position.set(-8,3,-4);fillBack.target.position.set(0,1,-3);scene.add(fillBack);scene.add(fillBack.target);
+const fillFront=new THREE.DirectionalLight(0xfff0cf,.6);fillFront.position.set(4,4,6);fillFront.target.position.set(0,1,0);scene.add(fillFront);scene.add(fillFront.target);
+const dlPt=new THREE.PointLight(0xffcc00,.8,4.5);dlPt.position.set(1.2,1.55,-6.6);scene.add(dlPt);
+const flPt=new THREE.PointLight(0xffcc60,1.0,6.0);flPt.position.set(3.6+1.02,1.5,-4.5+1.6);scene.add(flPt);
+const shelfPt=new THREE.PointLight(0xffefba,1.3,6.5);shelfPt.position.set(-5.0,1.9,-6);scene.add(shelfPt);
+const doorPt=new THREE.PointLight(0xffe8b0,.8,5.8);doorPt.position.set(4.0,1.6,5.9);scene.add(doorPt);
+const roomFill=new THREE.PointLight(0xfff1d8,1.95,18);roomFill.position.set(0,1.9,-1.5);scene.add(roomFill);
 
 // WINDOW REMOVED — keep the entrance wall clean and unobstructed.
 
@@ -1512,11 +1512,11 @@ function animParticles(t){
   pGeo.attributes.position.needsUpdate=true;
 }
 function animLights(t){
-  deskPt.intensity=1.88+Math.sin(t*1.1)*.14;tvPt.intensity=.72+Math.sin(t*.7)*.12;
-  bedPt.intensity=.92+Math.sin(t*1.6)*.08;mainPt.intensity=2.1+Math.sin(t*.4)*.07;
-  deskPend.intensity=.88+Math.sin(t*.95+.8)*.1;dlPt.intensity=.58+Math.sin(t*2.2)*.32;
-  doorPt.intensity=.42+Math.sin(t*.6+1.2)*.1;flPt.intensity=.72+Math.sin(t*1.4+.5)*.1;
-  shelfPt.intensity=1.05+Math.sin(t*.55+.3)*.12;winDir.intensity=.58+Math.sin(t*.22)*.09;
+  deskPt.intensity=1.42+Math.sin(t*1.1)*.09;tvPt.intensity=.48+Math.sin(t*.7)*.07;
+  bedPt.intensity=.72+Math.sin(t*1.6)*.05;mainPt.intensity=1.55+Math.sin(t*.4)*.05;
+  deskPend.intensity=.62+Math.sin(t*.95+.8)*.06;dlPt.intensity=.4+Math.sin(t*2.2)*.18;
+  doorPt.intensity=.3+Math.sin(t*.6+1.2)*.06;flPt.intensity=.48+Math.sin(t*1.4+.5)*.06;
+  shelfPt.intensity=.78+Math.sin(t*.55+.3)*.08;winDir.intensity=.42+Math.sin(t*.22)*.05;
   const now=new Date();const hr=now.getHours()%12+now.getMinutes()/60;const mn=now.getMinutes()+now.getSeconds()/60;const sc=now.getSeconds()+now.getMilliseconds()/1000;
   hrHand.rotation.x=-(hr/12)*Math.PI*2;mnHand.rotation.x=-(mn/60)*Math.PI*2;scHand.rotation.x=-(sc/60)*Math.PI*2;
 }
@@ -1541,9 +1541,9 @@ function animDrawers(){
 }
 function animAmbient(t){
   // Screens breathe with a faint glow, like real backlit displays
-  monitorPanel.material.emissiveIntensity=1.65+Math.sin(t*1.3)*.1;
-  tvSM.emissiveIntensity=1.9+Math.sin(t*.9+.4)*.12;
-  phScrM.emissiveIntensity=1.25+Math.sin(t*1.6+1.1)*.08;
+  monitorPanel.material.emissiveIntensity=1.1+Math.sin(t*1.3)*.06;
+  tvSM.emissiveIntensity=1.2+Math.sin(t*.9+.4)*.08;
+  phScrM.emissiveIntensity=.92+Math.sin(t*1.6+1.1)*.05;
   // Dust motes twinkle faintly instead of a flat opacity
   dustPointsMat.opacity=.32+Math.sin(t*.6)*.05;
   // Shelf plant leaves sway very slightly, like faint air movement
@@ -1551,7 +1551,7 @@ function animAmbient(t){
   // Ceiling stars twinkle independently, like a real night sky
   ceilingStars.forEach(s=>{s.material.opacity=s.userData.baseOp*(.6+Math.sin(t*1.8+s.userData.ph)*.4);});
   // The solar-system mural's sun breathes with a slow glow
-  muralMat.emissiveIntensity=1.1+Math.sin(t*.5)*.15;
+  muralMat.emissiveIntensity=.78+Math.sin(t*.5)*.08;
 }
 
 window.addEventListener('resize',()=>{camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
