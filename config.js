@@ -1,5 +1,5 @@
-const CLIENT_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client/releases/download/v1.0.0';
-const TV_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client-tv/releases/download/v1.0.0';
+const CLIENT_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client/releases/download/v1.0.1';
+const TV_RELEASE_BASE = 'https://github.com/kalaabalb/family-academy-client-tv/releases/download/v1.0.1';
 
 window.FAMILY_ACADEMY_SITE_CONFIG = {
   brand: 'Family Academy Learning Group',
@@ -564,8 +564,8 @@ window.FAMILY_ACADEMY_SITE_CONFIG = {
 };
 
 window.FA_DOWNLOADS = {
-  releaseLabel: 'v1.0.0',
-  releaseDate: 'July 21, 2026',
+  releaseLabel: 'v1.0.1',
+  releaseDate: 'July 26, 2026',
   client: {
     windows_installer: {
       label: 'Windows Installer',
