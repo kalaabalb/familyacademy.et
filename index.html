@@ -364,19 +364,26 @@ function drawLapTex(ctx,W,H){LAP_STATES[lapState](ctx,W,H);}
 
 const TV_STATES=[
   (ctx,W,H)=>{// watch list
-    ctx.fillStyle='#050816';ctx.fillRect(0,0,W,H);
-    const vg=ctx.createRadialGradient(W*.44,H*.34,8,W*.5,H*.45,H*.95);vg.addColorStop(0,'rgba(46,88,170,.62)');vg.addColorStop(.7,'rgba(10,18,40,.68)');vg.addColorStop(1,'rgba(4,4,12,.92)');ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='rgba(208,172,80,.95)';ctx.font='bold 20px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
-    ctx.fillStyle='rgba(168,194,255,.72)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('TV DOWNLOADS • STUDY • PARENT LINK',W-18,34);
-    ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(0,42,W,1);
+    ctx.fillStyle='#090c14';ctx.fillRect(0,0,W,H);
+    const vg=ctx.createRadialGradient(W*.48,H*.32,8,W*.5,H*.46,H*.98);
+    vg.addColorStop(0,'rgba(66,116,220,.34)');
+    vg.addColorStop(.55,'rgba(16,28,60,.68)');
+    vg.addColorStop(1,'rgba(6,8,16,.96)');
+    ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,220,140,.95)';ctx.font='bold 19px Georgia,serif';ctx.textAlign='left';ctx.fillText('Family Academy',18,34);
+    ctx.fillStyle='rgba(190,210,255,.72)';ctx.font='11px Lato,sans-serif';ctx.textAlign='right';ctx.fillText('TV DOWNLOADS • STUDY • PARENT LINK',W-18,34);
+    ctx.fillStyle='rgba(255,255,255,.09)';ctx.fillRect(0,42,W,1);
+    ctx.fillStyle='rgba(255,255,255,.05)';ctx.fillRect(18,54,W-36,16);
+    ctx.fillStyle='rgba(255,220,140,.2)';ctx.fillRect(18,54,118,16);
+    ctx.fillStyle='rgba(255,255,255,.2)';ctx.font='10px Lato,sans-serif';ctx.textAlign='left';ctx.fillText('Remote ready  •  Student mode  •  3 devices',24,66);
     const rows=[
       {col:'#b6d0ff',bold:true,title:'▶  Client App Downloads',sub:'Android old, Android new, universal APK, AAB',p:.81},
       {col:'rgba(255,255,255,.44)',title:'◌  TV App Downloads',sub:'Remote-first navigation and pairing',p:.56},
       {col:'rgba(255,255,255,.34)',title:'◌  Desktop Builds',sub:'Windows, macOS, and Linux installers',p:.42},
       {col:'rgba(255,255,255,.26)',title:'◌  Parent and Support Guides',sub:'Login, support, billing, and connection help',p:.33}
     ];
-    rows.forEach((row,i)=>{const y=58+i*63;if(i===0){ctx.fillStyle='rgba(78,122,208,.18)';ctx.fillRect(0,y-5,W,58);}ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');ctx.textAlign='left';ctx.fillText(row.title,18,y+20);ctx.fillStyle='rgba(186,172,126,.58)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,18,y+37);ctx.fillStyle='rgba(90,100,120,.34)';ctx.fillRect(18,y+47,W-36,3);ctx.fillStyle='rgba(208,172,80,.82)';ctx.fillRect(18,y+47,(W-36)*row.p,3);});
-    ctx.fillStyle='rgba(208,172,80,.5)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';ctx.fillText('Student Mode • Sync active • Project builds linked',W/2,H-10);
+    rows.forEach((row,i)=>{const y=66+i*58;if(i===0){ctx.fillStyle='rgba(86,130,232,.15)';ctx.fillRect(12,y-6,W-24,54);}ctx.fillStyle=row.col;ctx.font=(row.bold?'bold ':'')+(i===0?14:13)+'px '+(i===0?'Georgia,serif':'Lato,sans-serif');ctx.textAlign='left';ctx.fillText(row.title,20,y+18);ctx.fillStyle='rgba(210,196,160,.62)';ctx.font='10px Lato,sans-serif';ctx.fillText(row.sub,20,y+34);ctx.fillStyle='rgba(90,100,120,.34)';ctx.fillRect(20,y+42,W-40,3);ctx.fillStyle='rgba(255,215,120,.82)';ctx.fillRect(20,y+42,(W-40)*row.p,3);});
+    ctx.fillStyle='rgba(255,220,140,.55)';ctx.font='9px Lato,sans-serif';ctx.textAlign='center';ctx.fillText('Student Mode • Sync active • Project builds linked',W/2,H-10);
   },
   (ctx,W,H)=>{// TV pairing
     ctx.fillStyle='#020408';ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(40,80,200,.1)';ctx.fillRect(0,0,W,H);
@@ -568,7 +575,7 @@ const muralTex=makeTex(896,1376,(ctx,W,H)=>{
   });
 });
 const muralMat=new THREE.MeshStandardMaterial({map:muralTex,emissive:0xffffff,emissiveMap:muralTex,emissiveIntensity:1.1,roughness:.95,side:THREE.DoubleSide});
-const muralMesh=mesh(new THREE.PlaneGeometry(8.2,8.0),muralMat);
+const muralMesh=mesh(new THREE.PlaneGeometry(8.46,10.92),muralMat);
 muralMesh.rotation.x=Math.PI/2;muralMesh.position.set(0,RH-.045,RZ);scene.add(muralMesh);
 // Real 3D twinkling stars scattered across the full ceiling, for actual depth beyond the flat print
 const ceilingStars=[];
@@ -811,22 +818,22 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
       rotateWorldAxis(upLeg,AX,-Math.PI/2);
       rotateWorldAxis(leg,AX,Math.PI/2);
     }
-    if(shoulder)rotateWorldAxis(shoulder,AX,-Math.PI*.18);
-    if(arm)rotateWorldAxis(arm,AX,-Math.PI*.18);
-    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.72); // elbows bend forward so the hands rest near the desk
-    if(hand)rotateWorldAxis(hand,AX,-Math.PI*.24);
+    if(shoulder)rotateWorldAxis(shoulder,AX,-Math.PI*.08);
+    if(arm)rotateWorldAxis(arm,AX,-Math.PI*.14);
+    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.86); // elbows bend forward so the hands rest near the desk
+    if(hand)rotateWorldAxis(hand,AX,-Math.PI*.08);
   });
   // The hip bend above pivots the knee, not the pelvis — the pelvis itself has to be
   // lowered onto the chair by exactly the thigh length, since the thigh no longer
   // contributes any vertical height once it's horizontal.
   const hips=bone('Hips');
-  if(hips&&thighLen)hips.position.y-=thighLen;
-  const spine2=bone('Spine2');if(spine2)rotateWorldAxis(spine2,AX,.24); // stronger forward lean, studying posture
-  const head=bone('Head');if(head)rotateWorldAxis(head,AX,.14); // downward gaze toward the desk
+  if(hips&&thighLen)hips.position.y-=thighLen*.98;
+  const spine2=bone('Spine2');if(spine2)rotateWorldAxis(spine2,AX,.34); // stronger forward lean, studying posture
+  const head=bone('Head');if(head)rotateWorldAxis(head,AX,.18); // downward gaze toward the desk
 
   const wrap=new THREE.Group();
   wrap.add(model);
-  wrap.position.set(0,-.08,1.0); // pull the student closer to the desk so the hands sit on top of it
+  wrap.position.set(0,-.16,.88); // pull the student closer to the desk so the hands sit on top of it
   wrap.rotation.y=Math.PI;     // the model's bind pose faces +Z; the desk sits at lower z, so flip to face it
   deskGroup.add(wrap);
   studentPlaceholder.visible=false;
@@ -1005,17 +1012,29 @@ scene.add(shelfGroup);
 
 // TV UNIT
 const TVX=RW/2-.07,TVZ=-4.22;
-const tvBodyM=new THREE.MeshStandardMaterial({color:0x090808,roughness:.36,metalness:.42});
-const tvBezelM=new THREE.MeshStandardMaterial({color:0x040405,roughness:.28,metalness:.52});
-scene.add(place(box(.09,1.26,1.92,tvBodyM),TVX,2.08,TVZ));
-scene.add(place(box(.02,1.16,1.8,tvBezelM),TVX-.006,2.08,TVZ));
-const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x18294e,emissiveIntensity:1.05,emissiveMap:tvTex,roughness:.16,metalness:.08});
-const tvScreen=mesh(new THREE.PlaneGeometry(1.54,0.88),tvSM);tvScreen.position.set(TVX-.025,2.08,TVZ);tvScreen.rotation.y=-Math.PI/2;tvScreen.castShadow=false;scene.add(tvScreen);
-scene.add(place(box(.018,1.08,1.72,new THREE.MeshStandardMaterial({color:0x151515,roughness:.36,metalness:.28})),TVX-.006,2.08,TVZ));
+const tvGroup=new THREE.Group();
+tvGroup.position.set(TVX,2.08,TVZ);
+scene.add(tvGroup);
+const tvWallM=new THREE.MeshStandardMaterial({color:0x171411,roughness:.62,metalness:.18});
+tvGroup.add(place(box(.15,.24,.08,tvWallM),-.02,0,.02)); // wall plate
+tvGroup.add(place(box(.18,.06,.62,new THREE.MeshStandardMaterial({color:0x27221c,roughness:.5,metalness:.32})),.04,-.05,.02)); // arm / spacer
+tvGroup.add(place(box(.16,.045,1.0,new THREE.MeshStandardMaterial({color:0x14110e,roughness:.45,metalness:.28})),.06,.06,0)); // support rail
+const tvBodyM=new THREE.MeshStandardMaterial({color:0x070707,roughness:.34,metalness:.42});
+const tvBezelM=new THREE.MeshStandardMaterial({color:0x111111,roughness:.22,metalness:.58});
+tvGroup.add(place(box(.08,1.26,1.92,tvBodyM),0,0,0));
+tvGroup.add(place(box(.03,1.18,1.84,tvBezelM),-.015,0,0));
+const tvSM=new THREE.MeshStandardMaterial({map:tvTex,emissive:0x1a325f,emissiveIntensity:1.08,emissiveMap:tvTex,roughness:.12,metalness:.08});
+const tvScreen=mesh(new THREE.PlaneGeometry(1.5,0.86),tvSM);
+tvScreen.position.set(-.028,0,.022);
+tvScreen.rotation.y=-Math.PI/2;
+tvScreen.castShadow=false;
+tvGroup.add(tvScreen);
+tvGroup.add(place(box(.012,1.0,1.7,new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.05,roughness:.05,metalness:.08})),-.03,.01,.018));
+tvGroup.add(place(box(.012,1.06,1.78,new THREE.MeshStandardMaterial({color:0x050505,transparent:true,opacity:.16,roughness:.2,metalness:.1})),-.02,0,.018));
 const rem=place(box(.05,.01,.16,new THREE.MeshStandardMaterial({color:0x181412,roughness:.6})),TVX-.18,1.0,TVZ+.38);rem.rotation.y=.35;scene.add(rem);
 // TV hotspot (screen click = cycle)
-const tvHot=mesh(new THREE.BoxGeometry(.18,1.18,1.78),new THREE.MeshBasicMaterial({visible:false}));
-tvHot.position.set(TVX-.02,2.08,TVZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
+const tvHot=mesh(new THREE.BoxGeometry(.24,1.2,1.86),new THREE.MeshBasicMaterial({visible:false}));
+tvHot.position.set(TVX-.01,2.08,TVZ);tvHot.userData={isDevice:'tv',label:'TV — click to cycle'};
 scene.add(tvHot);
 allHotspots.push({mesh:tvHot,label:'📺  TV — click to cycle screen'});
 // TV guide hotspot (credenza area = open book)
@@ -1116,12 +1135,12 @@ function makePortraitTex(name,quote,W,H,ac){
 }
 // Einstein portrait
 const einMesh=mesh(new THREE.PlaneGeometry(.72,.92),new THREE.MeshStandardMaterial({map:makePortraitTex('Albert Einstein','Imagination is more\\nimportant than knowledge.',300,380,'200,160,80,.18'),roughness:.86}));
-einMesh.position.set(-3.1,2.32,-5.349);scene.add(einMesh);
-scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x8a6820,roughness:.55,metalness:.3})),-3.1,2.32,-5.37));
+einMesh.position.set(-3.1,2.32,RZ-RD/2+.12);scene.add(einMesh);
+scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x8a6820,roughness:.55,metalness:.3})),-3.1,2.32,RZ-RD/2+.095));
 // Tesla portrait
 const teslaMesh=mesh(new THREE.PlaneGeometry(.72,.92),new THREE.MeshStandardMaterial({map:makePortraitTex('Nikola Tesla','The present is theirs;\\nthe future is mine.',300,380,'100,160,255,.14'),roughness:.86}));
-teslaMesh.position.set(-1.8,2.32,-5.349);scene.add(teslaMesh);
-scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x304060,roughness:.55,metalness:.3})),-1.8,2.32,-5.37));
+teslaMesh.position.set(-1.8,2.32,RZ-RD/2+.12);scene.add(teslaMesh);
+scene.add(place(box(.78,.98,.03,new THREE.MeshStandardMaterial({color:0x304060,roughness:.55,metalness:.3})),-1.8,2.32,RZ-RD/2+.095));
 // Back wall quotes
 const pw2=mesh(new THREE.PlaneGeometry(1.28,.52),new THREE.MeshStandardMaterial({map:makePosterTex([{text:'STUDY \u00b7 PRACTICE \u00b7 ACHIEVE',font:'bold 20px Georgia,serif',color:'#e8e0d0',y:58},{text:'Family Academy \u00b7 Learn Without Limits',font:'italic 13px Lato,sans-serif',color:'#4a3820',y:96}],384,128,'#0e160a'),roughness:.88}));
 pw2.position.set(2.2,2.7,RZ-RD/2+.07);scene.add(pw2);scene.add(place(box(1.34,.58,.03,new THREE.MeshStandardMaterial({color:0x303828,roughness:.7})),2.2,2.7,RZ-RD/2+.05));
@@ -1154,21 +1173,23 @@ scene.add(place(box(.86,.008,.56,new THREE.MeshStandardMaterial({color:0x6c4016,
 for(const[lx,lz]of[[-.4,-.24],[.4,-.24],[-.4,.24],[.4,.24]])scene.add(place(cyl(.022,.03,.68,10,new THREE.MeshStandardMaterial({color:0x5a3818,roughness:.7})),etX+lx,.36,etZ+lz));
 // Two proper bentwood-style café chairs, facing each other across the table
 function cafeChair(cx,cz,faceAngle){
-  const seatM=new THREE.MeshStandardMaterial({color:0x73411d,roughness:.64});
-  const frameM=new THREE.MeshStandardMaterial({color:0x2b2318,roughness:.5,metalness:.18});
-  const cushionM=new THREE.MeshStandardMaterial({color:0x9a5f2e,roughness:.7});
+  const seatM=new THREE.MeshStandardMaterial({color:0x8b5a32,roughness:.72});
+  const frameM=new THREE.MeshStandardMaterial({color:0x2d2318,roughness:.42,metalness:.16});
+  const cushionM=new THREE.MeshStandardMaterial({color:0xd7c2a1,roughness:.9});
   const chG=new THREE.Group();
-  chG.add(place(box(.38,.06,.38,seatM),0,.44,0));
-  chG.add(place(box(.35,.025,.35,cushionM),0,.47,0));
-  chG.add(place(box(.05,.44,.04,frameM),-.16,.24,-.14));
-  chG.add(place(box(.05,.44,.04,frameM),.16,.24,-.14));
-  chG.add(place(box(.34,.04,.04,frameM),0,.63,-.14));
-  chG.add(place(box(.32,.38,.04,seatM),0,.83,-.16));
-  chG.add(place(box(.05,.22,.04,frameM),-.16,.16,.12));
-  chG.add(place(box(.05,.22,.04,frameM),.16,.16,.12));
-  chG.add(place(box(.22,.04,.04,frameM),0,.57,.12));
-  for(const[lx,lz]of[[-.14,-.14],[.14,-.14],[-.14,.14],[.14,.14]])chG.add(place(cyl(.015,.015,.46,8,frameM),lx,.2,lz));
-  chG.add(place(box(.22,.03,.04,frameM),0,.88,-.12));
+  chG.add(place(cyl(.014,.014,.43,10,frameM),-.16,.22,.16));
+  chG.add(place(cyl(.014,.014,.43,10,frameM),.16,.22,.16));
+  chG.add(place(cyl(.014,.014,.46,10,frameM),-.16,.24,-.16));
+  chG.add(place(cyl(.014,.014,.46,10,frameM),.16,.24,-.16));
+  chG.add(place(box(.42,.05,.4,seatM),0,.46,0));
+  chG.add(place(box(.38,.02,.34,cushionM),0,.495,0));
+  chG.add(place(box(.04,.46,.04,frameM),-.16,.47,-.14));
+  chG.add(place(box(.04,.46,.04,frameM),.16,.47,-.14));
+  chG.add(place(box(.34,.04,.04,frameM),0,.7,-.14));
+  chG.add(place(box(.38,.12,.04,seatM),0,.87,-.12));
+  chG.add(place(box(.24,.025,.035,frameM),0,.92,-.12));
+  chG.add(place(box(.03,.18,.03,frameM),-.22,.62,0));
+  chG.add(place(box(.03,.18,.03,frameM),.22,.62,0));
   chG.position.set(cx,0,cz);chG.rotation.y=faceAngle;scene.add(chG);
 }
 cafeChair(etX,etZ-.4,0);
