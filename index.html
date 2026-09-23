@@ -820,7 +820,9 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
     }
     if(shoulder)rotateWorldAxis(shoulder,AX,-Math.PI*.08);
     if(arm)rotateWorldAxis(arm,AX,-Math.PI*.14);
-    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.86); // elbows bend forward so the hands rest near the desk
+    // Keep the forearms angled forward *and down*.  The old near-180° bend
+    // folded them back upward in front of the chest, which looked like raised hands.
+    if(foreArm)rotateWorldAxis(foreArm,AX,-Math.PI*.42);
     if(hand)rotateWorldAxis(hand,AX,-Math.PI*.08);
   });
   // The hip bend above pivots the knee, not the pelvis — the pelvis itself has to be
@@ -833,7 +835,15 @@ gltfLoader.load('./assets/models/student.glb',(gltf)=>{
 
   const wrap=new THREE.Group();
   wrap.add(model);
-  wrap.position.set(0,-.16,.88); // pull the student closer to the desk so the hands sit on top of it
+  // The model's hips are lowered when the legs are bent.  Place that pelvis at
+  // the top of the chair cushion instead of using a fixed model offset; this
+  // prevents the chair from intersecting the student's chest on differently
+  // scaled avatar exports.
+  model.updateWorldMatrix(true,true);
+  const hipsWorld=new THREE.Vector3();
+  hips.getWorldPosition(hipsWorld);
+  const chairSeatTop=.66;
+  wrap.position.set(0,chairSeatTop-hipsWorld.y,.88); // pull the student closer to the desk
   wrap.rotation.y=Math.PI;     // the model's bind pose faces +Z; the desk sits at lower z, so flip to face it
   deskGroup.add(wrap);
   studentPlaceholder.visible=false;
